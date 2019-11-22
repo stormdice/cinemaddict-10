@@ -1,13 +1,83 @@
 'use strict';
 
 const FILM_COUNT = 5;
-const NAVIGATION_LINK_COUNT = 5;
-const SORT_LINK_COUNT = 3;
 const EXTRA_FILM_LIST = 2;
 const EXTRA_FILM_LIST_FILM_COUNT = 2;
 const FILM_DETAILS_DESCRIPTION_COUNT = 7;
 const FILM_DETAILS_CONTROL_COUNT = 3;
 const FILM_DETAILS_EMOJI_COUNT = 4;
+
+const navigationLinksData = [
+  {
+    name: `All Movies`,
+    path: `#all`,
+    isActive: true,
+    isAdditional: false,
+    isDesription: false
+  },
+  {
+    name: `Watchlist`,
+    path: `#watchlist`,
+    isActive: false,
+    isAdditional: false,
+    isDesription: true,
+    desriptionitemCount: 13
+  },
+  {
+    name: `History`,
+    path: `#history`,
+    isActive: false,
+    isAdditional: false,
+    isDesription: true,
+    desriptionitemCount: 8
+  },
+  {
+    name: `Favorites`,
+    path: `#favorites`,
+    isActive: false,
+    isAdditional: false,
+    isDesription: true,
+    desriptionitemCount: 4
+  },
+  {
+    name: `Stats`,
+    path: `#stats`,
+    isActive: false,
+    isAdditional: true,
+    isDesription: false
+  }
+];
+
+const sortLinksData = [
+  {
+    name: `Sort by default`,
+    isActive: true
+  },
+  {
+    name: `Sort by date`,
+    isActive: false
+  },
+  {
+    name: `Sort by rating`,
+    isActive: false
+  }
+];
+
+const checkNavigationLinkClass = (isActive, isAdditional) => {
+  let linkClass = `main-navigation__item`;
+
+  if (isActive) {
+    linkClass = `main-navigation__item main-navigation__item--active`;
+  }
+
+  if (isAdditional) {
+    linkClass = `main-navigation__item main-navigation__item--additional`;
+  }
+
+  return linkClass;
+};
+
+const checkSortLinksClass = (isActive) => isActive ? `sort__button sort__button--active` : `sort__button`;
 
 /**
  * Объединяет и возращает необходимое количество шаблонов разметки
@@ -29,38 +99,28 @@ const getProfileTemplate = () => (
 );
 
 /**
- * создаёт и возвращает разметку ссылки в навигации
- * @return {String}
- */
-const getNavigationItemTemplate = () => (
-  `<a href="#all" class="main-navigation__item">All movies</a>`
-);
-
-/**
  * создаёт и возвращает разметку навигации
+ * @param {Object} data - данные из массива ссылок навигации
  * @return {String}
  */
-const getNavigationTemplate = () => (
+const getNavigationTemplate = (data) => (
   `<nav class="main-navigation">
-    ${renderInLoop(NAVIGATION_LINK_COUNT, getNavigationItemTemplate)}
+    ${data.map(({name, path, isActive, isAdditional, isDesription, desriptionitemCount}) => `
+      <a href=${path} class="${checkNavigationLinkClass(isActive, isAdditional)}">
+        ${name}
+        ${isDesription ? `<span class="main-navigation__item-count">${desriptionitemCount}</span>` : ``}
+      </a>`).join(``)}
   </nav>`
 );
 
 /**
- * создаёт и возвращает разметку элемента сортировки
- * @return {String}
- */
-const getSortItemTemplate = () => (
-  `<li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>`
-);
-
-/**
  * создаёт и возвращает разметку сортировки
+ * @param {Object} data - данные из массива ссылок сортировки
  * @return {String}
  */
-const getSortTemplate = () => (
+const getSortTemplate = (data) => (
   `<ul class="sort">
-    ${renderInLoop(SORT_LINK_COUNT, getSortItemTemplate)}
+    ${data.map(({name, isActive}) => `<li><a href="#" class="${checkSortLinksClass(isActive)}">${name}</a></li>`).join(``)}
   </ul>`
 );
 
@@ -246,8 +306,8 @@ const initApp = () => {
   const footerElement = document.querySelector(`.footer`);
 
   render(headerElement, getProfileTemplate());
-  render(mainElement, getNavigationTemplate());
-  render(mainElement, getSortTemplate());
+  render(mainElement, getNavigationTemplate(navigationLinksData));
+  render(mainElement, getSortTemplate(sortLinksData));
   render(mainElement, getFilmsSectionTemplate());
   render(footerElement, getFilmDetailsTemplate(), `afterend`);
 };
