@@ -1,6 +1,5 @@
 'use strict';
 
-const FILM_COUNT = 5;
 const EXTRA_FILM_LIST = 2;
 const EXTRA_FILM_LIST_FILM_COUNT = 2;
 const FILM_DETAILS_DESCRIPTION_COUNT = 7;
@@ -11,39 +10,39 @@ const navigationLinksData = [
   {
     name: `All Movies`,
     path: `#all`,
-    isActive: true,
-    isAdditional: false,
+    active: true,
+    additional: false,
     isDesription: false
   },
   {
     name: `Watchlist`,
     path: `#watchlist`,
-    isActive: false,
-    isAdditional: false,
+    active: false,
+    additional: false,
     isDesription: true,
     desriptionitemCount: 13
   },
   {
     name: `History`,
     path: `#history`,
-    isActive: false,
-    isAdditional: false,
+    active: false,
+    additional: false,
     isDesription: true,
     desriptionitemCount: 8
   },
   {
     name: `Favorites`,
     path: `#favorites`,
-    isActive: false,
-    isAdditional: false,
+    active: false,
+    additional: false,
     isDesription: true,
     desriptionitemCount: 4
   },
   {
     name: `Stats`,
     path: `#stats`,
-    isActive: false,
-    isAdditional: true,
+    active: false,
+    additional: true,
     isDesription: false
   }
 ];
@@ -51,33 +50,85 @@ const navigationLinksData = [
 const sortLinksData = [
   {
     name: `Sort by default`,
-    isActive: true
+    active: true
   },
   {
     name: `Sort by date`,
-    isActive: false
+    active: false
   },
   {
     name: `Sort by rating`,
-    isActive: false
+    active: false
   }
 ];
 
-const checkNavigationLinkClass = (isActive, isAdditional) => {
-  let linkClass = `main-navigation__item`;
-
-  if (isActive) {
-    linkClass = `main-navigation__item main-navigation__item--active`;
+const filmCardsData = [
+  {
+    title: `The Dance of Life`,
+    rating: `8.3`,
+    year: `1929`,
+    duration: `1h 55m`,
+    genre: `Musical`,
+    imgSrc: `./images/posters/the-dance-of-life.jpg`,
+    description: `Burlesque comic Ralph "Skid" Johnson (Skelly), and specialty dancer Bonny Lee King (Carroll), end up together on a cold, rainy night at a tr…`,
+    commentsCount: `5`,
+    addToWatchlist: false,
+    markAsWatched: false,
+    favorite: false,
+  },
+  {
+    title: `Sagebrush Trail`,
+    rating: `3.2`,
+    year: `1933`,
+    duration: `54m`,
+    genre: `Western`,
+    imgSrc: `./images/posters/sagebrush-trail.jpg`,
+    description: `Sentenced for a murder he did not commit, John Brant escapes from prison determined to find the real killer. By chance Brant's narrow escap…`,
+    commentsCount: `89`,
+    addToWatchlist: true,
+    markAsWatched: false,
+    favorite: false,
+  },
+  {
+    title: `The Man with the Golden Arm`,
+    rating: `9.0`,
+    year: `1955`,
+    duration: `1h 59m`,
+    genre: `Drama`,
+    imgSrc: `./images/posters/the-man-with-the-golden-arm.jpg`,
+    description: `Frankie Machine (Frank Sinatra) is released from the federal Narcotic Farm in Lexington, Kentucky with a set of drums and a new outlook on…`,
+    commentsCount: `18`,
+    addToWatchlist: false,
+    markAsWatched: true,
+    favorite: false,
+  },
+  {
+    title: `Santa Claus Conquers the Martians`,
+    rating: `2.3`,
+    year: `1964`,
+    duration: `1h 21m`,
+    genre: `Comedy`,
+    imgSrc: `./images/posters/santa-claus-conquers-the-martians.jpg`,
+    description: `The Martians Momar ("Mom Martian") and Kimar ("King Martian") are worried that their children Girmar ("Girl Martian") and Bomar ("Boy Marti…`,
+    commentsCount: `465`,
+    addToWatchlist: false,
+    markAsWatched: false,
+    favorite: true,
+  },
+  {
+    title: `Popeye the Sailor Meets Sindbad the Sailor`,
+    rating: `6.3`,
+    year: `1936`,
+    duration: `16m`,
+    genre: `Cartoon`,
+    imgSrc: `./images/posters/popeye-meets-sinbad.png`,
+    description: `In this short, Sindbad the Sailor (presumably Bluto playing a "role") proclaims himself, in song, to be the greatest sailor, adventurer and…`,
+    commentsCount: `0`,
+    addToWatchlist: true,
+    markAsWatched: true,
+    favorite: true,
   }
-
-  if (isAdditional) {
-    linkClass = `main-navigation__item main-navigation__item--additional`;
-  }
-
-  return linkClass;
-};
-
-const checkSortLinksClass = (isActive) => isActive ? `sort__button sort__button--active` : `sort__button`;
+];
 
 /**
  * Объединяет и возращает необходимое количество шаблонов разметки
@@ -105,8 +156,8 @@ const getProfileTemplate = () => (
  */
 const getNavigationTemplate = (data) => (
   `<nav class="main-navigation">
-    ${data.map(({name, path, isActive, isAdditional, isDesription, desriptionitemCount}) => `
-      <a href=${path} class="${checkNavigationLinkClass(isActive, isAdditional)}">
+    ${data.map(({name, path, active, additional, isDesription, desriptionitemCount}) => `
+      <a href=${path} class="main-navigation__item ${active ? `main-navigation__item--active` : ``} ${additional ? `main-navigation__item--additional` : ``}">
         ${name}
         ${isDesription ? `<span class="main-navigation__item-count">${desriptionitemCount}</span>` : ``}
       </a>`).join(``)}
@@ -120,7 +171,7 @@ const getNavigationTemplate = (data) => (
  */
 const getSortTemplate = (data) => (
   `<ul class="sort">
-    ${data.map(({name, isActive}) => `<li><a href="#" class="${checkSortLinksClass(isActive)}">${name}</a></li>`).join(``)}
+    ${data.map(({name, active}) => `<li><a href="#" class="sort__button ${active ? `sort__button sort__button--active` : ``}">${name}</a></li>`).join(``)}
   </ul>`
 );
 
@@ -169,16 +220,28 @@ const getFilmListExtraTemplate = () => (
   </section>`
 );
 
-/**
- * создаёт и возвращает разметку блока Фильмов
- * @return {String}
- */
-const getFilmsSectionTemplate = () => (
+const getFilmsSectionTemplate = (data) => (
   `<section class="films">
     <section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
       <div class="films-list__container">
-        ${renderInLoop(FILM_COUNT, getItemTemplate)}
+        ${data.map(({title, rating, year, duration, genre, imgSrc, description, commentsCount, addToWatchlist, markAsWatched, favorite}) =>`<article class="film-card">
+            <h3 class="film-card__title">${title}</h3>
+            <p class="film-card__rating">${rating}</p>
+            <p class="film-card__info">
+              <span class="film-card__year">${year}</span>
+              <span class="film-card__duration">${duration}</span>
+              <span class="film-card__genre">${genre}</span>
+            </p>
+            <img src=${imgSrc} alt="" class="film-card__poster">
+            <p class="film-card__description">${description}</p>
+            <a class="film-card__comments">${commentsCount} comments</a>
+            <form class="film-card__controls">
+              <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${addToWatchlist ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
+              <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${markAsWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
+              <button class="film-card__controls-item button film-card__controls-item--favorite ${favorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
+            </form>
+          </article>`).join(``)}
       </div>
       ${getButtonShowMoreTemplate()}
     </section>
@@ -308,7 +371,7 @@ const initApp = () => {
   render(headerElement, getProfileTemplate());
   render(mainElement, getNavigationTemplate(navigationLinksData));
   render(mainElement, getSortTemplate(sortLinksData));
-  render(mainElement, getFilmsSectionTemplate());
+  render(mainElement, getFilmsSectionTemplate(filmCardsData));
   render(footerElement, getFilmDetailsTemplate(), `afterend`);
 };
 
