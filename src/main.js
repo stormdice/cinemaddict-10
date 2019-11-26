@@ -54,6 +54,21 @@ const sortLinksData = [
   }
 ];
 
+const filmCardControlsData = [
+  {
+    name: `add-to-watchlist`,
+    desc: `Add to watchlist`
+  },
+  {
+    name: `mark-as-watched`,
+    desc: `Mark as watched`
+  },
+  {
+    name: `favorite`,
+    desc: `Mark as favorite`
+  }
+];
+
 const filmCardsData = [
   {
     title: `The Dance of Life`,
@@ -66,7 +81,7 @@ const filmCardsData = [
     commentsCount: `5`,
     addToWatchlist: false,
     markAsWatched: false,
-    favorite: false,
+    favorite: false
   },
   {
     title: `Sagebrush Trail`,
@@ -79,7 +94,7 @@ const filmCardsData = [
     commentsCount: `89`,
     addToWatchlist: true,
     markAsWatched: false,
-    favorite: false,
+    favorite: false
   },
   {
     title: `The Man with the Golden Arm`,
@@ -92,7 +107,7 @@ const filmCardsData = [
     commentsCount: `18`,
     addToWatchlist: false,
     markAsWatched: true,
-    favorite: false,
+    favorite: false
   },
   {
     title: `Santa Claus Conquers the Martians`,
@@ -105,7 +120,7 @@ const filmCardsData = [
     commentsCount: `465`,
     addToWatchlist: false,
     markAsWatched: false,
-    favorite: true,
+    favorite: true
   },
   {
     title: `Popeye the Sailor Meets Sindbad the Sailor`,
@@ -118,22 +133,7 @@ const filmCardsData = [
     commentsCount: `0`,
     addToWatchlist: true,
     markAsWatched: true,
-    favorite: true,
-  }
-];
-
-const filmCardControlsData = [
-  {
-    name: `film-card__controls-item--add-to-watchlist`,
-    active: true
-  },
-  {
-    name: `film-card__controls-item--mark-as-watched`,
-    active: true
-  },
-  {
-    name: `film-card__controls-item--favorite`,
-    active: true
+    favorite: true
   }
 ];
 
@@ -221,8 +221,8 @@ const getSortTemplate = (data) => (
  * @param {Boolean} active - активная ли ссылка
  * @return {String}
  */
-const getFilmCardControlTemplate = ({name, active}) => (
-  `<button class="film-card__controls-item button ${name} ${active ? `film-card__controls-item--active` : ``}">Add to watchlist</button>`
+const getFilmCardControlTemplate = ({name, desc}) => (
+  `<button class="film-card__controls-item button film-card__controls-item--${name}">${desc}</button>`
 );
 
 /**
@@ -407,7 +407,7 @@ const initApp = () => {
   render(mainElement, getNavigationTemplate(navigationLinksData));
   render(mainElement, getSortTemplate(sortLinksData));
   render(mainElement, getFilmsSectionTemplate(filmCardsData));
-  render(footerElement, getFilmDetailsTemplate(), `afterend`);
+  // render(footerElement, getFilmDetailsTemplate(), `afterend`);
 };
 
 initApp();
