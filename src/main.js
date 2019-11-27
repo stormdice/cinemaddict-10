@@ -72,7 +72,7 @@ const filmCardControlsData = [
 const filmCardsData = [
   {
     title: `The Dance of Life`,
-    rating: `8.3`,
+    rating: 8.3,
     year: `1929`,
     duration: `1h 55m`,
     genre: `Musical`,
@@ -85,7 +85,7 @@ const filmCardsData = [
   },
   {
     title: `Sagebrush Trail`,
-    rating: `3.2`,
+    rating: 3.2,
     year: `1933`,
     duration: `54m`,
     genre: `Western`,
@@ -98,7 +98,7 @@ const filmCardsData = [
   },
   {
     title: `The Man with the Golden Arm`,
-    rating: `9.0`,
+    rating: 9.0,
     year: `1955`,
     duration: `1h 59m`,
     genre: `Drama`,
@@ -111,7 +111,7 @@ const filmCardsData = [
   },
   {
     title: `Santa Claus Conquers the Martians`,
-    rating: `2.3`,
+    rating: 2.3,
     year: `1964`,
     duration: `1h 21m`,
     genre: `Comedy`,
@@ -124,7 +124,7 @@ const filmCardsData = [
   },
   {
     title: `Popeye the Sailor Meets Sindbad the Sailor`,
-    rating: `6.3`,
+    rating: 6.3,
     year: `1936`,
     duration: `16m`,
     genre: `Cartoon`,
@@ -134,6 +134,84 @@ const filmCardsData = [
     addToWatchlist: true,
     markAsWatched: true,
     favorite: true
+  }
+];
+
+const filmListExtraData = [
+  {
+    name: `Top rated`
+  },
+  {
+    name: `Most commented`
+  }
+];
+
+const filmDetailsDescriptionData = [
+  {
+    term: `Director`,
+    cell: `Anthony Mann`
+  },
+  {
+    term: `Writers`,
+    cell: `Anne Wigton, Heinz Herald, Richard Weil`
+  },
+  {
+    term: `Actors`,
+    cell: `Erich von Stroheim, Mary Beth Hughes, Dan Duryea`
+  },
+  {
+    term: `Release Date`,
+    cell: `30 March 1945`
+  },
+  {
+    term: `Runtime`,
+    cell: `1h 18m`
+  },
+  {
+    term: `Country`,
+    cell: `USA`
+  },
+  {
+    term: `Genres`,
+    cell: `Drama`
+  }
+];
+
+const filmDetailsControlsData = [
+  {
+    name: `watchlist`,
+    desc: `Add to watchlist`
+  },
+  {
+    name: `watched`,
+    desc: `Already watched`
+  },
+  {
+    name: `favorite`,
+    desc: `Add to favorites`
+  }
+];
+
+const FilmDetailsEmojiData = [
+  {
+    id: `emoji-smile`,
+    value: `sleeping`,
+    imgSrc: `./images/emoji/smile.png`
+  },
+  {
+    id: `emoji-sleeping`,
+    value: `neutral-face`,
+    imgSrc: `./images/emoji/sleeping.png`
+  },
+  {
+    id: `emoji-gpuke`,
+    value: `grinning`,
+    imgSrc: `./images/emoji/puke.png`
+  },
+  {
+    id: `emoji-angry`,
+    value: `grinning`,
+    imgSrc: `./images/emoji/angry.png`
   }
 ];
 
@@ -154,6 +232,12 @@ const render = (container, template, place = `beforeend`) => {
  * @return {String}
  */
 const renderDataFromArrayOfObjects = (array, template) => array.map(template).join(``);
+
+/**
+ * создаёт и возвращает первые 2 карточки фильма из массива фильмов
+ * @return {String}
+ */
+const renderSlice = () => filmCardsData.slice(0, 2).map(getFilmCardTemplate).join(``);
 
 /**
  * создаёт и возвращает разметку профиля
@@ -269,28 +353,31 @@ const getButtonShowMoreTemplate = () => (
  * создаёт и возвращает разметку для блоков «Top rated movies» и «Most commented»
  * @return {String}
  */
-const getFilmListExtraTemplate = () => (
+const getFilmListExtraTemplate = ({name}) => (
   `<section class="films-list--extra">
-    <h2 class="films-list__title">Top rated</h2>
-    <div class="films-list__container"></div>
+    <h2 class="films-list__title">${name}</h2>
+    <div class="films-list__container">
+      ${renderSlice()}
+    </div>
   </section>`
 );
 
 /**
  * создаёт и возвращает разметку для раздела с фильмами
- * @param {Array} data - данные из массива
+ * @param {Array} filmCard - данные из массива карточки фильма
+ * @param {Array} filmListExtra - данные из массива блоков `Top rated` и `Most commented`
  * @return {String}
  */
-const getFilmsSectionTemplate = (data) => (
+const getFilmsSectionTemplate = (filmCard, filmListExtra) => (
   `<section class="films">
     <section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
       <div class="films-list__container">
-        ${renderDataFromArrayOfObjects(data, getFilmCardTemplate)}
+        ${renderDataFromArrayOfObjects(filmCard, getFilmCardTemplate)}
       </div>
       ${getButtonShowMoreTemplate()}
     </section>
-    ${getFilmListExtraTemplate()}
+    ${renderDataFromArrayOfObjects(filmListExtra, getFilmListExtraTemplate)}
   </section>`
 );
 
@@ -298,10 +385,10 @@ const getFilmsSectionTemplate = (data) => (
  * создаёт и возвращает разметку описания фильма в попапе - расширенном описании
  * @return {String}
  */
-const getFilmDetailsDescriptionTemplate = () => (
+const getFilmDetailsDescriptionTemplate = ({term, cell}) => (
   `<tr class="film-details__row">
-    <td class="film-details__term">Director</td>
-    <td class="film-details__cell">Anthony Mann</td>
+    <td class="film-details__term">${term}</td>
+    <td class="film-details__cell">${cell}</td>
   </tr>`
 );
 
@@ -309,19 +396,19 @@ const getFilmDetailsDescriptionTemplate = () => (
  * создаёт и возвращает разметку кнопок в попапе - расширенном описании
  * @return {String}
  */
-const getFilmDetailsControlsTemplate = () => (
-  `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-  <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>`
+const getFilmDetailsControlsTemplate = ({name, desc}) => (
+  `<input type="checkbox" class="film-details__control-input visually-hidden" id=${name} name=${name}>
+  <label for=${name} class="film-details__control-label film-details__control-label--watchlist">${desc}</label>`
 );
 
 /**
  * создаёт и возвращает разметку эмоджи в попапе - расширенном описании
  * @return {String}
  */
-const getFilmDetailsEmojiTemplate = () => (
-  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping" checked>
-  <label class="film-details__emoji-label" for="emoji-smile">
-    <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+const getFilmDetailsEmojiTemplate = ({id, value, imgSrc}) => (
+  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id=${id} value=${value}>
+  <label class="film-details__emoji-label" for=${id}>
+    <img src=${imgSrc} width="30" height="30" alt="emoji">
   </label>`
 );
 
@@ -356,7 +443,7 @@ const getFilmDetailsTemplate = () => (
             </div>
 
             <table class="film-details__table">
-              ${getFilmDetailsDescriptionTemplate()}
+              ${renderDataFromArrayOfObjects(filmDetailsDescriptionData, getFilmDetailsDescriptionTemplate)}
             </table>
 
             <p class="film-details__film-description">
@@ -366,7 +453,7 @@ const getFilmDetailsTemplate = () => (
         </div>
 
         <section class="film-details__controls">
-          ${getFilmDetailsControlsTemplate()}
+          ${renderDataFromArrayOfObjects(filmDetailsControlsData, getFilmDetailsControlsTemplate)}
         </section>
       </div>
 
@@ -386,7 +473,7 @@ const getFilmDetailsTemplate = () => (
             </label>
 
             <div class="film-details__emoji-list">
-              ${getFilmDetailsEmojiTemplate()};
+              ${renderDataFromArrayOfObjects(FilmDetailsEmojiData, getFilmDetailsEmojiTemplate)}
             </div>
           </div>
         </section>
@@ -406,8 +493,8 @@ const initApp = () => {
   render(headerElement, getProfileTemplate());
   render(mainElement, getNavigationTemplate(navigationLinksData));
   render(mainElement, getSortTemplate(sortLinksData));
-  render(mainElement, getFilmsSectionTemplate(filmCardsData));
-  // render(footerElement, getFilmDetailsTemplate(), `afterend`);
+  render(mainElement, getFilmsSectionTemplate(filmCardsData, filmListExtraData));
+  render(footerElement, getFilmDetailsTemplate(), `afterend`);
 };
 
 initApp();
