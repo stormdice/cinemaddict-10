@@ -16,4 +16,33 @@ const render = (container, template, place = `beforeend`) => {
  */
 const renderDataFromArrayOfObjects = (array, template) => array.map(template).join(``);
 
-export {render, renderDataFromArrayOfObjects};
+/**
+ * Возращает случайный индекс массива
+ * @param {Array} array - данные из массива
+ * @return {Number}
+ */
+const getRandomIndex = (array) => {
+  return Math.floor(Math.random() * array.length);
+};
+
+/**
+ * Возращает случайное булево значение
+ * @return {Boolean}
+ */
+const getRandomBoolean = () => {
+  return Math.random() >= 0.5;
+};
+
+/**
+ * Возращает случайный элемент из массива
+ * @param {Array} array - данные из массива
+ * @return {String}
+ */
+const getRandomElementFromArray = (array) => {
+  const randomIdx = getRandomIndex(array);
+  const randomElement = array.find((title, idx) => idx === randomIdx);
+
+  return randomElement;
+};
+
+export {render, renderDataFromArrayOfObjects, getRandomIndex, getRandomElementFromArray, getRandomBoolean};

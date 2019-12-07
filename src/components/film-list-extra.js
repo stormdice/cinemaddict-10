@@ -1,4 +1,4 @@
-import {filmCardsData} from '../data/film-cards';
+// import {filmCardsData} from '../data/film-cards';
 import {getFilmCardTemplate} from './film-card';
 
 /**
