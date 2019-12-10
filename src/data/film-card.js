@@ -51,25 +51,24 @@ const descriptions = [
  */
 const generateFilm = () => {
   const title = getRandomElementFromArray(titles);
-  const getRandomRating = Math.random() * 10;
-  const rating = getRandomRating.toFixed(1);
+  const rating = (Math.random() * 10).toFixed(1);
   const year = Math.floor(2000 + Math.random() * 10);
   const durationHours = Math.floor(Math.random() * 3);
   const durationMinutes = Math.floor(Math.random() * 60);
   const genre = getRandomElementFromArray(genres);
-  const imgPath = getRandomElementFromArray(imgPaths);
-  const description = descriptions.slice(0, getRandomIndex(descriptions)).join(`.`);
-  const comments = Math.floor(Math.random() * 1000);
+  const imgSrc = getRandomElementFromArray(imgPaths);
+  const description = descriptions.slice(0, getRandomIndex(descriptions)).join(` `);
+  const commentsCount = Math.floor(Math.random() * 1000);
 
   return ({
-    title: `${title}`,
-    rating: `${rating}`,
-    year: `${year}`,
+    title,
+    rating,
+    year,
     duration: `${durationHours}h ${durationMinutes}m`,
-    genre: `${genre}`,
-    imgSrc: `${imgPath}`,
-    description: `${description}`,
-    commentsCount: `${comments}`,
+    genre,
+    imgSrc,
+    description,
+    commentsCount,
     controls: [
       {
         name: `add-to-watchlist`,
@@ -90,7 +89,7 @@ const generateFilm = () => {
   });
 };
 
-const FILM_COUNT = 15;
+const FILM_COUNT = 17;
 
 /**
  * Возвращает массив фильмов
@@ -103,11 +102,11 @@ const generateFilms = (count) => {
 
 const films = generateFilms(FILM_COUNT);
 
-const sortedByRating = films.slice().sort((a, b) => {
+const sortedByRating = [...films].sort((a, b) => {
   return b.rating - a.rating;
 });
 
-const sortedByComments = films.slice().sort((a, b) => {
+const sortedByComments = [...films].sort((a, b) => {
   return b.commentsCount - a.commentsCount;
 });
 

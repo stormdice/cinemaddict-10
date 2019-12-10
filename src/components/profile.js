@@ -6,21 +6,19 @@ let numberOfFilmsWatched = Math.floor(Math.random() * 21);
  * @return {String}
  */
 const checkUserRank = (count) => {
-  let rank = ``;
-
   if (count > 0 && count <= 10) {
-    rank = `Novice`;
+    return `Novice`;
   }
 
   if (count > 10 && count <= 21) {
-    rank = `Fan`;
+    return `Fan`;
   }
 
   if (count > 21) {
-    rank = `Movie Buff`;
+    return `Movie Buff`;
   }
 
-  return rank;
+  return ``;
 };
 
 const userRank = checkUserRank(numberOfFilmsWatched);
