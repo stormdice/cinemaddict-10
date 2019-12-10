@@ -53,18 +53,18 @@ const generateFilm = () => {
   const title = getRandomElementFromArray(titles);
   const getRandomRating = Math.random() * 10;
   const rating = getRandomRating.toFixed(1);
-  const randomYear = Math.floor(2000 + Math.random() * 10);
+  const year = Math.floor(2000 + Math.random() * 10);
   const durationHours = Math.floor(Math.random() * 3);
   const durationMinutes = Math.floor(Math.random() * 60);
   const genre = getRandomElementFromArray(genres);
   const imgPath = getRandomElementFromArray(imgPaths);
   const description = descriptions.slice(0, getRandomIndex(descriptions)).join(`.`);
-  const comments = Math.floor(Math.random() * 400);
+  const comments = Math.floor(Math.random() * 1000);
 
   return ({
     title: `${title}`,
     rating: `${rating}`,
-    year: `${randomYear}`,
+    year: `${year}`,
     duration: `${durationHours}h ${durationMinutes}m`,
     genre: `${genre}`,
     imgSrc: `${imgPath}`,
@@ -90,6 +90,8 @@ const generateFilm = () => {
   });
 };
 
+const FILM_COUNT = 15;
+
 /**
  * Возвращает массив фильмов
  * @param {Number} count - требуемое количество фильмов
@@ -99,13 +101,28 @@ const generateFilms = (count) => {
   return new Array(count).fill(``).map(generateFilm);
 };
 
+const films = generateFilms(FILM_COUNT);
+
+const sortedByRating = films.slice().sort((a, b) => {
+  return b.rating - a.rating;
+});
+
+const sortedByComments = films.slice().sort((a, b) => {
+  return b.commentsCount - a.commentsCount;
+});
+
+const filmsSortedByRating = sortedByRating.slice(0, 2);
+const filmsSortedByComments = sortedByComments.slice(0, 2);
+
 const filmListExtraData = [
   {
-    name: `Top rated`
+    name: `Top rated`,
+    sort: filmsSortedByRating
   },
   {
-    name: `Most commented`
+    name: `Most commented`,
+    sort: filmsSortedByComments
   }
 ];
 
-export {generateFilms, filmListExtraData};
+export {filmListExtraData, films, FILM_COUNT};
