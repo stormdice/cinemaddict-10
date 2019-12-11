@@ -1,18 +1,6 @@
 import {renderDataFromArrayOfObjects} from '../utils';
-import {filmDetailsDescriptionData} from '../data/film-details';
-import {FilmDetailsEmojiData} from '../data/film-details';
 import {filmDetailsControlsData} from '../data/film-details';
-
-/**
- * создаёт и возвращает разметку описания фильма в попапе - расширенном описании
- * @return {String}
- */
-const getFilmDetailsDescriptionTemplate = ({term, cell}) => (/* html */
-  `<tr class="film-details__row">
-    <td class="film-details__term">${term}</td>
-    <td class="film-details__cell">${cell}</td>
-  </tr>`
-);
+import {FilmDetailsEmojiData} from '../data/film-details';
 
 /**
  * создаёт и возвращает разметку кнопок в попапе - расширенном описании
@@ -38,7 +26,7 @@ const getFilmDetailsEmojiTemplate = ({id, value, imgSrc}) => (/* html */
  * создаёт и возвращает разметку попапа - расширенного описания
  * @return {String}
  */
-const getFilmDetailsTemplate = () => (/* html */
+const getFilmDetailsTemplate = ({filmInfo: {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors}, release: {date, country}, runtime, genres, description}) => (/* html */
   `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -47,30 +35,57 @@ const getFilmDetailsTemplate = () => (/* html */
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+            <img class="film-details__poster-img" src=${poster} alt="">
 
-            <p class="film-details__age">18+</p>
+            <p class="film-details__age">${ageRating}+</p>
           </div>
 
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
-                <h3 class="film-details__title">The Great Flamarion</h3>
-                <p class="film-details__title-original">Original: The Great Flamarion</p>
+                <h3 class="film-details__title">${title}</h3>
+                <p class="film-details__title-original">${alternativeTitle}</p>
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">8.9</p>
+                <p class="film-details__total-rating">${totalRating}</p>
               </div>
             </div>
 
             <table class="film-details__table">
-              ${renderDataFromArrayOfObjects(filmDetailsDescriptionData, getFilmDetailsDescriptionTemplate)}
+              <tr class="film-details__row">
+                <td class="film-details__term">Director</td>
+                <td class="film-details__cell">${director}</td>
+              </tr>
+              <tr class="film-details__row">
+                <td class="film-details__term">Writers</td>
+                <td class="film-details__cell">${writers.join(`, `)}</td>
+              </tr>
+              <tr class="film-details__row">
+                <td class="film-details__term">Actors</td>
+                <td class="film-details__cell">${actors.join(`, `)}</td>
+              </tr>
+              <tr class="film-details__row">
+                <td class="film-details__term">Release Date</td>
+                <td class="film-details__cell">${date}</td>
+              </tr>
+              <tr class="film-details__row">
+                <td class="film-details__term">Runtime</td>
+                <td class="film-details__cell">${runtime}</td>
+              </tr>
+              <tr class="film-details__row">
+                <td class="film-details__term">Country</td>
+                <td class="film-details__cell">${country}</td>
+              </tr>
+              <tr class="film-details__row">
+                <td class="film-details__term">Genres</td>
+                <td class="film-details__cell">
+                  ${genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `)}
+                </td>
+              </tr>
             </table>
 
-            <p class="film-details__film-description">
-              The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Great Flamarion (Erich von Stroheim) is an arrogant, friendless, and misogynous marksman who displays his trick gunshot act in the vaudeville circuit. His show features a beautiful assistant, Connie (Mary Beth Hughes) and her drunken husband Al (Dan Duryea), Flamarion's other assistant. Flamarion falls in love with Connie, the movie's femme fatale, and is soon manipulated by her into killing her no good husband during one of their acts.
-            </p>
+            <p class="film-details__film-description">${description}</p>
           </div>
         </div>
 
