@@ -2,6 +2,8 @@ import {getRandomBoolean} from '../utils';
 import {getRandomIndex} from '../utils';
 import {getRandomElementFromArray} from '../utils';
 
+const FILM_COUNT = 17;
+
 const titles = [
   `Avengers: Endgame`,
   `Star Wars: The Force Awakens`,
@@ -88,8 +90,6 @@ const generateFilm = () => {
     ]
   });
 };
-
-const FILM_COUNT = 17;
 
 /**
  * Возвращает массив фильмов

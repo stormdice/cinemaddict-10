@@ -1,4 +1,7 @@
-let numberOfFilmsWatched = Math.floor(Math.random() * 21);
+const FilmsRange = {
+  MIN: 10,
+  MAX: 21
+};
 
 /**
  * Возращает звание пользователя в зависимости от числа просмотренных фильмов
@@ -6,21 +9,22 @@ let numberOfFilmsWatched = Math.floor(Math.random() * 21);
  * @return {String}
  */
 const checkUserRank = (count) => {
-  if (count > 0 && count <= 10) {
+  if (count <= FilmsRange.MIN) {
     return `Novice`;
   }
 
-  if (count > 10 && count <= 21) {
+  if (count <= FilmsRange.MAX) {
     return `Fan`;
   }
 
-  if (count > 21) {
+  if (count > FilmsRange.MAX) {
     return `Movie Buff`;
   }
 
   return ``;
 };
 
+const numberOfFilmsWatched = Math.floor(Math.random() * 30);
 const userRank = checkUserRank(numberOfFilmsWatched);
 
 /**

@@ -13,18 +13,18 @@ import {films} from './data/film-card';
 
 import {getFilmCardTemplate} from './components/film-card';
 
+const SHOWING_FILMS_ON_START = 5;
+const SHOWING_FILMS_BY_BUTTON = 5;
+
 const mainElement = document.querySelector(`.main`);
 const headerElement = document.querySelector(`.header`);
 const footerElement = document.querySelector(`.footer`);
-
-const SHOWING_FILMS_ON_START = 5;
-const SHOWING_FILMS_BY_BUTTON = 5;
 
 render(headerElement, getProfileTemplate());
 render(mainElement, getMenuTemplate(menuLinksData));
 render(mainElement, getSortTemplate(sortLinksData));
 render(mainElement, getFilmsSectionTemplate(filmListExtraData));
-render(footerElement, getFilmDetailsTemplate(filmDetails), `afterend`);
+// render(footerElement, getFilmDetailsTemplate(filmDetails), `afterend`);
 
 const loadMoreButton = mainElement.querySelector(`.films-list__show-more`);
 const filmList = mainElement.querySelector(`.films-list__container`);
