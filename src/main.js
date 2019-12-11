@@ -24,7 +24,7 @@ render(headerElement, getProfileTemplate());
 render(mainElement, getMenuTemplate(menuLinksData));
 render(mainElement, getSortTemplate(sortLinksData));
 render(mainElement, getFilmsSectionTemplate(filmListExtraData));
-// render(footerElement, getFilmDetailsTemplate(filmDetails), `afterend`);
+render(footerElement, getFilmDetailsTemplate(filmDetails), `afterend`);
 
 const loadMoreButton = mainElement.querySelector(`.films-list__show-more`);
 const filmList = mainElement.querySelector(`.films-list__container`);
