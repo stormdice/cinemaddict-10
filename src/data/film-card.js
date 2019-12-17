@@ -4,7 +4,7 @@ import {getRandomElementFromArray} from '../utils';
 
 const FILM_COUNT = 17;
 
-const titles = [
+const TITLES = [
   `Avengers: Endgame`,
   `Star Wars: The Force Awakens`,
   `Avengers: Infinity War`,
@@ -22,7 +22,7 @@ const titles = [
   `Incredibles 2`
 ];
 
-const genres = [
+const GENRES = [
   `Drama`,
   `Mystery`,
   `Comedy`,
@@ -31,7 +31,7 @@ const genres = [
   `Cartoon`
 ];
 
-const imgPaths = [
+const IMG_PATHS = [
   `./images/posters/made-for-each-other.png`,
   `./images/posters/popeye-meets-sinbad.png`,
   `./images/posters/sagebrush-trail.jpg`,
@@ -41,7 +41,7 @@ const imgPaths = [
   `./images/posters/the-man-with-the-golden-arm.jpg`
 ];
 
-const descriptions = [
+const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`
@@ -52,14 +52,14 @@ const descriptions = [
  * @return {Object}
  */
 const generateFilm = () => {
-  const title = getRandomElementFromArray(titles);
+  const title = getRandomElementFromArray(TITLES);
   const rating = (Math.random() * 10).toFixed(1);
   const year = Math.floor(2000 + Math.random() * 10);
   const durationHours = Math.floor(Math.random() * 3);
   const durationMinutes = Math.floor(Math.random() * 60);
-  const genre = getRandomElementFromArray(genres);
-  const imgSrc = getRandomElementFromArray(imgPaths);
-  const description = descriptions.slice(0, getRandomIndex(descriptions)).join(` `);
+  const genre = getRandomElementFromArray(GENRES);
+  const imgSrc = getRandomElementFromArray(IMG_PATHS);
+  const description = DESCRIPTIONS.slice(0, getRandomIndex(DESCRIPTIONS)).join(` `);
   const commentsCount = Math.floor(Math.random() * 1000);
 
   return ({
@@ -115,11 +115,11 @@ const filmsSortedByComments = sortedByComments.slice(0, 2);
 
 const filmListExtraData = [
   {
-    name: `Top rated`,
+    title: `Top rated`,
     sort: filmsSortedByRating
   },
   {
-    name: `Most commented`,
+    title: `Most commented`,
     sort: filmsSortedByComments
   }
 ];

@@ -1,34 +1,28 @@
-import {renderDataFromArrayOfObjects} from '../utils';
+import {createElement, renderDataFromArrayOfObjects} from '../utils';
 
 /**
  * создаёт и возвращает разметку скрытой кнопки под изображением карточки
- * @param {String} name - имя класса
- * @param {Boolean} active - активная ли ссылка
- * @param {Boolean} desc - имя кнопки
+ * @param {String} control - данные из объекта кнопок управления
  * @return {String}
  */
-const getFilmCardControlTemplate = ({name, active, desc}) => (/* html */
-  `<button class="film-card__controls-item button ${active ? `film-card__controls-item--active` : ``} film-card__controls-item--${name}">${desc}</button>`
-);
+const getFilmCardControlTemplate = (control) => {
+  const {name, active, desc} = control;
+
+  return (/* html */
+    `<button class="film-card__controls-item button ${active ? `film-card__controls-item--active` : ``} film-card__controls-item--${name}">${desc}</button>`
+  );
+};
 
 /**
  * создаёт и возвращает разметку карточки фильма из массива объектов.
- * Деструктурируем объект и получаем следующие ключи:
- * @property {String} title - название
- * @property {String} rating - рейтинг
- * @property {String} year - год создания
- * @property {String} genre - жанр
- * @property {String} imgSrc - относительный путь до изображения
- * @property {String} description - описание фильма
- * @property {String} commentsCount - количество коментариев
- * @property {String} controls - кнопки для добавления в избранное, лист просмотренных фильмов и т. д.
- * @property {Boolean} addToWatchlist - добавлен ли в лист просмотров
- * @property {Boolean} markAsWatched - отмечен ли как просмотренный
- * @property {Boolean} favorite - добавить ли в избранное
+ * @param {Object} film - данные из объекта фильма
  * @return {String}
  */
-const getFilmCardTemplate = ({title, rating, year, duration, genre, imgSrc, description, commentsCount, controls}) => (/* html */
-  `<article class="film-card">
+const getFilmCardTemplate = (film) => {
+  const {title, rating, year, duration, genre, imgSrc, description, commentsCount, controls} = film;
+
+  return (/* html */
+    `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
@@ -43,6 +37,28 @@ const getFilmCardTemplate = ({title, rating, year, duration, genre, imgSrc, desc
       ${renderDataFromArrayOfObjects(controls, getFilmCardControlTemplate)}
     </form>
   </article>`
-);
+  );
+};
 
-export {getFilmCardTemplate};
+export default class FilmCard {
+  constructor(films) {
+    this._films = films;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getFilmCardTemplate(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

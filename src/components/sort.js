@@ -1,23 +1,52 @@
+import {createElement} from '../utils.js';
+
 /**
- * создаёт и возвращает разметку ссылки сортировки из массива объектов ссылок.
- * Деструктурируем объект и получаем следующие ключи:
- * @param {String} name - название
- * @param {Boolean} active - активная ли ссылка
+ * создаёт и возвращает разметку ссылки сортировки.
+ * @param {Object} link - данные из объекта ссылки сортировки
  * @return {String}
  */
-const getSortLinkTemplate = ({name, active}) => (/* html */
-  `<li><a href="#" class="sort__button ${active ? `sort__button--active` : ``}">${name}</a></li>`
-);
+const getSortLinkTemplate = (link) => {
+  const {name, active} = link;
+
+  return (/* html */
+    `<li><a href="#" class="sort__button ${active ? `sort__button--active` : ``}">${name}</a></li>`
+  );
+};
 
 /**
  * создаёт и возвращает разметку сортировки
- * @param {Object} data - данные из массива ссылок сортировки
+ * @param {Object} links - данные из массива ссылок сортировки
  * @return {String}
  */
-const getSortTemplate = (data) => (/* html */
-  `<ul class="sort">
-    ${data.map(getSortLinkTemplate).join(``)}
-  </ul>`
-);
+const getSortTemplate = (links) => {
+  const sortLinksTemplate = links.map((link) => getSortLinkTemplate(link)).join(`\n`);
 
-export {getSortTemplate};
+  return (
+    `<ul class="sort">
+      ${sortLinksTemplate}
+    </ul>`
+  );
+};
+
+export default class Sort {
+  constructor(sortLinks) {
+    this._sortLinks = sortLinks;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getSortTemplate(this._sortLinks);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

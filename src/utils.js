@@ -1,11 +1,6 @@
-/**
- * Вставляет разметку
- * @param {DOMNode} container - элемент, относительно которого будет вставка
- * @param {String} template - шаблон разметки
- * @param {DOMString} place - определяет позицию добавляемого элемента относительно элемента, вызвавшего метод
- */
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
 };
 
 /**
@@ -14,14 +9,15 @@ const render = (container, template, place = `beforeend`) => {
  * @param {String} template - шаблон разметки
  * @return {String}
  */
-const renderDataFromArrayOfObjects = (array, template) => array.map(template).join(``);
+export const renderDataFromArrayOfObjects = (array, template) =>
+  array.map(template).join(``);
 
 /**
  * Возращает случайный индекс массива
  * @param {Array} array - данные из массива
  * @return {Number}
  */
-const getRandomIndex = (array) => {
+export const getRandomIndex = (array) => {
   return Math.floor(Math.random() * array.length);
 };
 
@@ -29,7 +25,7 @@ const getRandomIndex = (array) => {
  * Возращает случайное булево значение
  * @return {Boolean}
  */
-const getRandomBoolean = () => {
+export const getRandomBoolean = () => {
   return Math.random() >= 0.5;
 };
 
@@ -38,11 +34,27 @@ const getRandomBoolean = () => {
  * @param {Array} array - данные из массива
  * @return {String}
  */
-const getRandomElementFromArray = (array) => {
+export const getRandomElementFromArray = (array) => {
   const randomIdx = getRandomIndex(array);
   const randomElement = array.find((title, idx) => idx === randomIdx);
 
   return randomElement;
 };
 
-export {render, renderDataFromArrayOfObjects, getRandomIndex, getRandomElementFromArray, getRandomBoolean};
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};

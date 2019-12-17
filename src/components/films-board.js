@@ -1,20 +1,20 @@
 import {createElement} from '../utils.js';
 
 /**
- * создаёт и возвращает разметку кнопки 'Показать больше'
+ * создаёт и возвращает разметку для раздела с фильмами
  * @return {String}
  */
-const getButtonShowMoreTemplate = () => (/* html */
-  `<button class="films-list__show-more">Show more</button>`
+const getFilmsBoardTemplate = () => (/* html */
+  `<section class="films"></section>`
 );
 
-export default class ShowMoreButton {
+export default class FilmBoard {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return getButtonShowMoreTemplate();
+    return getFilmsBoardTemplate();
   }
 
   getElement() {

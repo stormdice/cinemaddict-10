@@ -1,32 +1,52 @@
-import {renderDataFromArrayOfObjects} from '../utils';
+import {createElement} from "../utils";
 
 /**
- * Создаёт и возвращает разметку ссылки навигации из массива объектов ссылок.
- * Деструктурируем объект и получаем следующие ключи:
- * @param {String} name - название
- * @param {String} path - адрес ссылки
- * @param {Boolean} active - активная ли ссылка
- * @param {Boolean} additional - присутствует ли дополнительный класс
- * @param {Boolean} desription - присутствует ли дополнительная разметка для показа количества фильмов
- * @param {Number} desriptionItemCount - количество добавленных фильмов
+ * Создаёт и возвращает разметку ссылки навигации.
+ * @param {Object} link - данные из объекта ссылки навигации
  * @return {String}
  */
-const getMenuLinkTemplate = ({name, path, active, additional, desription, desriptionItemCount}) => (/* html */
-  `<a href=${path} class="main-navigation__item ${active ? `main-navigation__item--active` : ``} ${additional ? `main-navigation__item--additional` : ``}">
-    ${name}
-    ${desription ? `<span class="main-navigation__item-count">${desriptionItemCount}</span>` : ``}
-  </a>`
-);
+const getMenuLinkTemplate = (link) => {
+  const {name, path, active, additional, desription, desriptionItemCount} = link;
+
+  return (/* html */
+    `<a href=${path} class="main-navigation__item ${active ? `main-navigation__item--active` : ``}${additional ? `main-navigation__item--additional` : ``}">${name}${desription ? `<span class="main-navigation__item-count">${desriptionItemCount}</span>` : ``}</a>`
+  );
+};
 
 /**
  * создаёт и возвращает разметку навигации
- * @param {Object} data - данные из массива ссылок навигации
+ * @param {Object} links - данные из массива ссылок навигации
  * @return {String}
  */
-const getMenuTemplate = (data) => (/* html */
-  `<nav class="main-navigation">
-    ${renderDataFromArrayOfObjects(data, getMenuLinkTemplate)}
-  </nav>`
-);
+const getMenuTemplate = (links) => {
+  const menuLinksTemplate = links.map((link) => getMenuLinkTemplate(link)).join(`\n`);
 
-export {getMenuTemplate};
+  return (/* html */
+    `<nav class="main-navigation">
+      ${menuLinksTemplate}
+    </nav>`
+  );
+};
+
+export default class Menu {
+  constructor(menuLinks) {
+    this._menuLinks = menuLinks;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getMenuTemplate(this._menuLinks);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
