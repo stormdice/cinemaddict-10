@@ -21,7 +21,7 @@ const getSortLinkTemplate = (link) => {
 const getSortTemplate = (links) => {
   const sortLinksTemplate = links.map((link) => getSortLinkTemplate(link)).join(`\n`);
 
-  return (
+  return (/* html */
     `<ul class="sort">
       ${sortLinksTemplate}
     </ul>`
