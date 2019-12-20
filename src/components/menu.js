@@ -9,7 +9,7 @@ const getMenuLinkTemplate = (link) => {
   const {name, path, active, additional, desription, desriptionItemCount} = link;
 
   return (/* html */
-    `<a href=${path} class="main-navigation__item ${active ? `main-navigation__item--active` : ``}${additional ? `main-navigation__item--additional` : ``}">${name}${desription ? `<span class="main-navigation__item-count">${desriptionItemCount}</span>` : ``}</a>`
+    `<a href=${path} class="main-navigation__item ${active ? `main-navigation__item--active` : ``}${additional ? `main-navigation__item--additional` : ``}">${name} ${desription ? `<span class="main-navigation__item-count">${desriptionItemCount}</span>` : ``}</a>`
   );
 };
 

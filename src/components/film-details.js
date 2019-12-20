@@ -1,7 +1,5 @@
-import {renderDataFromArrayOfObjects} from '../utils';
-import {filmDetailsControlsData} from '../data/film-details';
+import {createElement, renderDataFromArrayOfObjects} from '../utils';
 import {FilmDetailsEmojiData} from '../data/film-details';
-import {createElement} from "../utils";
 
 /**
  * создаёт и возвращает разметку кнопок в попапе - расширенном описании
@@ -34,17 +32,37 @@ const getFilmDetailsEmojiTemplate = (emoji) => {
 
 /**
  * создаёт и возвращает разметку попапа - расширенного описания
- * @param {Object} filmDetails - данные из объекта детального описания фильма
+ * @param {Object} film - данные из объекта детального описания фильма
  * @return {String}
  */
-const getFilmDetailsTemplate = (filmDetails) => {
+const getFilmDetailsTemplate = (film) => {
   const {
-    filmInfo: {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors},
-    release: {date, country},
+    filmInfo: {
+      title,
+      originalTitle,
+      totalRating,
+      poster,
+      ageRating,
+      director,
+      writers,
+      actors
+    },
+    release: {
+      date,
+      country
+    },
     runtime,
     genres,
-    description
-  } = filmDetails;
+    description,
+    controls
+  } = film;
+
+  const releaseDate = `1 december ${date}`;
+  const DetailedDescription = description.join(` `);
+
+  const limitDescription = (filmDescription) => {
+    return (filmDescription.length > 140) ? `${filmDescription.slice(0, 139)}…` : filmDescription;
+  };
 
   return (/* html */
     `<section class="film-details">
@@ -64,7 +82,7 @@ const getFilmDetailsTemplate = (filmDetails) => {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${title}</h3>
-                  <p class="film-details__title-original">${alternativeTitle}</p>
+                  <p class="film-details__title-original">${originalTitle}</p>
                 </div>
 
                 <div class="film-details__rating">
@@ -79,15 +97,15 @@ const getFilmDetailsTemplate = (filmDetails) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${writers.join(`, `)}</td>
+                  <td class="film-details__cell">${writers}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${actors.join(`, `)}</td>
+                  <td class="film-details__cell">${actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${date}</td>
+                  <td class="film-details__cell">${releaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -100,17 +118,17 @@ const getFilmDetailsTemplate = (filmDetails) => {
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
                   <td class="film-details__cell">
-                    ${genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `)}
+                    ${genres.slice(0, 3).map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `)}
                   </td>
                 </tr>
               </table>
 
-              <p class="film-details__film-description">${description}</p>
+              <p class="film-details__film-description">${limitDescription(DetailedDescription)}</p>
             </div>
           </div>
 
           <section class="film-details__controls">
-            ${renderDataFromArrayOfObjects(filmDetailsControlsData, getFilmDetailsControlsTemplate)}
+
           </section>
         </div>
 
@@ -130,7 +148,7 @@ const getFilmDetailsTemplate = (filmDetails) => {
               </label>
 
               <div class="film-details__emoji-list">
-                ${renderDataFromArrayOfObjects(FilmDetailsEmojiData, getFilmDetailsEmojiTemplate)}
+
               </div>
             </div>
           </section>
@@ -139,6 +157,9 @@ const getFilmDetailsTemplate = (filmDetails) => {
     </section>`
   );
 };
+
+// ${renderDataFromArrayOfObjects(controls, getFilmDetailsControlsTemplate)}
+// ${renderDataFromArrayOfObjects(FilmDetailsEmojiData, getFilmDetailsEmojiTemplate)}
 
 export default class FilmDetails {
   constructor(filmDetails) {

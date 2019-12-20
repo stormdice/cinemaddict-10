@@ -2,7 +2,7 @@ import {getRandomBoolean} from '../utils';
 import {getRandomIndex} from '../utils';
 import {getRandomElementFromArray} from '../utils';
 
-const FILM_COUNT = 17;
+const FILM_COUNT = 13;
 
 const TITLES = [
   `Avengers: Endgame`,
@@ -31,7 +31,7 @@ const GENRES = [
   `Cartoon`
 ];
 
-const IMG_PATHS = [
+const POSTERS = [
   `./images/posters/made-for-each-other.png`,
   `./images/posters/popeye-meets-sinbad.png`,
   `./images/posters/sagebrush-trail.jpg`,
@@ -43,8 +43,49 @@ const IMG_PATHS = [
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-  `Fusce tristique felis at fermentum pharetra.`
+  `Ut enim ad minim veniam, quis nostrud exercitation.`,
+  `Duis aute irure dolor in reprehenderit in voluptate.`,
+  `Excepteur sint occaecat cupidatat non proident.`,
+  `Vitae congue eu consequat ac.`,
+  `Et tortor consequat id porta nibh venenatis.`,
+  `Facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum.`,
+  `Odio morbi quis commodo odio aenean sed adipiscing diam.`,
+  `Sed tempus urna et pharetra pharetra massa.`,
+  `Quam vulputate dignissim suspendisse in est.`,
+  `Faucibus turpis in eu mi bibendum neque egestas.`,
+  `Luctus venenatis lectus magna fringilla urna.`,
+  `Condimentum mattis pellentesque id nibh tortor id aliquet lectus.`
+];
+
+const RARS = [0, 6, 12, 16, 18];
+
+const WRITERS = [
+  `Quentin Tarantino`,
+  `Christopher Nolan`,
+  `Joel Coen`,
+  `Michael Mann`,
+  `Frank Darabont`,
+  `Sergio Leone`
+];
+
+const ACTORS = [
+  `Morgan Freeman`,
+  `Leonardo DiCaprio`,
+  `Brad Pitt`,
+  `Michael Caine`,
+  `Robert De Niro`,
+  `Matt Damon`,
+  `Tom Hanks`,
+  `Christian Bale`,
+  `Gary Oldman`,
+];
+
+const DIRECTORS = [
+  `Christopher Nolan`,
+  `Steven Spielberg`,
+  `Quentin Tarantino`,
+  `Martin Scorsese`,
+  `Stanley Kubrick`,
 ];
 
 /**
@@ -53,24 +94,40 @@ const DESCRIPTIONS = [
  */
 const generateFilm = () => {
   const title = getRandomElementFromArray(TITLES);
-  const rating = (Math.random() * 10).toFixed(1);
-  const year = Math.floor(2000 + Math.random() * 10);
-  const durationHours = Math.floor(Math.random() * 3);
-  const durationMinutes = Math.floor(Math.random() * 60);
-  const genre = getRandomElementFromArray(GENRES);
-  const imgSrc = getRandomElementFromArray(IMG_PATHS);
-  const description = DESCRIPTIONS.slice(0, getRandomIndex(DESCRIPTIONS)).join(` `);
-  const commentsCount = Math.floor(Math.random() * 1000);
+  const originalTitle = `Original: ${title}`;
+  const totalRating = (Math.random() * 10).toFixed(1);
+  const poster = getRandomElementFromArray(POSTERS);
+  const ageRating = getRandomElementFromArray(RARS);
+  const director = getRandomElementFromArray(DIRECTORS);
+  const writers = WRITERS.slice(0, getRandomIndex(WRITERS)).join(`, `);
+  const actors = ACTORS.slice(0, getRandomIndex(ACTORS)).join(` `);
+  const date = Math.floor(2000 + Math.random() * 10);
+  const country = `USA`;
+  const hours = Math.floor(Math.random() * 3);
+  const minutes = Math.floor(Math.random() * 60);
+  const genres = GENRES;
+  const description = DESCRIPTIONS.slice(0, getRandomIndex(DESCRIPTIONS));
+  const comments = Math.floor(Math.random() * 1000);
 
   return ({
-    title,
-    rating,
-    year,
-    duration: `${durationHours}h ${durationMinutes}m`,
-    genre,
-    imgSrc,
+    filmInfo: {
+      title,
+      originalTitle,
+      totalRating,
+      poster,
+      ageRating,
+      director,
+      writers,
+      actors,
+    },
+    release: {
+      date,
+      country
+    },
+    runtime: `${hours}h ${minutes}m`,
+    genres,
     description,
-    commentsCount,
+    comments,
     controls: [
       {
         name: `add-to-watchlist`,
