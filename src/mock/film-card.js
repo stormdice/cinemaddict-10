@@ -1,9 +1,3 @@
-import {getRandomBoolean} from '../utils';
-import {getRandomIndex} from '../utils';
-import {getRandomElementFromArray} from '../utils';
-
-const FILM_COUNT = 13;
-
 const TITLES = [
   `Avengers: Endgame`,
   `Star Wars: The Force Awakens`,
@@ -89,6 +83,35 @@ const DIRECTORS = [
 ];
 
 /**
+ * Возращает случайный индекс массива
+ * @param {Array} array - данные из массива
+ * @return {Number}
+ */
+const getRandomIndex = (array) => {
+  return Math.floor(Math.random() * array.length);
+};
+
+/**
+ * Возращает случайное булево значение
+ * @return {Boolean}
+ */
+const getRandomBoolean = () => {
+  return Math.random() >= 0.5;
+};
+
+/**
+ * Возращает случайный элемент из массива
+ * @param {Array} array - данные из массива
+ * @return {String}
+ */
+const getRandomElementFromArray = (array) => {
+  const randomIdx = getRandomIndex(array);
+  const randomElement = array.find((title, idx) => idx === randomIdx);
+
+  return randomElement;
+};
+
+/**
  * Возвращает фильм со случайными данными
  * @return {Object}
  */
@@ -157,28 +180,4 @@ const generateFilms = (count) => {
   return new Array(count).fill(``).map(generateFilm);
 };
 
-const films = generateFilms(FILM_COUNT);
-
-const sortedByRating = [...films].sort((a, b) => {
-  return b.rating - a.rating;
-});
-
-const sortedByComments = [...films].sort((a, b) => {
-  return b.commentsCount - a.commentsCount;
-});
-
-const filmsSortedByRating = sortedByRating.slice(0, 2);
-const filmsSortedByComments = sortedByComments.slice(0, 2);
-
-const filmListExtraData = [
-  {
-    title: `Top rated`,
-    sort: filmsSortedByRating
-  },
-  {
-    title: `Most commented`,
-    sort: filmsSortedByComments
-  }
-];
-
-export {filmListExtraData, films, FILM_COUNT};
+export {generateFilms};
