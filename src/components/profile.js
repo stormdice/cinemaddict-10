@@ -1,9 +1,5 @@
 import {createElement} from '../utils.js';
-
-const FilmsRange = {
-  MIN: 10,
-  MAX: 21
-};
+import {UserRating} from '../const';
 
 /**
  * Возращает звание пользователя в зависимости от числа просмотренных фильмов
@@ -11,15 +7,15 @@ const FilmsRange = {
  * @return {String}
  */
 const checkUserRank = (count) => {
-  if (count <= FilmsRange.MIN) {
+  if (count <= UserRating.MIN) {
     return `Novice`;
   }
 
-  if (count <= FilmsRange.MAX) {
+  if (count <= UserRating.MAX) {
     return `Fan`;
   }
 
-  if (count > FilmsRange.MAX) {
+  if (count > UserRating.MAX) {
     return `Movie Buff`;
   }
 

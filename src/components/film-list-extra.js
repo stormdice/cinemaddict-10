@@ -8,17 +8,12 @@ import {createElement} from "../utils";
  */
 const getFilmListExtraTemplate = (listExtra) => {
   const {title, sort} = listExtra;
-
-  const renderFilms = () => {
-    return sort.map((list) => new FilmCardComponent(list).getTemplate()).join(`\n`);
-  };
+  const films = sort.map((list) => new FilmCardComponent(list).getTemplate()).join(`\n`);
 
   return (/* html */
     `<section class="films-list--extra">
       <h2 class="films-list__title">${title}</h2>
-      <div class="films-list__container">
-        ${renderFilms()}
-      </div>
+      <div class="films-list__container">${films}</div>
     </section>`
   );
 };

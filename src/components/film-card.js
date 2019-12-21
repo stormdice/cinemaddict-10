@@ -1,4 +1,4 @@
-import {createElement, renderDataFromArrayOfObjects} from '../utils';
+import {createElement} from '../utils';
 
 /**
  * создаёт и возвращает разметку скрытой кнопки под изображением карточки
@@ -37,6 +37,7 @@ const getFilmCardTemplate = (film) => {
 
   const genre = genres.slice(0, 1);
   const miniDescription = description.slice(0, 2).join(` `);
+  const controlsButton = controls.map((control) => getFilmCardControlTemplate(control)).join(`\n`);
 
   return (/* html */
     `<article class="film-card">
@@ -51,7 +52,7 @@ const getFilmCardTemplate = (film) => {
     <p class="film-card__description">${miniDescription}</p>
     <a class="film-card__comments">${comments} comments</a>
     <form class="film-card__controls">
-      ${renderDataFromArrayOfObjects(controls, getFilmCardControlTemplate)}
+      ${controlsButton}
     </form>
   </article>`
   );

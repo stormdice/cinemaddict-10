@@ -1,17 +1,17 @@
 import ProfileComponent from './components/profile';
-import {menuLinksData} from './data/menu-links';
 import MenuComponent from './components/menu';
-import {sortLinksData} from './data/sort-links';
 import SortComponent from './components/sort';
 import FilmsBoardComponent from './components/films-board';
 import FilmsListComponent from './components/films-list';
 import ShowMoreComponent from './components/show-more';
 import FilmListExtraComponent from './components/film-list-extra';
-import {films, filmListExtraData, FILM_COUNT} from './data/film-card';
 import FilmDetailsComponent from './components/film-details';
-import {render, RenderPosition} from './utils';
 import FilmCardComponent from './components/film-card';
 import NoFilmsComponent from './components/no-films';
+import {menuLinksData} from './data/menu-links';
+import {sortLinksData} from './data/sort-links';
+import {films, filmListExtraData, FILM_COUNT} from './data/film-card';
+import {render, RenderPosition} from './utils';
 
 const SHOWING_FILMS_ON_START = 5;
 const SHOWING_FILMS_BY_BUTTON = 5;

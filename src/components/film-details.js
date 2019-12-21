@@ -1,12 +1,12 @@
-import {createElement, renderDataFromArrayOfObjects} from '../utils';
-import {FilmDetailsEmojiData} from '../data/film-details';
+import {createElement} from '../utils';
+import {DESCRIPTION_TEXT_LIMIT, EMOJIS} from '../const';
 
 /**
  * создаёт и возвращает разметку кнопок в попапе - расширенном описании
  * @param {Object} controls - данные из объекта кнопок управления
  * @return {String}
  */
-const getFilmDetailsControlsTemplate = (controls) => {
+const getControlsTemplate = (controls) => {
   const {name, desc} = controls;
 
   return (/* html */
@@ -20,7 +20,7 @@ const getFilmDetailsControlsTemplate = (controls) => {
  * @param {Object} emoji - данные из объекта эмоджи
  * @return {String}
  */
-const getFilmDetailsEmojiTemplate = (emoji) => {
+const getEmojiTemplate = (emoji) => {
   const {id, value, imgSrc} = emoji;
   return (/* html */
     `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id=${id} value=${value}>
@@ -57,12 +57,21 @@ const getFilmDetailsTemplate = (film) => {
     controls
   } = film;
 
+  /**
+   * Сокращает длину строки
+   * @param {String} filmDescription
+   * @return {String}
+   */
+  const limitDescription = (filmDescription) => {
+    return (filmDescription.length > DESCRIPTION_TEXT_LIMIT) ? `${filmDescription.slice(0, DESCRIPTION_TEXT_LIMIT)}…` : filmDescription;
+  };
+
   const releaseDate = `1 december ${date}`;
   const DetailedDescription = description.join(` `);
-
-  const limitDescription = (filmDescription) => {
-    return (filmDescription.length > 140) ? `${filmDescription.slice(0, 139)}…` : filmDescription;
-  };
+  const filmGenres = genres.slice(0, 3).map((genre) =>`<span class="film-details__genre">${genre}</span>`).join(` `);
+  const filmDescription = limitDescription(DetailedDescription);
+  const controlsButton = controls.map((control) => getControlsTemplate(control)).join(`\n`);
+  const emojis = EMOJIS.map((emoji) => getEmojiTemplate(emoji)).join(`\n`);
 
   return (/* html */
     `<section class="film-details">
@@ -117,19 +126,15 @@ const getFilmDetailsTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">
-                    ${genres.slice(0, 3).map((genre) => `<span class="film-details__genre">${genre}</span>`).join(` `)}
-                  </td>
+                  <td class="film-details__cell">${filmGenres}</td>
                 </tr>
               </table>
 
-              <p class="film-details__film-description">${limitDescription(DetailedDescription)}</p>
+              <p class="film-details__film-description">${filmDescription}</p>
             </div>
           </div>
 
-          <section class="film-details__controls">
-
-          </section>
+          <section class="film-details__controls">${controlsButton}</section>
         </div>
 
         <div class="form-details__bottom-container">
@@ -147,9 +152,7 @@ const getFilmDetailsTemplate = (film) => {
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">Great movie!</textarea>
               </label>
 
-              <div class="film-details__emoji-list">
-
-              </div>
+              <div class="film-details__emoji-list">${emojis}</div>
             </div>
           </section>
         </div>
@@ -157,9 +160,6 @@ const getFilmDetailsTemplate = (film) => {
     </section>`
   );
 };
-
-// ${renderDataFromArrayOfObjects(controls, getFilmDetailsControlsTemplate)}
-// ${renderDataFromArrayOfObjects(FilmDetailsEmojiData, getFilmDetailsEmojiTemplate)}
 
 export default class FilmDetails {
   constructor(filmDetails) {

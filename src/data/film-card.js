@@ -100,7 +100,7 @@ const generateFilm = () => {
   const ageRating = getRandomElementFromArray(RARS);
   const director = getRandomElementFromArray(DIRECTORS);
   const writers = WRITERS.slice(0, getRandomIndex(WRITERS)).join(`, `);
-  const actors = ACTORS.slice(0, getRandomIndex(ACTORS)).join(` `);
+  const actors = ACTORS.slice(0, getRandomIndex(ACTORS)).join(`, `);
   const date = Math.floor(2000 + Math.random() * 10);
   const country = `USA`;
   const hours = Math.floor(Math.random() * 3);

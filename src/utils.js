@@ -4,15 +4,6 @@ export const RenderPosition = {
 };
 
 /**
- * Возращает разметку из массива объектов
- * @param {Array} array - данные из массива
- * @param {String} template - шаблон разметки
- * @return {String}
- */
-export const renderDataFromArrayOfObjects = (array, template) =>
-  array.map(template).join(``);
-
-/**
  * Возращает случайный индекс массива
  * @param {Array} array - данные из массива
  * @return {Number}
