@@ -45,7 +45,7 @@ const renderFilms = (filmListContainer, film) => {
 
   filmComponent.getElement().addEventListener(`click`, (evt) => {
     if ((evt.target === poster) || (evt.target === title) || (evt.target === comments)) {
-      render(footerElement, filmDetailsComponent.getElement(), RenderPosition.BEFOREEND);
+      render(footerElement, filmDetailsComponent, RenderPosition.BEFOREEND);
       document.addEventListener(`keydown`, onEscKeyDown);
     }
   });
