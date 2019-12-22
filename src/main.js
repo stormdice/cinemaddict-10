@@ -73,8 +73,6 @@ const renderFilmsBoard = (filmsBoard, films) => {
       const showMoreButton = new ShowMoreComponent();
       render(filmList.getElement(), showMoreButton.getElement(), RenderPosition.BEFOREEND);
 
-      // filmListExtraData.forEach((list) => render(filmsBoard.getElement(), new FilmListExtraComponent(list).getElement(), RenderPosition.BEFOREEND));
-
       showMoreButton.getElement().addEventListener(`click`, (evt) => {
         evt.preventDefault();
         const prevFilmsCount = showingFilmsCount;

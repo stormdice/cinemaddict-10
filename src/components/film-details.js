@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from "./abstract-component";
 import {DESCRIPTION_TEXT_LIMIT, EMOJIS} from '../const';
 
 /**
@@ -161,25 +161,14 @@ const getFilmDetailsTemplate = (film) => {
   );
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(filmDetails) {
+    super();
+
     this._filmDetails = filmDetails;
-    this._element = null;
   }
 
   getTemplate() {
     return getFilmDetailsTemplate(this._filmDetails);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

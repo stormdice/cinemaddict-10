@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component";
 
 /**
  * создаёт и возвращает разметку ссылки сортировки.
@@ -28,25 +28,14 @@ const getSortTemplate = (links) => {
   );
 };
 
-export default class Sort {
+export default class Sort extends AbstractComponent {
   constructor(sortLinks) {
+    super();
+
     this._sortLinks = sortLinks;
-    this._element = null;
   }
 
   getTemplate() {
     return getSortTemplate(this._sortLinks);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

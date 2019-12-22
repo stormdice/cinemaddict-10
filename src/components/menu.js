@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract-component";
 
 /**
  * Создаёт и возвращает разметку ссылки навигации.
@@ -28,25 +28,14 @@ const getMenuTemplate = (links) => {
   );
 };
 
-export default class Menu {
+export default class Menu extends AbstractComponent {
   constructor(menuLinks) {
+    super();
+
     this._menuLinks = menuLinks;
-    this._element = null;
   }
 
   getTemplate() {
     return getMenuTemplate(this._menuLinks);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

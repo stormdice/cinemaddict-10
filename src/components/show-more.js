@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component";
 
 /**
  * создаёт и возвращает разметку кнопки 'Показать больше'
@@ -8,24 +8,8 @@ const getButtonShowMoreTemplate = () => (/* html */
   `<button class="films-list__show-more">Show more</button>`
 );
 
-export default class ShowMoreButton {
-  constructor() {
-    this._element = null;
-  }
-
+export default class ShowMoreButton extends AbstractComponent {
   getTemplate() {
     return getButtonShowMoreTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

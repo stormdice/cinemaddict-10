@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component";
 import {UserRating} from '../const';
 
 /**
@@ -36,24 +36,8 @@ const getProfileTemplate = () => (/* html */
   </section>`
 );
 
-export default class Profile {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Profile extends AbstractComponent {
   getTemplate() {
     return getProfileTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

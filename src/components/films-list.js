@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component";
 
 /**
  * Создаёт и возвращает разметку для раздела с фильмами
@@ -16,25 +16,14 @@ const getFilmsListTemplate = (filmList) => {
   );
 };
 
-export default class FilmList {
+export default class FilmList extends AbstractComponent {
   constructor(filmLists) {
+    super();
+
     this._filmLists = filmLists;
-    this._element = null;
   }
 
   getTemplate() {
     return getFilmsListTemplate(this._filmLists);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

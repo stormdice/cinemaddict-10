@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component";
 
 /**
  * создаёт и возвращает разметку для раздела с фильмами
@@ -8,24 +8,8 @@ const getFilmsBoardTemplate = () => (/* html */
   `<section class="films"></section>`
 );
 
-export default class FilmBoard {
-  constructor() {
-    this._element = null;
-  }
-
+export default class FilmBoard extends AbstractComponent {
   getTemplate() {
     return getFilmsBoardTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
