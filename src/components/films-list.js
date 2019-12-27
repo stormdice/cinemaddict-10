@@ -1,29 +1,27 @@
 import AbstractComponent from "./abstract-component";
 
-/**
- * Создаёт и возвращает разметку для раздела с фильмами
- * @param {Object} filmList - данные из объекта списков с фильмами
- * @return {String}
- */
-const getFilmsListTemplate = (filmList) => {
-  const {title, extra, sort} = filmList;
+const getTitle = (isHaveFilms) => {
+  const noFilmsText = `There are no movies in our database`;
+  const filmsText = `All movies. Upcoming`;
 
+  return `<h2 class="films-list__title ${isHaveFilms ? `visually-hidden` : ``}">${isHaveFilms ? filmsText : noFilmsText}</h2>`;
+};
+
+const getFilmsListTemplate = (isHaveFilms) => {
   return (/* html */
-    `<section class="${extra ? `films-list--extra` : `films-list`}">
-      <h2 class="films-list__title ${extra ? `visually-hidden` : ``}">${title}</h2>
-      <div class="films-list__container"></div>
+    `<section class="films-list">
+      ${getTitle(isHaveFilms)}
     </section>`
   );
 };
 
 export default class FilmList extends AbstractComponent {
-  constructor(filmLists) {
+  constructor(isHaveFilms) {
     super();
-
-    this._filmLists = filmLists;
+    this._isHaveFilms = isHaveFilms;
   }
 
   getTemplate() {
-    return getFilmsListTemplate(this._filmLists);
+    return getFilmsListTemplate(this._isHaveFilms);
   }
 }
