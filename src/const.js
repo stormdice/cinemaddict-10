@@ -1,4 +1,5 @@
 export const DESCRIPTION_TEXT_LIMIT = 140;
+export const EXTRA_FILMS_LIMIT = 2;
 export const UserRating = {
   MIN: 10,
   MAX: 21

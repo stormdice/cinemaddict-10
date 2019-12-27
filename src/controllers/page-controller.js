@@ -4,6 +4,7 @@ import FilmCardComponent from '../components/film-card';
 import ShowMoreButtonComponent from '../components/show-more';
 import FilmsContainerComponent from '../components/films-container';
 import FilmListExtraComponent from '../components/film-list-extra';
+import {EXTRA_FILMS_LIMIT} from '../const';
 import {render, remove, RenderPosition} from '../utils/render';
 
 const footerElement = document.querySelector(`.footer`);
@@ -74,17 +75,17 @@ export default class PageController {
       .forEach((film) => renderFilms(filmContainer.getElement(), film));
 
       if (showingFilmsCount >= films.length) {
-        remove(showingFilmsCount);
+        remove(showMoreButtonComponent);
       }
     });
 
     const sortedByRating = films.sort((a, b) => {
       return b.filmInfo.totalRating - a.filmInfo.totalRating;
-    }).slice(0, 2);
+    }).slice(0, EXTRA_FILMS_LIMIT);
 
     const sortedByComments = films.sort((a, b) => {
       return b.comments - a.comments;
-    }).slice(0, 2);
+    }).slice(0, EXTRA_FILMS_LIMIT);
 
     const topRatedFilmsComponent = new FilmListExtraComponent(`Top rated`);
     render(this._container.getElement(), topRatedFilmsComponent, RenderPosition.BEFOREEND);
