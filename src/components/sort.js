@@ -1,23 +1,49 @@
-/**
- * создаёт и возвращает разметку ссылки сортировки из массива объектов ссылок.
- * Деструктурируем объект и получаем следующие ключи:
- * @param {String} name - название
- * @param {Boolean} active - активная ли ссылка
- * @return {String}
- */
-const getSortLinkTemplate = ({name, active}) => (/* html */
-  `<li><a href="#" class="sort__button ${active ? `sort__button--active` : ``}">${name}</a></li>`
-);
+import AbstractComponent from "./abstract-component";
 
-/**
- * создаёт и возвращает разметку сортировки
- * @param {Object} data - данные из массива ссылок сортировки
- * @return {String}
- */
-const getSortTemplate = (data) => (/* html */
-  `<ul class="sort">
-    ${data.map(getSortLinkTemplate).join(``)}
-  </ul>`
-);
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`,
+};
 
-export {getSortTemplate};
+const getSortTemplate = () => {
+  return (/* html */
+    `<ul class="sort">
+      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button">Sort by default</a></li>
+      <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button">Sort by date</a></li>
+      <li><a href="#" data-sort-type="${SortType.RATING}" class="sort__button">Sort by rating</a></li>
+    </ul>`
+  );
+};
+
+export default class Sort extends AbstractComponent {
+  constructor() {
+    super();
+
+    this._currentSortType = SortType.DEFAULT;
+  }
+
+  getTemplate() {
+    return getSortTemplate();
+  }
+
+  setSortTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
+
+      const sortType = evt.target.dataset.sortType;
+
+      if (this._currentSortType === sortType) {
+        return;
+      }
+
+      this._currentSortType = sortType;
+
+      handler(this._currentSortType);
+    });
+  }
+}

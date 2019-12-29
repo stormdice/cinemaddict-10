@@ -1,7 +1,5 @@
-const FilmsRange = {
-  MIN: 10,
-  MAX: 21
-};
+import AbstractComponent from "./abstract-component";
+import {UserRating} from '../const';
 
 /**
  * Возращает звание пользователя в зависимости от числа просмотренных фильмов
@@ -9,15 +7,15 @@ const FilmsRange = {
  * @return {String}
  */
 const checkUserRank = (count) => {
-  if (count <= FilmsRange.MIN) {
+  if (count <= UserRating.MIN) {
     return `Novice`;
   }
 
-  if (count <= FilmsRange.MAX) {
+  if (count <= UserRating.MAX) {
     return `Fan`;
   }
 
-  if (count > FilmsRange.MAX) {
+  if (count > UserRating.MAX) {
     return `Movie Buff`;
   }
 
@@ -31,9 +29,15 @@ const userRank = checkUserRank(numberOfFilmsWatched);
  * создаёт и возвращает разметку профиля
  * @return {String}
  */
-export const getProfileTemplate = () => (/* html */
+const getProfileTemplate = () => (/* html */
   `<section class="header__profile profile">
     <p class="profile__rating">${userRank}</p>
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
   </section>`
 );
+
+export default class Profile extends AbstractComponent {
+  getTemplate() {
+    return getProfileTemplate();
+  }
+}
