@@ -1,10 +1,11 @@
+import FilmsBoardComponent from '../components/films-board';
 import FilmsListComponent from '../components/films-list';
 import FilmDetailsComponent from '../components/film-details';
 import FilmCardComponent from '../components/film-card';
 import ShowMoreButtonComponent from '../components/show-more';
 import FilmsContainerComponent from '../components/films-container';
 import FilmListExtraComponent from '../components/film-list-extra';
-// import SortComponent, {SortType} from '../components/sort';
+import SortComponent, {SortType} from '../components/sort';
 import {EXTRA_FILMS_LIMIT} from '../const';
 import {render, remove, RenderPosition} from '../utils/render';
 
@@ -51,9 +52,10 @@ const renderFilms = (filmsContainer, films) => {
 export default class PageController {
   constructor(container) {
     this._container = container;
-
-    this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._sortComponent = new SortComponent();
+    this._filmsBoard = new FilmsBoardComponent();
     this._filmsContainer = new FilmsContainerComponent();
+    this._showMoreButtonComponent = new ShowMoreButtonComponent();
   }
 
   render(films) {
@@ -78,8 +80,11 @@ export default class PageController {
       });
     };
 
+    render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._container, this._filmsBoard, RenderPosition.BEFOREEND);
+
     const filmsListComponent = new FilmsListComponent(films.length);
-    render(this._container.getElement(), filmsListComponent, RenderPosition.BEFOREEND);
+    render(this._filmsBoard.getElement(), filmsListComponent, RenderPosition.BEFOREEND);
 
     if (!films.length) {
       return;
@@ -91,6 +96,32 @@ export default class PageController {
     renderFilms(this._filmsContainer, films.slice(0, showingFilmsCount));
     renderShowMoreButton();
 
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
+      let sortedFilms = [];
+
+      switch (sortType) {
+        case SortType.DEFAULT:
+          sortedFilms = films.slice(0, showingFilmsCount);
+          break;
+        case SortType.DATE:
+          sortedFilms = films.slice().sort((a, b) => b.release.date - a.release.date);
+          break;
+        case SortType.RATING:
+          sortedFilms = films.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+          break;
+      }
+
+      this._filmsContainer.getElement().innerHTML = ``;
+
+      renderFilms(this._filmsContainer, sortedFilms);
+
+      if (sortType === SortType.DEFAULT) {
+        renderShowMoreButton();
+      } else {
+        remove(this._showMoreButtonComponent);
+      }
+    });
+
     const sortedByRating = films.sort((a, b) => {
       return b.filmInfo.totalRating - a.filmInfo.totalRating;
     }).slice(0, EXTRA_FILMS_LIMIT);
@@ -100,12 +131,12 @@ export default class PageController {
     }).slice(0, EXTRA_FILMS_LIMIT);
 
     const topRatedFilmsComponent = new FilmListExtraComponent(`Top rated`);
-    render(this._container.getElement(), topRatedFilmsComponent, RenderPosition.BEFOREEND);
+    render(this._filmsBoard.getElement(), topRatedFilmsComponent, RenderPosition.BEFOREEND);
     const topRatedFilmsContainer = topRatedFilmsComponent.getElement().querySelector(`.films-list__container`);
     sortedByRating.forEach((film) => renderFilm(topRatedFilmsContainer, film));
 
     const mostCommentedComponent = new FilmListExtraComponent(`Most commented`);
-    render(this._container.getElement(), mostCommentedComponent, RenderPosition.BEFOREEND);
+    render(this._filmsBoard.getElement(), mostCommentedComponent, RenderPosition.BEFOREEND);
     const mostCommentedFilmsContainer = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
     sortedByComments.forEach((film) => renderFilm(mostCommentedFilmsContainer, film));
 
