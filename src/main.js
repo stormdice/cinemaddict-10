@@ -5,7 +5,7 @@ import {menuLinksData} from './data/menu-links';
 import {generateFilms} from './mock/film-card';
 import {render, RenderPosition} from './utils/render';
 
-const FILM_COUNT = 8;
+const FILM_COUNT = 13;
 const mainElement = document.querySelector(`.main`);
 const headerElement = document.querySelector(`.header`);
 
