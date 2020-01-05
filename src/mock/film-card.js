@@ -118,7 +118,7 @@ const getRandomElementFromArray = (array) => {
 const generateFilm = () => {
   const title = getRandomElementFromArray(TITLES);
   const originalTitle = `Original: ${title}`;
-  const totalRating = (Math.random() * 10).toFixed(1);
+  const totalRating = Number((Math.random() * 10).toFixed(1));
   const poster = getRandomElementFromArray(POSTERS);
   const ageRating = getRandomElementFromArray(RARS);
   const director = getRandomElementFromArray(DIRECTORS);
