@@ -1,41 +1,97 @@
 import FilmDetailsComponent from '../components/film-details';
 import FilmCardComponent from '../components/film-card';
-import {render, remove, RenderPosition} from '../utils/render';
+import {render, remove, replace, RenderPosition} from '../utils/render';
+
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
 
 export default class MovieController {
-  constructor(container) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+
+    this._mode = Mode.DEFAULT;
+
+    this._filmComponent = null;
+    this._filmDetailsComponent = null;
+
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
 
   render(film) {
-    const filmComponent = new FilmCardComponent(film);
-    const filmDetailsComponent = new FilmDetailsComponent(film);
+    const oldFilmComponent = this._filmCardComponent;
+    const oldFilmDetailsComponent = this._popupComponent;
 
-    const poster = filmComponent.getElement().querySelector(`.film-card__poster`);
-    const title = filmComponent.getElement().querySelector(`.film-card__title`);
-    const comments = filmComponent.getElement().querySelector(`.film-card__comments`);
-    const closePopup = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
+    this._filmComponent = new FilmCardComponent(film);
+    this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    const onEscKeyDown = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-      if (isEscKey) {
-        remove(filmDetailsComponent);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    closePopup.addEventListener(`click`, () => {
-      remove(filmDetailsComponent);
+    this._filmComponent.setOpenDetailsClickHandler(() => {
+      // this._onViewChange();
+      render(document.querySelector(`body`), this._filmDetailsComponent, RenderPosition.BEFOREEND);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`click`, this._onCloseButtonClick);
+      this._mode = Mode.EDIT;
     });
 
-    filmComponent.setOpenDetailsClickHandler((evt) => {
-      if ((evt.target === poster) || (evt.target === title) || (evt.target === comments)) {
-        render(document.querySelector(`body`), filmDetailsComponent, RenderPosition.BEFOREEND);
-        document.addEventListener(`keydown`, onEscKeyDown);
-      }
+    this._filmComponent.setWatchlistButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatchlist: !film.isWatchlist,
+      }));
     });
 
-    render(this._container, filmComponent, RenderPosition.BEFOREEND);
+    this._filmComponent.setWatchedButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatched: !film.isWatched,
+      }));
+    });
+
+    this._filmComponent.setFavoriteButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite,
+      }));
+    });
+
+    if (oldFilmComponent && oldFilmDetailsComponent) {
+      replace(this._filmComponent, oldFilmComponent);
+      replace(this._filmDetailsComponent, oldFilmDetailsComponent);
+    } else {
+      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
+    }
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      remove(this._filmDetailsComponent);
+    }
+  }
+
+  _closeFilmDetails() {
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    document.removeEventListener(`click`, this._onCloseButtonClick);
+    this._mode = Mode.DEFAULT;
+  }
+
+  _onCloseButtonClick(evt) {
+    const closeButton = document.querySelector(`.film-details__close-btn`);
+
+    if (evt.target === closeButton) {
+      this._closeFilmDetails();
+    }
+  }
+
+  _onEscKeyDown(evt) {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      this._closeFilmDetails();
+    }
   }
 }

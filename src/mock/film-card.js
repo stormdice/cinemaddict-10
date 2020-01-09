@@ -131,6 +131,9 @@ const generateFilm = () => {
   const genres = GENRES;
   const description = DESCRIPTIONS.slice(0, getRandomIndex(DESCRIPTIONS));
   const comments = Math.floor(Math.random() * 1000);
+  const isWatchlist = getRandomBoolean();
+  const isWatched = getRandomBoolean();
+  const isFavorite = getRandomBoolean();
 
   return ({
     filmInfo: {
@@ -151,23 +154,9 @@ const generateFilm = () => {
     genres,
     description,
     comments,
-    controls: [
-      {
-        name: `add-to-watchlist`,
-        desc: `Add to watchlist`,
-        active: getRandomBoolean()
-      },
-      {
-        name: `mark-as-watched`,
-        desc: `Mark as watched`,
-        active: getRandomBoolean()
-      },
-      {
-        name: `favorite`,
-        desc: `Mark as favorite`,
-        active: getRandomBoolean()
-      }
-    ]
+    isWatchlist,
+    isWatched,
+    isFavorite
   });
 };
 

@@ -1,5 +1,9 @@
 import AbstractComponent from "./abstract-component";
-import {UserRating} from '../const';
+
+const UserRating = {
+  MIN: 10,
+  MAX: 21
+};
 
 /**
  * Возращает звание пользователя в зависимости от числа просмотренных фильмов

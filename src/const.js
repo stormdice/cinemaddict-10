@@ -1,8 +1,4 @@
 export const DESCRIPTION_TEXT_LIMIT = 140;
-export const UserRating = {
-  MIN: 10,
-  MAX: 21
-};
 export const EMOJIS = [
   {
     id: `emoji-smile`,
