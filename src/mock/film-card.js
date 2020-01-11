@@ -22,7 +22,7 @@ const GENRES = [
   `Comedy`,
   `Western`,
   `Musical`,
-  `Cartoon`
+  `Cartoon`,
 ];
 
 const POSTERS = [
@@ -82,28 +82,14 @@ const DIRECTORS = [
   `Stanley Kubrick`,
 ];
 
-/**
- * Возращает случайный индекс массива
- * @param {Array} array - данные из массива
- * @return {Number}
- */
 const getRandomIndex = (array) => {
   return Math.floor(Math.random() * array.length);
 };
 
-/**
- * Возращает случайное булево значение
- * @return {Boolean}
- */
 const getRandomBoolean = () => {
   return Math.random() >= 0.5;
 };
 
-/**
- * Возращает случайный элемент из массива
- * @param {Array} array - данные из массива
- * @return {String}
- */
 const getRandomElementFromArray = (array) => {
   const randomIdx = getRandomIndex(array);
   const randomElement = array.find((title, idx) => idx === randomIdx);
@@ -111,10 +97,6 @@ const getRandomElementFromArray = (array) => {
   return randomElement;
 };
 
-/**
- * Возвращает фильм со случайными данными
- * @return {Object}
- */
 const generateFilm = () => {
   const title = getRandomElementFromArray(TITLES);
   const originalTitle = `Original: ${title}`;
@@ -128,8 +110,8 @@ const generateFilm = () => {
   const country = `USA`;
   const hours = Math.floor(Math.random() * 3);
   const minutes = Math.floor(Math.random() * 60);
-  const genres = GENRES;
-  const description = DESCRIPTIONS.slice(0, getRandomIndex(DESCRIPTIONS));
+  const genres = GENRES.filter(() => Math.random() > 0.5).slice(0, 3);
+  const description = DESCRIPTIONS.slice(0, getRandomIndex(DESCRIPTIONS)).join(``);
   const comments = Math.floor(Math.random() * 1000);
   const isWatchlist = getRandomBoolean();
   const isWatched = getRandomBoolean();
@@ -160,11 +142,6 @@ const generateFilm = () => {
   });
 };
 
-/**
- * Возвращает массив фильмов
- * @param {Number} count - требуемое количество фильмов
- * @return {Array}
- */
 const generateFilms = (count) => {
   return new Array(count).fill(``).map(generateFilm);
 };

@@ -1,10 +1,5 @@
 import AbstractComponent from "./abstract-component";
 
-/**
- * Создаёт и возвращает разметку ссылки навигации.
- * @param {Object} link - данные из объекта ссылки навигации
- * @return {String}
- */
 const getMenuLinkTemplate = (link) => {
   const {name, path, active, additional, desription, desriptionItemCount} = link;
 
@@ -13,11 +8,6 @@ const getMenuLinkTemplate = (link) => {
   );
 };
 
-/**
- * создаёт и возвращает разметку навигации
- * @param {Object} links - данные из массива ссылок навигации
- * @return {String}
- */
 const getMenuTemplate = (links) => {
   const menuLinksTemplate = links.map((link) => getMenuLinkTemplate(link)).join(`\n`);
 

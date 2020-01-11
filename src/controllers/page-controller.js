@@ -69,7 +69,7 @@ export default class PageController {
     if (topRatedFilms.length > 0) {
       render(this._filmsBoard.getElement(), this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
       const topFilmsContainer = this._topRatedFilmsComponent.getElement().querySelector(`.films-list__container`);
-      renderFilms(topFilmsContainer, topRatedFilms);
+      renderFilms(topFilmsContainer, topRatedFilms, this._onDataChange, this._onViewChange);
     }
 
     const mostCommentedFilms = this._films
@@ -81,7 +81,7 @@ export default class PageController {
     if (mostCommentedFilms.length > 0) {
       render(this._filmsBoard.getElement(), this._mostCommentedFilmsComponent, RenderPosition.BEFOREEND);
       const topFilmsContainer = this._mostCommentedFilmsComponent.getElement().querySelector(`.films-list__container`);
-      renderFilms(topFilmsContainer, mostCommentedFilms);
+      renderFilms(topFilmsContainer, mostCommentedFilms, this._onDataChange, this._onViewChange);
     }
 
     footerElement.querySelector(`p`).textContent = `${films.length} movies inside`;
@@ -100,8 +100,7 @@ export default class PageController {
   }
 
   _onViewChange() {
-    // this._showedFilmControllers.forEach((filmDetails) => filmDetails.setDefaultView());
-    console.log(`da nichego ne delaetsa`);
+    this._showedFilmControllers.forEach((filmDetails) => filmDetails.setDefaultView());
   }
 
   _renderShowMoreButton() {
@@ -142,7 +141,7 @@ export default class PageController {
     this._filmsContainer.getElement().innerHTML = ``;
 
     const newFilms = renderFilms(this._filmsContainer.getElement(), sortedFilms, this._onDataChange, this._onViewChange);
-    this._showedTaskControllers = newFilms;
+    this._showedFilmControllers = newFilms;
 
     if (sortType === SortType.DEFAULT) {
       this._renderShowMoreButton();

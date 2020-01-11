@@ -1,19 +1,10 @@
 import AbstractComponent from "./abstract-component";
+import {SHORT_DESCRIPTION_LENGTH} from "../const";
 
-/**
- * проверяет активность класса и в зависимости от этого выставляет класс в разметке
- * @param {boolean} prop - активен ли класс
- * @return {string}
- */
 const isActive = (prop) => {
   return prop ? `film-card__controls-item--active` : ``;
 };
 
-/**
- * создаёт и возвращает разметку карточки фильма из массива объектов.
- * @param {Object} film - данные из объекта фильма
- * @return {String}
- */
 const getFilmCardTemplate = (film) => {
   const {
     filmInfo: {
@@ -33,8 +24,11 @@ const getFilmCardTemplate = (film) => {
     isFavorite
   } = film;
 
-  const genre = genres.slice(0, 1);
-  const miniDescription = description.slice(0, 2).join(` `);
+  const shortDescription = description.length > SHORT_DESCRIPTION_LENGTH
+    ? `${description.substring(0, SHORT_DESCRIPTION_LENGTH)}...`
+    : description;
+
+  const shortGenre = genres[0];
 
   return (/* html */
     `<article class="film-card">
@@ -43,10 +37,10 @@ const getFilmCardTemplate = (film) => {
       <p class="film-card__info">
         <span class="film-card__year">${date}</span>
         <span class="film-card__duration">${runtime}</span>
-        <span class="film-card__genre">${genre}</span>
+        <span class="film-card__genre">${shortGenre}</span>
       </p>
       <img src=${poster} alt="" class="film-card__poster">
-      <p class="film-card__description">${miniDescription}</p>
+      <p class="film-card__description">${shortDescription}</p>
       <a class="film-card__comments">${comments} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isActive(isWatchlist)}">Add to watchlist</button>
@@ -68,7 +62,7 @@ export default class FilmCard extends AbstractComponent {
     return getFilmCardTemplate(this._film);
   }
 
-  setOpenDetailsClickHandler(handler) {
+  openDetailsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);

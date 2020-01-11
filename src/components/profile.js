@@ -5,11 +5,6 @@ const UserRating = {
   MAX: 21
 };
 
-/**
- * Возращает звание пользователя в зависимости от числа просмотренных фильмов
- * @param {*} count - число просмотренных фильмов
- * @return {String}
- */
 const checkUserRank = (count) => {
   if (count <= UserRating.MIN) {
     return `Novice`;
@@ -29,10 +24,6 @@ const checkUserRank = (count) => {
 const numberOfFilmsWatched = Math.floor(Math.random() * 30);
 const userRank = checkUserRank(numberOfFilmsWatched);
 
-/**
- * создаёт и возвращает разметку профиля
- * @return {String}
- */
 const getProfileTemplate = () => (/* html */
   `<section class="header__profile profile">
     <p class="profile__rating">${userRank}</p>

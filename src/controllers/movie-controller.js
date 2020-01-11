@@ -4,7 +4,7 @@ import {render, remove, replace, RenderPosition} from '../utils/render';
 
 const Mode = {
   DEFAULT: `default`,
-  EDIT: `edit`,
+  DETAILS: `details`,
 };
 
 export default class MovieController {
@@ -18,23 +18,18 @@ export default class MovieController {
     this._filmComponent = null;
     this._filmDetailsComponent = null;
 
+    this._closeFilmDetails = this._closeFilmDetails.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
-    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
 
   render(film) {
-    const oldFilmComponent = this._filmCardComponent;
-    const oldFilmDetailsComponent = this._popupComponent;
+    const oldFilmComponent = this._filmComponent ? this._filmComponent : null;
 
     this._filmComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    this._filmComponent.setOpenDetailsClickHandler(() => {
-      // this._onViewChange();
-      render(document.querySelector(`body`), this._filmDetailsComponent, RenderPosition.BEFOREEND);
-      document.addEventListener(`keydown`, this._onEscKeyDown);
-      document.addEventListener(`click`, this._onCloseButtonClick);
-      this._mode = Mode.EDIT;
+    this._filmComponent.openDetailsClickHandler(() => {
+      this._openFilmDetails();
     });
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
@@ -58,33 +53,31 @@ export default class MovieController {
       }));
     });
 
-    if (oldFilmComponent && oldFilmDetailsComponent) {
+    this._filmDetailsComponent.setClosePopupClickHandler(this._closeFilmDetails);
+
+    if (oldFilmComponent) {
       replace(this._filmComponent, oldFilmComponent);
-      replace(this._filmDetailsComponent, oldFilmDetailsComponent);
     } else {
       render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
     }
   }
 
-  setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
-      remove(this._filmDetailsComponent);
-    }
+  _openFilmDetails() {
+    this._onViewChange();
+
+    render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
+
+    this._filmDetailsComponent.setClosePopupClickHandler(this._closeFilmDetails);
+
+    this._mode = Mode.DETAILS;
   }
 
   _closeFilmDetails() {
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    document.removeEventListener(`click`, this._onCloseButtonClick);
+
     this._mode = Mode.DEFAULT;
-  }
-
-  _onCloseButtonClick(evt) {
-    const closeButton = document.querySelector(`.film-details__close-btn`);
-
-    if (evt.target === closeButton) {
-      this._closeFilmDetails();
-    }
   }
 
   _onEscKeyDown(evt) {
@@ -92,6 +85,12 @@ export default class MovieController {
 
     if (isEscKey) {
       this._closeFilmDetails();
+    }
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      remove(this._filmDetailsComponent);
     }
   }
 }
