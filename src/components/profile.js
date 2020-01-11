@@ -1,11 +1,10 @@
 import AbstractComponent from "./abstract-component";
-import {UserRating} from '../const';
 
-/**
- * Возращает звание пользователя в зависимости от числа просмотренных фильмов
- * @param {*} count - число просмотренных фильмов
- * @return {String}
- */
+const UserRating = {
+  MIN: 10,
+  MAX: 21
+};
+
 const checkUserRank = (count) => {
   if (count <= UserRating.MIN) {
     return `Novice`;
@@ -25,10 +24,6 @@ const checkUserRank = (count) => {
 const numberOfFilmsWatched = Math.floor(Math.random() * 30);
 const userRank = checkUserRank(numberOfFilmsWatched);
 
-/**
- * создаёт и возвращает разметку профиля
- * @return {String}
- */
 const getProfileTemplate = () => (/* html */
   `<section class="header__profile profile">
     <p class="profile__rating">${userRank}</p>

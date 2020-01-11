@@ -1,10 +1,5 @@
 import AbstractComponent from './abstract-component';
 
-/**
- * создаёт и возвращает разметку для блоков «Top rated movies» и «Most commented»
- * @param {Object} title - заголовок
- * @return {String}
- */
 const getFilmListExtraTemplate = (title) => {
   return (/* html */
     `<section class="films-list--extra">

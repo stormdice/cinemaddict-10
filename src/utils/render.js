@@ -42,3 +42,20 @@ export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
+
+/**
+ * Заменяет DOM элемент
+ * @param {DOMNode} newComponent - новый элемент
+ * @param {DOMNode} oldComponent - элемент, котрый нужно заменить
+ */
+export const replace = (newComponent, oldComponent) => {
+  const parentElement = oldComponent.getElement().parentElement;
+  const newElement = newComponent.getElement();
+  const oldElement = oldComponent.getElement();
+
+  const isExistElements = !!(parentElement && oldElement && newElement);
+
+  if (isExistElements && parentElement.contains(oldElement)) {
+    parentElement.replaceChild(newElement, oldElement);
+  }
+};

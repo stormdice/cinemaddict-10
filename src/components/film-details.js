@@ -1,41 +1,79 @@
-import AbstractComponent from "./abstract-component";
-import {DESCRIPTION_TEXT_LIMIT, EMOJIS} from '../const';
+import AbstractSmartComponent from "./abstract-smart-component";
+import {EMOTIONS} from "../const";
 
-/**
- * создаёт и возвращает разметку кнопок в попапе - расширенном описании
- * @param {Object} controls - данные из объекта кнопок управления
- * @return {String}
- */
-const getControlsTemplate = (controls) => {
-  const {name, desc} = controls;
+const getFilmGenresTemplate = (genres) => {
+  return genres.map((genre) => {
+    return (
+      `<span class="film-details__genre">${genre}</span>`
+    );
+  }).join(` `);
+};
 
+const getUserRatingTemplate = (poster, title) => {
   return (/* html */
-    `<input type="checkbox" class="film-details__control-input visually-hidden" id=${name} name=${name}>
-    <label for=${name} class="film-details__control-label film-details__control-label--watchlist">${desc}</label>`
+    `<div class="form-details__middle-container">
+      <section class="film-details__user-rating-wrap">
+        <div class="film-details__user-rating-controls">
+          <button class="film-details__watched-reset" type="button">Undo</button>
+        </div>
+
+        <div class="film-details__user-score">
+          <div class="film-details__user-rating-poster">
+            <img src="${poster}" alt="film-poster" class="film-details__user-rating-img">
+          </div>
+
+          <section class="film-details__user-rating-inner">
+            <h3 class="film-details__user-rating-title">${title}</h3>
+            <p class="film-details__user-rating-feelings">How you feel it?</p>
+            <div class="film-details__user-rating-score">
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
+              <label class="film-details__user-rating-label" for="rating-1">1</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
+              <label class="film-details__user-rating-label" for="rating-2">2</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
+              <label class="film-details__user-rating-label" for="rating-3">3</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
+              <label class="film-details__user-rating-label" for="rating-4">4</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5">
+              <label class="film-details__user-rating-label" for="rating-5">5</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
+              <label class="film-details__user-rating-label" for="rating-6">6</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
+              <label class="film-details__user-rating-label" for="rating-7">7</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
+              <label class="film-details__user-rating-label" for="rating-8">8</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" checked>
+              <label class="film-details__user-rating-label" for="rating-9">9</label>
+
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>`
   );
 };
 
-/**
- * создаёт и возвращает разметку эмоджи в попапе - расширенном описании
- * @param {Object} emoji - данные из объекта эмоджи
- * @return {String}
- */
-const getEmojiTemplate = (emoji) => {
-  const {id, value, imgSrc} = emoji;
-  return (/* html */
-    `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id=${id} value=${value}>
-    <label class="film-details__emoji-label" for=${id}>
-      <img src=${imgSrc} width="30" height="30" alt="emoji">
-    </label>`
-  );
+const getEmotionsTemplate = () => {
+  return EMOTIONS.map((emotion) => {
+    return (/* html */
+      `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
+      <label class="film-details__emoji-label" for="emoji-${emotion}">
+        <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
+      </label>`
+    );
+  }).join(` `);
 };
 
-/**
- * создаёт и возвращает разметку попапа - расширенного описания
- * @param {Object} film - данные из объекта детального описания фильма
- * @return {String}
- */
-const getFilmDetailsTemplate = (film) => {
+const getFilmDetailsTemplate = (film, options = {}) => {
   const {
     filmInfo: {
       title,
@@ -47,31 +85,16 @@ const getFilmDetailsTemplate = (film) => {
       writers,
       actors
     },
-    release: {
-      date,
-      country
-    },
+    release: {date, country},
     runtime,
     genres,
     description,
-    controls
   } = film;
 
-  /**
-   * Сокращает длину строки
-   * @param {String} filmDescription
-   * @return {String}
-   */
-  const limitDescription = (filmDescription) => {
-    return (filmDescription.length > DESCRIPTION_TEXT_LIMIT) ? `${filmDescription.slice(0, DESCRIPTION_TEXT_LIMIT)}…` : filmDescription;
-  };
+  const {isWatchlist, isWatched, isFavorites} = options;
 
   const releaseDate = `1 december ${date}`;
-  const DetailedDescription = description.join(` `);
-  const filmGenres = genres.slice(0, 3).map((genre) =>`<span class="film-details__genre">${genre}</span>`).join(` `);
-  const filmDescription = limitDescription(DetailedDescription);
-  const controlsButton = controls.map((control) => getControlsTemplate(control)).join(`\n`);
-  const emojis = EMOJIS.map((emoji) => getEmojiTemplate(emoji)).join(`\n`);
+  const genreTitle = genres.length > 1 ? `Genres` : `Genre`;
 
   return (/* html */
     `<section class="film-details">
@@ -125,50 +148,163 @@ const getFilmDetailsTemplate = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${filmGenres}</td>
+                  <td class="film-details__term">${genreTitle}</td>
+                  <td class="film-details__cell">${getFilmGenresTemplate(genres)}</td>
                 </tr>
               </table>
 
-              <p class="film-details__film-description">${filmDescription}</p>
+              <p class="film-details__film-description">${description}</p>
             </div>
           </div>
 
-          <section class="film-details__controls">${controlsButton}</section>
-        </div>
-
-        <div class="form-details__bottom-container">
-          <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">0</span></h3>
-
-            <ul class="film-details__comments-list"></ul>
-
-            <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label">
-                <img src="images/emoji/smile.png" width="55" height="55" alt="emoji">
-              </div>
-
-              <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">Great movie!</textarea>
-              </label>
-
-              <div class="film-details__emoji-list">${emojis}</div>
-            </div>
+          <section class="film-details__controls">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlist ? `checked` : ``}>
+            <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
+            <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorites ? `checked` : ``}>
+            <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
+
+        ${isWatched ? getUserRatingTemplate(poster, title) : ``}
+
+        <div class="form-details__bottom-container">
+        <section class="film-details__comments-wrap">
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+
+          <ul class="film-details__comments-list">
+            <li class="film-details__comment">
+              <span class="film-details__comment-emoji">
+                <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">
+              </span>
+              <div>
+                <p class="film-details__comment-text">Interesting setting and a good cast</p>
+                <p class="film-details__comment-info">
+                  <span class="film-details__comment-author">Tim Macoveev</span>
+                  <span class="film-details__comment-day">2019/12/31 23:59</span>
+                  <button class="film-details__comment-delete">Delete</button>
+                </p>
+              </div>
+            </li>
+            <li class="film-details__comment">
+              <span class="film-details__comment-emoji">
+                <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">
+              </span>
+              <div>
+                <p class="film-details__comment-text">Booooooooooring</p>
+                <p class="film-details__comment-info">
+                  <span class="film-details__comment-author">John Doe</span>
+                  <span class="film-details__comment-day">2 days ago</span>
+                  <button class="film-details__comment-delete">Delete</button>
+                </p>
+              </div>
+            </li>
+            <li class="film-details__comment">
+              <span class="film-details__comment-emoji">
+                <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">
+              </span>
+              <div>
+                <p class="film-details__comment-text">Very very old. Meh</p>
+                <p class="film-details__comment-info">
+                  <span class="film-details__comment-author">John Doe</span>
+                  <span class="film-details__comment-day">2 days ago</span>
+                  <button class="film-details__comment-delete">Delete</button>
+                </p>
+              </div>
+            </li>
+            <li class="film-details__comment">
+              <span class="film-details__comment-emoji">
+                <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">
+              </span>
+              <div>
+                <p class="film-details__comment-text">Almost two hours? Seriously?</p>
+                <p class="film-details__comment-info">
+                  <span class="film-details__comment-author">John Doe</span>
+                  <span class="film-details__comment-day">Today</span>
+                  <button class="film-details__comment-delete">Delete</button>
+                </p>
+              </div>
+            </li>
+          </ul>
+
+          <div class="film-details__new-comment">
+            <div for="add-emoji" class="film-details__add-emoji-label"></div>
+
+            <label class="film-details__comment-label">
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            </label>
+
+            <div class="film-details__emoji-list">${getEmotionsTemplate()}</div>
+          </div>
+        </section>
+      </div>
+
       </form>
     </section>`
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
-  constructor(filmDetails) {
+export default class FilmDetails extends AbstractSmartComponent {
+  constructor(film) {
     super();
 
-    this._filmDetails = filmDetails;
+    this._film = film;
+    this._isWatchlist = !!film.isWatchlist;
+    this._isWatched = !!film.isWatched;
+    this._isFavorites = !!film.isFavorites;
+
+    this._setEmotionClickHandler();
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return getFilmDetailsTemplate(this._filmDetails);
+    return getFilmDetailsTemplate(this._film, {
+      isWatchlist: this._isWatchlist,
+      isWatched: this._isWatched,
+      isFavorites: this._isFavorites
+    });
+  }
+
+  setClosePopupClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
+  }
+
+  _setEmotionClickHandler() {
+    const emotionList = this.getElement().querySelector(`.film-details__emoji-list`);
+
+    emotionList.addEventListener(`change`, (evt) => {
+      this._selectedEmotion = evt.target.value;
+      this.getElement().querySelector(`.film-details__add-emoji-label`)
+        .innerHTML = `<img src="./images/emoji/${this._selectedEmotion}.png" width="55" height="55" alt="emoji">`;
+    });
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`#watchlist`).addEventListener(`click`, () => {
+      this._isWatchlist = !this._isWatchlist;
+      this.rerender();
+    });
+
+    element.querySelector(`#watched`).addEventListener(`click`, () => {
+      this._isWatched = !this._isWatched;
+      this.rerender();
+    });
+
+    element.querySelector(`#favorite`).addEventListener(`click`, () => {
+      this._isFavorites = !this._isFavorites;
+      this.rerender();
+    });
+  }
+
+  recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
   }
 }
