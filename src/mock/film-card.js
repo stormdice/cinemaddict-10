@@ -97,6 +97,20 @@ const getRandomElementFromArray = (array) => {
   return randomElement;
 };
 
+const getRandomIntegerNumber = (min, max) => {
+  return min + Math.floor((max - min) * Math.random());
+};
+
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const sign = Math.random() > 0.5 ? 1 : -1;
+  const diffValue = sign * getRandomIntegerNumber(0, 7);
+
+  targetDate.setDate(targetDate.getDate() + diffValue);
+
+  return targetDate;
+};
+
 const generateFilm = () => {
   const title = getRandomElementFromArray(TITLES);
   const originalTitle = `Original: ${title}`;
@@ -106,7 +120,7 @@ const generateFilm = () => {
   const director = getRandomElementFromArray(DIRECTORS);
   const writers = WRITERS.slice(0, getRandomIndex(WRITERS)).join(`, `);
   const actors = ACTORS.slice(0, getRandomIndex(ACTORS)).join(`, `);
-  const date = Math.floor(2000 + Math.random() * 10);
+  const date = getRandomDate();
   const country = `USA`;
   const hours = Math.floor(Math.random() * 3);
   const minutes = Math.floor(Math.random() * 60);
