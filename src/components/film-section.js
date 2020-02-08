@@ -2,8 +2,10 @@
  * Создаёт и возвращает разметку раздела для фильмов
  * @return {string}
  */
-export const createFilmsSectionTemplate = () => {
+const createFilmsSectionTemplate = () => {
   return (
     `<section class="films"></section>`
   );
 };
+
+export {createFilmsSectionTemplate};
