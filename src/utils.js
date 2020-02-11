@@ -1,3 +1,8 @@
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
+
 const MONTH_NAMES = [
   `January`,
   `February`,
@@ -42,6 +47,37 @@ const getTopFilms = (films, props) => {
     .filter((film) => film[props]);
 };
 
-export {formatDuration, getTopFilms, formatDate};
+/**
+ * Возвращает DOM элемент
+ * @param {string} template
+ * @return {DOMNode}
+ */
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+/**
+ * Вставляет DOM элемент в указанное место
+ * @param {HTMLElement} container - элемент относительно которого идёт вставка
+ * @param {HTMLElement} element - DOM элемент
+ * @param {string} place - позиция для вставки
+ */
+const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+    default:
+      throw new Error(`Вы должны указать позицию для вставки из объекта RenderPosition - либо в начало: AFTERBEGIN, либо в конец: BEFOREEND`);
+  }
+};
+
+export {RenderPosition, formatDuration, getTopFilms, formatDate, createElement, render};
 
 

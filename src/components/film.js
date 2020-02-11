@@ -1,3 +1,5 @@
+import {createElement} from '../utils';
+
 /**
  * Возвращает 1 жанр для карточки фильма
  * @param {Set} genres - сет жанров
@@ -43,4 +45,25 @@ const createFilmTemplate = (film) => {
   );
 };
 
-export {createFilmTemplate};
+export default class Film {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

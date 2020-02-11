@@ -1,3 +1,5 @@
+import {createElement} from '../utils';
+
 /**
  * Сделать первую букву большой
  * @param {string} string - строка
@@ -54,4 +56,25 @@ const createMenuTemplate = (menu) => {
   );
 };
 
-export {createMenuTemplate};
+export default class Menu {
+  constructor(menu) {
+    this._menu = menu;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMenuTemplate(this._menu);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

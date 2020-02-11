@@ -1,3 +1,5 @@
+import {createElement} from '../utils';
+
 /**
  * Создаёт и возвращает разметку списка фильмов
  * @param {string} title - заголовок
@@ -14,4 +16,25 @@ const createFilmsListTemplate = (title = null) => {
   );
 };
 
-export {createFilmsListTemplate};
+export default class FilmsList {
+  constructor(title) {
+    this._title = title;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmsListTemplate(this._title);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
