@@ -1,3 +1,5 @@
+import {createElement} from '../utils';
+
 const userRanks = {
   novice: {
     min: 1,
@@ -47,4 +49,25 @@ const createProfileTemplate = (count) => {
   );
 };
 
-export {createProfileTemplate};
+export default class Profile {
+  constructor(count) {
+    this._count = count;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createProfileTemplate(this._count);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
