@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 const userRanks = {
   novice: {
@@ -49,25 +49,26 @@ const createProfileTemplate = (count) => {
   );
 };
 
-export default class Profile {
+/**
+ * Класс, представляющий профиль
+ * @extends AbstractComponent
+ */
+export default class Profile extends AbstractComponent {
+  /**
+   * Создаёт количество просмотренных фильмов
+   * @param {Object} count - количество просмотренных фильмов
+   */
   constructor(count) {
+    super();
+
     this._count = count;
-    this._element = null;
   }
 
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createProfileTemplate(this._count);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

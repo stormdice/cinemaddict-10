@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Создаёт и возвращает разметку раздела для фильмов
@@ -10,24 +10,16 @@ const createFilmsSectionTemplate = () => {
   );
 };
 
-export default class FilmsSection {
-  constructor() {
-    this._element = null;
-  }
-
+/**
+ * Класс, представляющий общий раздел для фильмов
+ * @extends AbstractComponent
+ */
+export default class FilmsSection extends AbstractComponent {
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createFilmsSectionTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

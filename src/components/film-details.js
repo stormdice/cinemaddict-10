@@ -1,4 +1,5 @@
-import {createElement, formatDate} from '../utils';
+import AbstractComponent from './abstract-component.js';
+import {formatDate} from '../utils/common.js';
 
 /**
  * Создаёт и возвращает разметку жанра
@@ -194,25 +195,35 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-export default class FilmDetails {
+/**
+ * Класс, представляющий попап
+ * @extends AbstractComponent
+ */
+export default class FilmDetails extends AbstractComponent {
+  /**
+   * Создаёт карточку фильма
+   * @param {Object} film - фильм
+   */
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setCloseButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
   }
 }
