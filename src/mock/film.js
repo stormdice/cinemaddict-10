@@ -1,4 +1,4 @@
-import {formatDuration} from '../utils';
+import {formatDuration} from '../utils/common.js';
 
 const FILM_TITLES = [
   `The Lighthouse`,

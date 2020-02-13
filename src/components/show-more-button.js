@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Создаёт и возвращает разметку кнопки 'Смотреть больше'
@@ -10,24 +10,24 @@ const createShowMoreButtonTemplate = () => {
   );
 };
 
-export default class ShowMoreButton {
-  constructor() {
-    this._element = null;
-  }
-
+/**
+ * Класс, представляющий кнопку загрузить больше
+ * @extends AbstractComponent
+ */
+export default class ShowMoreButton extends AbstractComponent {
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createShowMoreButtonTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Создаёт и возвращает разметку раздела без фильмов
@@ -12,24 +12,16 @@ const createNoFilmsTemplate = () => {
   );
 };
 
-export default class NoFilms {
-  constructor() {
-    this._element = null;
-  }
-
+/**
+ * Класс, представляющий отсутствие фильмов
+ * @extends AbstractComponent
+ */
+export default class NoFilms extends AbstractComponent {
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createNoFilmsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

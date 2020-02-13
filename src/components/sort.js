@@ -1,4 +1,10 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
+
+const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`,
+};
 
 /**
  * Создаёт и возвращает разметку сортировки
@@ -7,31 +13,53 @@ import {createElement} from '../utils';
 const createSortTemplate = () => {
   return (
     `<ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" class="sort__button">Sort by date</a></li>
-      <li><a href="#" class="sort__button">Sort by rating</a></li>
+      <li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
+      <li><a href="#" class="sort__button" data-sort-type="${SortType.DATE}">Sort by date</a></li>
+      <li><a href="#" class="sort__button" data-sort-type="${SortType.RATING}">Sort by rating</a></li>
     </ul>`
   );
 };
 
-export default class Sort {
+/**
+ * Класс, представляющий сортировку
+ * @extends AbstractComponent
+ */
+export default class Sort extends AbstractComponent {
+  /**
+   * Создаёт текущий тип сортировки
+   */
   constructor() {
-    this._element = null;
-  }
+    super();
 
+    this._currentSortType = SortType.DEFAULT;
+  }
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createSortTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setSortTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
 
-    return this._element;
-  }
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
 
-  removeElement() {
-    this._element = null;
+      const sortType = evt.target.dataset.sortType;
+
+      this._currentSortType = sortType;
+
+      handler(sortType);
+    });
   }
 }
+
+export {SortType};

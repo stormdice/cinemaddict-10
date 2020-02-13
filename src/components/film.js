@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Возвращает 1 жанр для карточки фильма
@@ -45,25 +45,36 @@ const createFilmTemplate = (film) => {
   );
 };
 
-export default class Film {
+/**
+ * Класс, представляющий карточку фильма
+ * @extends AbstractComponent
+ */
+export default class Film extends AbstractComponent {
+  /**
+   * Создаёт карточку фильма
+   * @param {Object} film - данные из объека фильма
+   */
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createFilmTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setOpenDetailsClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
 }

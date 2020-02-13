@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Сделать первую букву большой
@@ -43,7 +43,7 @@ const createMenuItemTemplate = (item, isActive) => {
 
 /**
  * Создаёт и возвращает разметку меню
- * @param {Array} menu - массив пунктов меню
+ * @param {string[]} menu - массив пунктов меню
  * @return {string}
  */
 const createMenuTemplate = (menu) => {
@@ -56,25 +56,26 @@ const createMenuTemplate = (menu) => {
   );
 };
 
-export default class Menu {
+/**
+ * Класс, представляющий меню
+ * @extends AbstractComponent
+ */
+export default class Menu extends AbstractComponent {
+  /**
+   * Создаёт меню
+   * @param {Object} menu - данные из объека меню
+   */
   constructor(menu) {
+    super();
+
     this._menu = menu;
-    this._element = null;
   }
 
+  /**
+   * Возвращает функцию создания разметки
+   * @return {Function}
+   */
   getTemplate() {
     return createMenuTemplate(this._menu);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
