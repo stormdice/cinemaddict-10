@@ -1,12 +1,11 @@
 import ProfileComponent from './components/profile.js';
 import MenuComponent from './components/menu.js';
-import SortComponent from './components/sort.js';
 import FilmsSectionComponent from './components/film-section.js';
 import PageController from './controllers/page-controller.js';
 import {generateFilms} from './mock/film.js';
 import {RenderPosition, render} from './utils/render.js';
 
-const FILMS_COUNT = 14;
+const FILMS_COUNT = 8;
 
 const films = generateFilms(FILMS_COUNT);
 
@@ -27,7 +26,6 @@ const siteMainElement = document.querySelector(`.main`);
 
 render(siteHeaderElement, new ProfileComponent(countOfMoviesWatched), RenderPosition.BEFOREEND);
 render(siteMainElement, new MenuComponent(menuItems), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
 
 const filmsSectionComponent = new FilmsSectionComponent();
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
