@@ -1,7 +1,6 @@
 import SortComponent, {SortType} from '../components/sort.js';
+import MovieController from './movie-controller.js';
 import FilmsListComponent from '../components/film-list.js';
-import FilmComponent from '../components/film.js';
-import FilmDetailsComponent from '../components/film-details.js';
 import NoFilmsComponent from '../components/no-films.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import {RenderPosition, render, remove} from '../utils/render.js';
@@ -13,43 +12,11 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 /**
  * Отрисовывает фильмы
  * @param {HTMLElement} filmListElement - контейнер в который будет вставлять
- * @param {Object} film - данные из объекта фильмов
- */
-const renderFilm = (filmListElement, film) => {
-  const filmComponent = new FilmComponent(film);
-  const filmDetailsComponent = new FilmDetailsComponent(film);
-
-  const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      filmDetailsComponent.getElement().remove();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  filmDetailsComponent.setCloseButtonClickHandler(() => {
-    filmDetailsComponent.getElement().remove();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  });
-
-  filmComponent.setOpenDetailsClickHandler((evt) => {
-    evt.preventDefault();
-    render(document.body, filmDetailsComponent, RenderPosition.BEFOREEND);
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-
-  render(filmListElement.querySelector(`.films-list__container`), filmComponent, RenderPosition.BEFOREEND);
-};
-
-/**
- * Отрисовывает фильмы
- * @param {HTMLElement} filmListElement - контейнер в который будет вставлять
  * @param {Object[]} films - массив объектов с фильмами
  */
 const renderFilms = (filmListElement, films) => {
   films.forEach((film) => {
-    renderFilm(filmListElement, film);
+    new MovieController(filmListElement).render(film);
   });
 };
 
