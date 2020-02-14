@@ -9,6 +9,11 @@ export default class MovieController {
    */
   constructor(container) {
     this.container = container;
+
+    this._filmComponent = null;
+    this._filmDetailsComponent = null;
+
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   /**
@@ -16,29 +21,30 @@ export default class MovieController {
    * @param {Object} film - данные из объекта фильмов
    */
   render(film) {
-    const filmComponent = new FilmComponent(film);
-    const filmDetailsComponent = new FilmDetailsComponent(film);
+    this._filmComponent = new FilmComponent(film);
+    this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    const onEscKeyDown = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-      if (isEscKey) {
-        filmDetailsComponent.getElement().remove();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    filmDetailsComponent.setCloseButtonClickHandler(() => {
-      filmDetailsComponent.getElement().remove();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+    this._filmDetailsComponent.setCloseButtonClickHandler(() => {
+      this._filmDetailsComponent.getElement().remove();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    filmComponent.setOpenDetailsClickHandler((evt) => {
+    this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
-      render(document.body, filmDetailsComponent, RenderPosition.BEFOREEND);
-      document.addEventListener(`keydown`, onEscKeyDown);
+      render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    render(this.container.querySelector(`.films-list__container`), filmComponent, RenderPosition.BEFOREEND);
+    render(this.container.querySelector(`.films-list__container`), this._filmComponent, RenderPosition.BEFOREEND);
+  }
+
+  _onEscKeyDown(evt) {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      this._filmDetailsComponent.getElement().remove();
+
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    }
   }
 }
