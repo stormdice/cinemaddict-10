@@ -4,7 +4,6 @@ import FilmsListComponent from '../components/film-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import {RenderPosition, render, remove} from '../utils/render.js';
-import {getTopFilms} from '../utils/common.js';
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
@@ -18,20 +17,6 @@ const renderFilms = (filmListElement, films) => {
   films.forEach((film) => {
     new MovieController(filmListElement).render(film);
   });
-};
-
-/**
- * Отрисовывает блок с лучшими фильмами
- * @param {HTMLElement} container - контейнер для вставки
- * @param {Array} topFilms - массив фильмов
- * @param {string} title - заголовок блока
- */
-const renderTopFilms = (container, topFilms, title) => {
-  if (topFilms.length) {
-    const topFilmsList = new FilmsListComponent(title);
-    render(container, topFilmsList, RenderPosition.BEFOREEND);
-    renderFilms(topFilmsList.getElement(), topFilms);
-  }
 };
 
 /**
@@ -64,8 +49,6 @@ export default class PageController {
     this._films = films;
 
     const container = this._container.getElement();
-    const topRatedFilms = getTopFilms(this._films, `totalRating`);
-    const mostCommentedFilms = getTopFilms(this._films, `comments`);
 
     container.insertAdjacentElement(`beforebegin`, this._sortComponent.getElement());
 
@@ -82,8 +65,8 @@ export default class PageController {
 
     this._renderShowMoreButton();
 
-    renderTopFilms(container, topRatedFilms, `Top rated`);
-    renderTopFilms(container, mostCommentedFilms, `Most commented`);
+    this._renderTopFilms(container, `totalRating`, `Top rated`);
+    this._renderTopFilms(container, `comments`, `Most commented`);
   }
 
   /**
@@ -141,6 +124,25 @@ export default class PageController {
       this._renderShowMoreButton();
     } else {
       remove(this._showMoreButtonComponent);
+    }
+  }
+
+  /**
+   * Отрисовывает блок с двумя лучшими фильмами
+   * @param {HTMLElement} container - контейнер для вставки
+   * @param {string} props - свойство из объекта фильма
+   * @param {string} title - заголовок блока
+   */
+  _renderTopFilms(container, props, title) {
+    const topFilms = this._films
+      .sort((a, b) => b[props] - a[props])
+      .slice(0, 2)
+      .filter((film) => film[props]);
+
+    if (topFilms.length) {
+      const topFilmsList = new FilmsListComponent(title);
+      render(container, topFilmsList, RenderPosition.BEFOREEND);
+      renderFilms(topFilmsList.getElement(), topFilms);
     }
   }
 }
