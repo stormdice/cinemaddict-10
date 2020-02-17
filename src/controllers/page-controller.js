@@ -45,46 +45,31 @@ export default class PageController {
   constructor(container) {
     this._container = container;
 
+    this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     this._sortComponent = new SortComponent();
     this._noFilmsComponent = new NoFilmsComponent();
     this._filmListComponent = new FilmsListComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   /**
-   * Отрисовывает основной блок с фильмами, кнопку загрузить больше, дополнительные блоки с лучшими фильмами
+   * Отрисовывает основной блок с фильмами, кнопку загрузить больше и дополнительные блоки с лучшими фильмами
    * @param {Array} films - массив объектов с данными фильмов
    */
   render(films) {
-    /**
-     * Отрисовывает кнопку показать больше
-     */
-    const renderShowMoreButton = () => {
-      if (showingFilmsCount >= films.length) {
-        return;
-      }
-
-      render(filmListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-      this._showMoreButtonComponent.setClickHandler(() => {
-        const prevFilmsCount = showingFilmsCount;
-        showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
-
-        renderFilms(filmListElement, films.slice(prevFilmsCount, showingFilmsCount));
-
-        if (showingFilmsCount >= films.length) {
-          remove(this._showMoreButtonComponent);
-        }
-      });
-    };
+    this._films = films;
 
     const container = this._container.getElement();
-    const topRatedFilms = getTopFilms(films, `totalRating`);
-    const mostCommentedFilms = getTopFilms(films, `comments`);
+    const topRatedFilms = getTopFilms(this._films, `totalRating`);
+    const mostCommentedFilms = getTopFilms(this._films, `comments`);
 
     container.insertAdjacentElement(`beforebegin`, this._sortComponent.getElement());
 
-    if (!films.length) {
+    if (!this._films.length) {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -93,40 +78,69 @@ export default class PageController {
 
     const filmListElement = this._filmListComponent.getElement();
 
-    let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
+    renderFilms(filmListElement, this._films.slice(0, this._showingFilmsCount));
 
-    renderFilms(filmListElement, films.slice(0, showingFilmsCount));
-
-    renderShowMoreButton();
+    this._renderShowMoreButton();
 
     renderTopFilms(container, topRatedFilms, `Top rated`);
     renderTopFilms(container, mostCommentedFilms, `Most commented`);
+  }
 
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      let sortedFilms = [];
+  /**
+   * Отрисовывает кнопку показать больше
+   */
+  _renderShowMoreButton() {
+    if (this._showingFilmsCount >= this._films.length) {
+      return;
+    }
 
-      switch (sortType) {
-        case SortType.DEFAULT:
-          sortedFilms = films.slice(0, showingFilmsCount);
-          break;
-        case SortType.DATE:
-          sortedFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
-          break;
-        case SortType.RATING:
-          sortedFilms = films.slice().sort((a, b) => b.totalRating - a.totalRating);
-          break;
-      }
+    const filmListElement = this._filmListComponent.getElement();
 
-      filmListElement.querySelector(`.films-list__container`)
-        .innerHTML = ``;
+    render(filmListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-      renderFilms(container, sortedFilms);
+    this._showMoreButtonComponent.setClickHandler(() => {
+      const prevFilmsCount = this._showingFilmsCount;
+      this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      if (sortType === SortType.DEFAULT) {
-        renderShowMoreButton();
-      } else {
+      renderFilms(filmListElement, this._films.slice(prevFilmsCount, this._showingFilmsCount));
+
+      if (this._showingFilmsCount >= this._films.length) {
         remove(this._showMoreButtonComponent);
       }
     });
+  }
+
+  /**
+   * Сортирует фильмы
+   * @param {string} sortType - тип сортировки
+   */
+  _onSortTypeChange(sortType) {
+    let sortedFilms = [];
+
+    switch (sortType) {
+      case SortType.DEFAULT:
+        sortedFilms = this._films.slice(0, this._showingFilmsCount);
+        break;
+      case SortType.DATE:
+        sortedFilms = this._films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
+        break;
+      case SortType.RATING:
+        sortedFilms = this._films.slice().sort((a, b) => b.totalRating - a.totalRating);
+        break;
+    }
+
+    const container = this._container.getElement();
+    const filmListElement = this._filmListComponent.getElement();
+
+    filmListElement.querySelector(`.films-list__container`)
+      .innerHTML = ``;
+
+    renderFilms(container, sortedFilms);
+
+    if (sortType === SortType.DEFAULT) {
+      this._renderShowMoreButton();
+    } else {
+      remove(this._showMoreButtonComponent);
+    }
   }
 }
