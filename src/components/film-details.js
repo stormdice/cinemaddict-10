@@ -226,4 +226,28 @@ export default class FilmDetails extends AbstractComponent {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
   }
+
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setWatchlistInputChangeHandler(handler) {
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, handler);
+  }
+
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setWatchedInputChangeHandler(handler) {
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
+  }
+
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setFavoriteInputChangeHandler(handler) {
+    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+  }
 }
