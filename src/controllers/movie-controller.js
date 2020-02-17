@@ -2,15 +2,23 @@ import FilmComponent from '../components/film.js';
 import FilmDetailsComponent from '../components/film-details.js';
 import {RenderPosition, render, replace} from '../utils/render.js';
 
+const Mode = {
+  DEFAULT: `default`,
+  DETAILS: `details`,
+};
+
 export default class MovieController {
   /**
    * Создаёт контейнер
    * @param {HTMLElement} container - контейнер для вставки
    * @param {Function} onDataChange - функция для изменения объекта дааных
    */
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+
+    this._mode = Mode.DEFAULT;
 
     this._filmComponent = null;
     this._filmDetailsComponent = null;
@@ -31,8 +39,8 @@ export default class MovieController {
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
-      render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-      document.addEventListener(`keydown`, this._onEscKeyDown);
+
+      this._openFilmDetails();
     });
 
     this._filmComponent.setWatchlistClickHandler((evt) => {
@@ -57,8 +65,7 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setCloseButtonClickHandler(() => {
-      this._filmDetailsComponent.getElement().remove();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._closeFilmDetails();
     });
 
     this._filmDetailsComponent.setWatchlistInputChangeHandler(() => {
@@ -85,6 +92,35 @@ export default class MovieController {
     } else {
       render(this._container.querySelector(`.films-list__container`), this._filmComponent, RenderPosition.BEFOREEND);
     }
+  }
+
+  /**
+   * Показывает стандартное состояние карточки фильма
+   */
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closeFilmDetails();
+    }
+  }
+
+  /**
+   * Показывает попап
+   */
+  _openFilmDetails() {
+    this._onViewChange();
+
+    render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.DETAILS;
+  }
+
+  /**
+   * Убирает попап
+   */
+  _closeFilmDetails() {
+    this._filmDetailsComponent.getElement().remove();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.DEFAULT;
   }
 
   /**
