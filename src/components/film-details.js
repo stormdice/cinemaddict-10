@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component';
 import {formatDate} from '../utils/common.js';
 
 /**
@@ -199,7 +199,7 @@ const createFilmDetailsTemplate = (film) => {
  * Класс, представляющий попап
  * @extends AbstractComponent
  */
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   /**
    * Создаёт карточку фильма
    * @param {Object} film - фильм
