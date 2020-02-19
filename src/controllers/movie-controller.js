@@ -11,7 +11,8 @@ export default class MovieController {
   /**
    * Создаёт контейнер
    * @param {HTMLElement} container - контейнер для вставки
-   * @param {Function} onDataChange - функция для изменения объекта дааных
+   * @param {Function} onDataChange - измененяет объект данных
+   * @param {Function} onViewChange - запрет на открытие нескольких попапов
    */
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
@@ -109,6 +110,7 @@ export default class MovieController {
   _openFilmDetails() {
     this._onViewChange();
 
+    this._filmDetailsComponent.getElement().style = `animation: bounceInRight 0.3s;`;
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DETAILS;
