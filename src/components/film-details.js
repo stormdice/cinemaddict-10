@@ -88,8 +88,8 @@ const createEmotionsMarkup = (emotions) => {
   return emotions
     .map((emotion) => {
       return (
-        `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-"${emotion}" value="${emotion}">
-        <label class="film-details__emoji-label" for="emoji-"${emotion}">
+        `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
+        <label class="film-details__emoji-label" for="emoji-${emotion}">
           <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
         </label>`
       );
@@ -283,6 +283,8 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
 
     this._film = film;
+
+    this._subscribeOnEvents();
   }
 
   /**
@@ -291,6 +293,10 @@ export default class FilmDetails extends AbstractSmartComponent {
    */
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
+  }
+
+  recoveryListeners() {
+    this._subscribeOnEvents();
   }
 
   /**
@@ -324,5 +330,21 @@ export default class FilmDetails extends AbstractSmartComponent {
    */
   setFavoriteInputChangeHandler(handler) {
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__new-comment`)
+      .addEventListener(`click`, function (evt) {
+        if (evt.target.tagName !== `INPUT`) {
+          return;
+        }
+
+        const emotionContainer = element.querySelector(`.film-details__add-emoji-label`);
+        const selectedEmotion = evt.target.value;
+
+        emotionContainer.innerHTML = `<img src="./images/emoji/${selectedEmotion}.png" width="55" height="55" alt="emoji">`;
+      });
   }
 }
