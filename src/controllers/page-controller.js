@@ -32,11 +32,12 @@ export default class PageController {
   /**
    * Создаёт контейнер
    * @param {HTMLElement} container - контейнер для вставки блоков с фильмами
+   * @param {Object} moviesModel - модель фильмов
    */
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._container = container;
+    this._moviesModel = moviesModel;
 
-    this._films = [];
     this._showedFilmControllers = [];
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     this._sortComponent = new SortComponent();
@@ -55,14 +56,13 @@ export default class PageController {
    * Отрисовывает основной блок с фильмами, кнопку загрузить больше и дополнительные блоки с лучшими фильмами
    * @param {Array} films - массив объектов с данными фильмов
    */
-  render(films) {
-    this._films = films;
-
+  render() {
     const container = this._container.getElement();
+    const films = this._moviesModel.films;
 
     container.insertAdjacentElement(`beforebegin`, this._sortComponent.getElement());
 
-    if (!this._films.length) {
+    if (!films.length) {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -71,7 +71,7 @@ export default class PageController {
 
     const filmListElement = this._filmListComponent.getElement();
 
-    const newFilms = renderFilms(filmListElement, this._films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
+    const newFilms = renderFilms(filmListElement, films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
     this._renderShowMoreButton();
@@ -87,15 +87,11 @@ export default class PageController {
    * @param {Object} newData - новые данные
    */
   _onDataChange(movieController, oldData, newData) {
-    const index = this._films.findIndex((it) => it === oldData);
+    const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      movieController.render(newData);
     }
-
-    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-
-    movieController.render(this._films[index]);
   }
 
   /**
@@ -111,7 +107,7 @@ export default class PageController {
    * Отрисовывает кнопку показать больше
    */
   _renderShowMoreButton() {
-    if (this._showingFilmsCount >= this._films.length) {
+    if (this._showingFilmsCount >= this._moviesModel.films.length) {
       return;
     }
 
@@ -123,10 +119,10 @@ export default class PageController {
       const prevFilmsCount = this._showingFilmsCount;
       this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-      const newFilms = renderFilms(filmListElement, this._films.slice(prevFilmsCount, this._showingFilmsCount), this._onDataChange, this._onViewChange);
+      const newFilms = renderFilms(filmListElement, this._moviesModel.films.slice(prevFilmsCount, this._showingFilmsCount), this._onDataChange, this._onViewChange);
       this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
-      if (this._showingFilmsCount >= this._films.length) {
+      if (this._showingFilmsCount >= this._moviesModel.films.length) {
         remove(this._showMoreButtonComponent);
       }
     });
@@ -138,16 +134,17 @@ export default class PageController {
    */
   _onSortTypeChange(sortType) {
     let sortedFilms = [];
+    const films = this._moviesModel.films;
 
     switch (sortType) {
       case SortType.DEFAULT:
-        sortedFilms = this._films.slice(0, this._showingFilmsCount);
+        sortedFilms = films.slice(0, this._showingFilmsCount);
         break;
       case SortType.DATE:
-        sortedFilms = this._films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
+        sortedFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
         break;
       case SortType.RATING:
-        sortedFilms = this._films.slice().sort((a, b) => b.totalRating - a.totalRating);
+        sortedFilms = films.slice().sort((a, b) => b.totalRating - a.totalRating);
         break;
     }
 
@@ -174,7 +171,7 @@ export default class PageController {
    * @param {string} title - заголовок блока
    */
   _renderTopFilms(container, props, title) {
-    const topFilms = this._films
+    const topFilms = this._moviesModel.films
       .sort((a, b) => b[props] - a[props])
       .slice(0, 2)
       .filter((film) => film[props]);

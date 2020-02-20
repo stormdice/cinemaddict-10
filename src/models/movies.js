@@ -1,4 +1,10 @@
+/**
+ * Класс, представляющий модель фильмов
+ */
 export default class Movies {
+  /**
+   * Создаёт модель для управления списком фильмов
+   */
   constructor() {
     this._films = [];
   }
@@ -11,7 +17,13 @@ export default class Movies {
     this._films = Array.from(films);
   }
 
-  updateFilms(id, film) {
+  /**
+   * Обновляет фильм
+   * @param {string} id - идентификатор фильма
+   * @param {Object} film - данные из объекта фильма
+   * @return {Boolean}
+   */
+  updateFilm(id, film) {
     const index = this._films.findIndex((movie) => movie.id === id);
 
     if (index === -1) {
