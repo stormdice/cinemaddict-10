@@ -14,7 +14,7 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
  * @param {Object[]} films - массив объектов с фильмами
  * @param {Function} onDataChange - изменяет данные компонента
  * @param {Function} onViewChange - показывает стандартное состояние карточки
- * @return {Object} - Возвращает MovieController
+ * @return {Object} - Возвращает контроллер с фильмами
  */
 const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
   return films.map((film) => {
@@ -48,12 +48,13 @@ export default class PageController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   /**
-   * Отрисовывает основной блок с фильмами, кнопку загрузить больше и дополнительные блоки с лучшими фильмами
+   * Отображает основной блок с фильмами, кнопку загрузить больше и дополнительные блоки с лучшими фильмами
    * @param {Array} films - массив объектов с данными фильмов
    */
   render() {
@@ -69,15 +70,35 @@ export default class PageController {
 
     render(container, this._filmListComponent, RenderPosition.BEFOREEND);
 
-    const filmListElement = this._filmListComponent.getElement();
-
-    const newFilms = renderFilms(filmListElement, films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    this._renderFilms(films.slice(0, this._showingFilmsCount));
 
     this._renderShowMoreButton();
 
     this._renderTopFilms(container, `totalRating`, `Top rated`);
     this._renderTopFilms(container, `comments`, `Most commented`);
+  }
+
+  /**
+   * Отрисовывает карточки фильмов
+   * @param {Object[]} films - массив с данными фильмов
+   */
+  _renderFilms(films) {
+    const filmListElement = this._filmListComponent.getElement();
+
+    const newFilms = renderFilms(filmListElement, films, this._onDataChange, this._onViewChange);
+    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    this._showingFilmsCount = this._showedFilmControllers.length;
+  }
+
+  /**
+   * Удаляет карточки фильмов
+   */
+  _removeFilms() {
+    const filmListContainerElement = this._filmListComponent.getElement().querySelector(`.films-list__container`);
+
+    filmListContainerElement.innerHTML = ``;
+
+    this._showedFilmControllers = [];
   }
 
   /**
@@ -107,25 +128,32 @@ export default class PageController {
    * Отрисовывает кнопку показать больше
    */
   _renderShowMoreButton() {
+    remove(this._showMoreButtonComponent);
+
     if (this._showingFilmsCount >= this._moviesModel.films.length) {
       return;
     }
 
     const filmListElement = this._filmListComponent.getElement();
-
     render(filmListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    this._showMoreButtonComponent.setClickHandler(() => {
-      const prevFilmsCount = this._showingFilmsCount;
-      this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+    this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
+  }
 
-      const newFilms = renderFilms(filmListElement, this._moviesModel.films.slice(prevFilmsCount, this._showingFilmsCount), this._onDataChange, this._onViewChange);
-      this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+  /**
+   * показывает очередное количество фильмов
+   */
+  _onShowMoreButtonClick() {
+    const prevFilmsCount = this._showingFilmsCount;
+    const films = this._moviesModel.films;
 
-      if (this._showingFilmsCount >= this._moviesModel.films.length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
+    this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+
+    this._renderFilms(films.slice(prevFilmsCount, this._showingFilmsCount));
+
+    if (this._showingFilmsCount >= this._moviesModel.films.length) {
+      remove(this._showMoreButtonComponent);
+    }
   }
 
   /**
@@ -148,14 +176,8 @@ export default class PageController {
         break;
     }
 
-    const container = this._container.getElement();
-    const filmListElement = this._filmListComponent.getElement();
-
-    filmListElement.querySelector(`.films-list__container`)
-      .innerHTML = ``;
-
-    const newFilms = renderFilms(container, sortedFilms, this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = newFilms;
+    this._removeFilms();
+    this._renderFilms(sortedFilms);
 
     if (sortType === SortType.DEFAULT) {
       this._renderShowMoreButton();
