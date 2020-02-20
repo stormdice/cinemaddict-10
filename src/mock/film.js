@@ -143,6 +143,7 @@ const generateDescriptions = (descriptions) => {
  */
 const generateFilm = () => {
   return {
+    id: String(new Date() + Math.random()),
     title: getRandomArrayItem(FILM_TITLES),
     originalTitle: getRandomArrayItem(FILM_TITLES),
     totalRating: generateRating(),
