@@ -1,5 +1,7 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component';
 import {formatDate} from '../utils/common.js';
+
+const EMOTIONS = [`smile`, `sleeping`, `puke`, `angry`];
 
 /**
  * Создаёт и возвращает разметку жанра
@@ -14,6 +16,105 @@ const createGenreMarkup = (genres) => {
       );
     })
     .join(`\n`);
+};
+
+/**
+ * Создаёт и возвращает разметку блока оценки фильма
+ * @param {Object} film - данные из объекта фильма
+ * @return {string}
+ */
+const createUserRatingMarkup = (film) => {
+  const {title, poster} = film;
+
+  return (
+    `<div class="form-details__middle-container">
+      <section class="film-details__user-rating-wrap">
+        <div class="film-details__user-rating-controls">
+          <button class="film-details__watched-reset" type="button">Undo</button>
+        </div>
+
+        <div class="film-details__user-score">
+          <div class="film-details__user-rating-poster">
+            <img src="${poster}" alt="film-poster" class="film-details__user-rating-img">
+          </div>
+
+          <section class="film-details__user-rating-inner">
+            <h3 class="film-details__user-rating-title">${title}</h3>
+
+            <p class="film-details__user-rating-feelings">How you feel it?</p>
+
+            <div class="film-details__user-rating-score">
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
+              <label class="film-details__user-rating-label" for="rating-1">1</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
+              <label class="film-details__user-rating-label" for="rating-2">2</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
+              <label class="film-details__user-rating-label" for="rating-3">3</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
+              <label class="film-details__user-rating-label" for="rating-4">4</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5">
+              <label class="film-details__user-rating-label" for="rating-5">5</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
+              <label class="film-details__user-rating-label" for="rating-6">6</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
+              <label class="film-details__user-rating-label" for="rating-7">7</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
+              <label class="film-details__user-rating-label" for="rating-8">8</label>
+
+              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" checked="">
+              <label class="film-details__user-rating-label" for="rating-9">9</label>
+
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>`
+  );
+};
+
+/**
+ * Создаёт и возвращает разметку эмодзи
+ * @param {string[]} emotions
+ * @return {string}
+ */
+const createEmotionsMarkup = (emotions) => {
+  return emotions
+    .map((emotion) => {
+      return (
+        `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
+        <label class="film-details__emoji-label" for="emoji-${emotion}">
+          <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
+        </label>`
+      );
+    })
+    .join(`\n`);
+};
+
+/**
+ * Создаёт и возвращает разметку нового комментария
+ * @return {string}
+ */
+const createNewCommentMarkup = () => {
+  const emotions = createEmotionsMarkup(EMOTIONS);
+
+  return (
+    `<div class="film-details__new-comment">
+      <div for="add-emoji" class="film-details__add-emoji-label"></div>
+
+      <label class="film-details__comment-label">
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+      </label>
+
+      <div class="film-details__emoji-list">${emotions}</div>
+    </div>`
+  );
 };
 
 /**
@@ -100,6 +201,8 @@ const createFilmDetailsTemplate = (film) => {
           </section>
         </div>
 
+        ${isWatched ? createUserRatingMarkup(film) : ``}
+
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
@@ -159,35 +262,7 @@ const createFilmDetailsTemplate = (film) => {
               </li>
             </ul>
 
-            <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
-
-              <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-              </label>
-
-              <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
-                <label class="film-details__emoji-label" for="emoji-smile">
-                  <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                </label>
-
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
-                <label class="film-details__emoji-label" for="emoji-sleeping">
-                  <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                </label>
-
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
-                <label class="film-details__emoji-label" for="emoji-gpuke">
-                  <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                </label>
-
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
-                <label class="film-details__emoji-label" for="emoji-angry">
-                  <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                </label>
-              </div>
-            </div>
+            ${createNewCommentMarkup()}
           </section>
         </div>
       </form>
@@ -199,7 +274,7 @@ const createFilmDetailsTemplate = (film) => {
  * Класс, представляющий попап
  * @extends AbstractComponent
  */
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   /**
    * Создаёт карточку фильма
    * @param {Object} film - фильм
@@ -208,6 +283,8 @@ export default class FilmDetails extends AbstractComponent {
     super();
 
     this._film = film;
+
+    this._subscribeOnEvents();
   }
 
   /**
@@ -218,6 +295,10 @@ export default class FilmDetails extends AbstractComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
+  recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
   /**
    * Устанавливает слушатель событий
    * @param {Function} handler - функция для слушателя
@@ -225,5 +306,45 @@ export default class FilmDetails extends AbstractComponent {
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
+  }
+
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setWatchlistInputChangeHandler(handler) {
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, handler);
+  }
+
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setWatchedInputChangeHandler(handler) {
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
+  }
+
+  /**
+   * Устанавливает слушатель событий
+   * @param {Function} handler - функция для слушателя
+   */
+  setFavoriteInputChangeHandler(handler) {
+    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__new-comment`)
+      .addEventListener(`click`, function (evt) {
+        if (evt.target.tagName !== `INPUT`) {
+          return;
+        }
+
+        const emotionContainer = element.querySelector(`.film-details__add-emoji-label`);
+        const selectedEmotion = evt.target.value;
+
+        emotionContainer.innerHTML = `<img src="./images/emoji/${selectedEmotion}.png" width="55" height="55" alt="emoji">`;
+      });
   }
 }

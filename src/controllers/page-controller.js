@@ -1,11 +1,9 @@
 import SortComponent, {SortType} from '../components/sort.js';
+import MovieController from './movie-controller.js';
 import FilmsListComponent from '../components/film-list.js';
-import FilmComponent from '../components/film.js';
-import FilmDetailsComponent from '../components/film-details.js';
 import NoFilmsComponent from '../components/no-films.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import {RenderPosition, render, remove} from '../utils/render.js';
-import {getTopFilms} from '../utils/common.js';
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
@@ -13,58 +11,18 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 /**
  * Отрисовывает фильмы
  * @param {HTMLElement} filmListElement - контейнер в который будет вставлять
- * @param {Object} film - данные из объекта фильмов
- */
-const renderFilm = (filmListElement, film) => {
-  const filmComponent = new FilmComponent(film);
-  const filmDetailsComponent = new FilmDetailsComponent(film);
-
-  const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      filmDetailsComponent.getElement().remove();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  filmDetailsComponent.setCloseButtonClickHandler(() => {
-    filmDetailsComponent.getElement().remove();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  });
-
-  filmComponent.setOpenDetailsClickHandler((evt) => {
-    evt.preventDefault();
-    render(document.body, filmDetailsComponent, RenderPosition.BEFOREEND);
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-
-  render(filmListElement.querySelector(`.films-list__container`), filmComponent, RenderPosition.BEFOREEND);
-};
-
-/**
- * Отрисовывает фильмы
- * @param {HTMLElement} filmListElement - контейнер в который будет вставлять
  * @param {Object[]} films - массив объектов с фильмами
+ * @param {Function} onDataChange - изменяет данные компонента
+ * @param {Function} onViewChange - показывает стандартное состояние карточки
+ * @return {Object} - Возвращает MovieController
  */
-const renderFilms = (filmListElement, films) => {
-  films.forEach((film) => {
-    renderFilm(filmListElement, film);
-  });
-};
+const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
+  return films.map((film) => {
+    const movieController = new MovieController(filmListElement, onDataChange, onViewChange);
+    movieController.render(film);
 
-/**
- * Отрисовывает блок с лучшими фильмами
- * @param {HTMLElement} container - контейнер для вставки
- * @param {Array} topFilms - массив фильмов
- * @param {string} title - заголовок блока
- */
-const renderTopFilms = (container, topFilms, title) => {
-  if (topFilms.length) {
-    const topFilmsList = new FilmsListComponent(title);
-    render(container, topFilmsList, RenderPosition.BEFOREEND);
-    renderFilms(topFilmsList.getElement(), topFilms);
-  }
+    return movieController;
+  });
 };
 
 /**
@@ -78,46 +36,33 @@ export default class PageController {
   constructor(container) {
     this._container = container;
 
+    this._films = [];
+    this._showedFilmControllers = [];
+    this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     this._sortComponent = new SortComponent();
     this._noFilmsComponent = new NoFilmsComponent();
     this._filmListComponent = new FilmsListComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
+
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   /**
-   * Отрисовывает основной блок с фильмами, кнопку загрузить больше, дополнительные блоки с лучшими фильмами
+   * Отрисовывает основной блок с фильмами, кнопку загрузить больше и дополнительные блоки с лучшими фильмами
    * @param {Array} films - массив объектов с данными фильмов
    */
   render(films) {
-    /**
-     * Отрисовывает кнопку показать больше
-     */
-    const renderShowMoreButton = () => {
-      if (showingFilmsCount >= films.length) {
-        return;
-      }
-
-      render(filmListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-      this._showMoreButtonComponent.setClickHandler(() => {
-        const prevFilmsCount = showingFilmsCount;
-        showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
-
-        renderFilms(filmListElement, films.slice(prevFilmsCount, showingFilmsCount));
-
-        if (showingFilmsCount >= films.length) {
-          remove(this._showMoreButtonComponent);
-        }
-      });
-    };
+    this._films = films;
 
     const container = this._container.getElement();
-    const topRatedFilms = getTopFilms(films, `totalRating`);
-    const mostCommentedFilms = getTopFilms(films, `comments`);
 
     container.insertAdjacentElement(`beforebegin`, this._sortComponent.getElement());
 
-    if (!films.length) {
+    if (!this._films.length) {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -126,40 +71,118 @@ export default class PageController {
 
     const filmListElement = this._filmListComponent.getElement();
 
-    let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
+    const newFilms = renderFilms(filmListElement, this._films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
+    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
-    renderFilms(filmListElement, films.slice(0, showingFilmsCount));
+    this._renderShowMoreButton();
 
-    renderShowMoreButton();
+    this._renderTopFilms(container, `totalRating`, `Top rated`);
+    this._renderTopFilms(container, `comments`, `Most commented`);
+  }
 
-    renderTopFilms(container, topRatedFilms, `Top rated`);
-    renderTopFilms(container, mostCommentedFilms, `Most commented`);
+  /**
+   * Изменяет данные объекта
+   * @param {Object} movieController контроллер фильмов
+   * @param {Object} oldData - станые данные
+   * @param {Object} newData - новые данные
+   */
+  _onDataChange(movieController, oldData, newData) {
+    const index = this._films.findIndex((it) => it === oldData);
 
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      let sortedFilms = [];
+    if (index === -1) {
+      return;
+    }
 
-      switch (sortType) {
-        case SortType.DEFAULT:
-          sortedFilms = films.slice(0, showingFilmsCount);
-          break;
-        case SortType.DATE:
-          sortedFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
-          break;
-        case SortType.RATING:
-          sortedFilms = films.slice().sort((a, b) => b.totalRating - a.totalRating);
-          break;
-      }
+    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
 
-      filmListElement.querySelector(`.films-list__container`)
-        .innerHTML = ``;
+    movieController.render(this._films[index]);
+  }
 
-      renderFilms(container, sortedFilms);
+  /**
+   * Переводит все карточки с фильмами в стандартный режим(закрывает все попапы)
+   */
+  _onViewChange() {
+    this._showedFilmControllers.forEach((it) => {
+      it.setDefaultView();
+    });
+  }
 
-      if (sortType === SortType.DEFAULT) {
-        renderShowMoreButton();
-      } else {
+  /**
+   * Отрисовывает кнопку показать больше
+   */
+  _renderShowMoreButton() {
+    if (this._showingFilmsCount >= this._films.length) {
+      return;
+    }
+
+    const filmListElement = this._filmListComponent.getElement();
+
+    render(filmListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
+
+    this._showMoreButtonComponent.setClickHandler(() => {
+      const prevFilmsCount = this._showingFilmsCount;
+      this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+
+      const newFilms = renderFilms(filmListElement, this._films.slice(prevFilmsCount, this._showingFilmsCount), this._onDataChange, this._onViewChange);
+      this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+
+      if (this._showingFilmsCount >= this._films.length) {
         remove(this._showMoreButtonComponent);
       }
     });
+  }
+
+  /**
+   * Сортирует фильмы
+   * @param {string} sortType - тип сортировки
+   */
+  _onSortTypeChange(sortType) {
+    let sortedFilms = [];
+
+    switch (sortType) {
+      case SortType.DEFAULT:
+        sortedFilms = this._films.slice(0, this._showingFilmsCount);
+        break;
+      case SortType.DATE:
+        sortedFilms = this._films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
+        break;
+      case SortType.RATING:
+        sortedFilms = this._films.slice().sort((a, b) => b.totalRating - a.totalRating);
+        break;
+    }
+
+    const container = this._container.getElement();
+    const filmListElement = this._filmListComponent.getElement();
+
+    filmListElement.querySelector(`.films-list__container`)
+      .innerHTML = ``;
+
+    const newFilms = renderFilms(container, sortedFilms, this._onDataChange, this._onViewChange);
+    this._showedFilmControllers = newFilms;
+
+    if (sortType === SortType.DEFAULT) {
+      this._renderShowMoreButton();
+    } else {
+      remove(this._showMoreButtonComponent);
+    }
+  }
+
+  /**
+   * Отрисовывает блок с двумя лучшими фильмами
+   * @param {HTMLElement} container - контейнер для вставки
+   * @param {string} props - свойство из объекта фильма
+   * @param {string} title - заголовок блока
+   */
+  _renderTopFilms(container, props, title) {
+    const topFilms = this._films
+      .sort((a, b) => b[props] - a[props])
+      .slice(0, 2)
+      .filter((film) => film[props]);
+
+    if (topFilms.length) {
+      const topFilmsList = new FilmsListComponent(title);
+      render(container, topFilmsList, RenderPosition.BEFOREEND);
+      renderFilms(topFilmsList.getElement(), topFilms, this._onDataChange, this._onViewChange);
+    }
   }
 }

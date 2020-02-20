@@ -29,17 +29,4 @@ const formatDuration = (duration) => {
   return `${hours}h ${minutes}m`;
 };
 
-/**
- * Возвращает 2 топовых фильма по заданному свойству
- * @param {Array} films - массив фильмов
- * @param {string} props - свойство из объекта фильма
- * @return {Array}
- */
-const getTopFilms = (films, props) => {
-  return films
-    .sort((a, b) => b[props] - a[props])
-    .slice(0, 2)
-    .filter((film) => film[props]);
-};
-
-export {formatDuration, getTopFilms, formatDate};
+export {formatDuration, formatDate};
