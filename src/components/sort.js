@@ -1,10 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-
-const SortType = {
-  DEFAULT: `default`,
-  DATE: `date`,
-  RATING: `rating`,
-};
+import {SortType} from '../const.js';
 
 /**
  * Создаёт и возвращает разметку сортировки
@@ -70,5 +65,3 @@ export default class Sort extends AbstractComponent {
     });
   }
 }
-
-export {SortType};

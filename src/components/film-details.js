@@ -1,7 +1,6 @@
 import AbstractSmartComponent from './abstract-smart-component';
 import {formatDate} from '../utils/common.js';
-
-const EMOTIONS = [`smile`, `sleeping`, `puke`, `angry`];
+import {EMOTIONS} from '../const.js';
 
 /**
  * Создаёт и возвращает разметку жанра

@@ -1,18 +1,6 @@
 import AbstractComponent from './abstract-component.js';
+import {userRanks} from '../const.js';
 
-const userRanks = {
-  novice: {
-    min: 1,
-    max: 10
-  },
-  fan: {
-    min: 11,
-    max: 20
-  },
-  movieBuff: {
-    min: 21
-  }
-};
 
 /**
  * Возвращает звание пользователя в зависимости от количества просмотренных фильмов
