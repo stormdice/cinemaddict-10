@@ -33,9 +33,11 @@ export default class PageController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._moviesModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -139,6 +141,12 @@ export default class PageController {
     } else {
       remove(this._showMoreButtonComponent);
     }
+  }
+
+  _onFilterChange() {
+    this._removeFilms();
+    this._renderFilms(this._moviesModel.films.slice(0, SHOWING_FILMS_COUNT_ON_START));
+    this._renderShowMoreButton();
   }
 
   _renderTopFilms(container, props, title) {

@@ -1,10 +1,11 @@
 import AbstractComponent from './abstract-component.js';
-import {getFilterName} from '../utils/common.js';
+import {FilterType} from '../const.js';
+import {getFilterTitle} from '../utils/common.js';
 
 const createFilterMarkup = (filter) => {
   const {name, count, active} = filter;
 
-  const title = getFilterName(name);
+  const title = getFilterTitle(name);
   const countMarkup = count > 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``;
   const activeClass = active ? `main-navigation__item--active` : ``;
 
@@ -29,6 +30,7 @@ export default class Filter extends AbstractComponent {
     super();
 
     this._filters = filters;
+    this._currentFilterType = FilterType.ALL;
   }
 
   getTemplate() {
@@ -39,7 +41,23 @@ export default class Filter extends AbstractComponent {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
-      handler();
+      let filterName = evt.target.dataset.filterType;
+
+      if (filterName === undefined && evt.target.parentElement.dataset.filterType === undefined) {
+        return;
+      }
+
+      if (evt.target.parentElement.dataset.filterType !== undefined) {
+        filterName = evt.target.parentElement.dataset.filterType;
+      }
+
+      if (this._currentFilterType === filterName) {
+        return;
+      }
+
+      this._currentFilterType = filterName;
+
+      handler(filterName);
     });
   }
 }

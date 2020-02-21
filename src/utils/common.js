@@ -24,12 +24,12 @@ const formatDuration = (duration) => {
   return `${hours}h ${minutes}m`;
 };
 
-const getFilterName = (name) => {
-  if (name === `all`) {
+const getFilterTitle = (title) => {
+  if (title === `all`) {
     return `All movies`;
   }
 
-  return name[0].toUpperCase().concat(name.slice(1));
+  return title[0].toUpperCase().concat(title.slice(1));
 };
 
-export {formatDuration, formatDate, getFilterName};
+export {formatDuration, formatDate, getFilterTitle};

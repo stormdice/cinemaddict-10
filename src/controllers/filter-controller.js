@@ -1,7 +1,7 @@
 import FilterComponent from '../components/filter.js';
 import {FilterType} from '../const.js';
 import {render, replace, RenderPosition} from '../utils/render.js';
-import {getFilmsByFilter} from '../utils/filter';
+import {getFilmsByFilter} from '../utils/filter.js';
 
 export default class FilterController {
   constructor(container, moviesModel) {
@@ -10,6 +10,8 @@ export default class FilterController {
 
     this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
+
+    this._onFilterChange = this._onFilterChange.bind(this);
   }
 
   render() {
@@ -34,7 +36,8 @@ export default class FilterController {
     }
   }
 
-  _onFilterChange() {
-    // console.log(`Меняем фильтр`);
+  _onFilterChange(filterType) {
+    this._moviesModel.filter = filterType;
+    this._activeFilterType = filterType;
   }
 }

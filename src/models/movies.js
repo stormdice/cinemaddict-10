@@ -1,16 +1,16 @@
-/**
- * Класс, представляющий модель фильмов
- */
+import {getFilmsByFilter} from '../utils/filter.js';
+import {FilterType} from '../const.js';
+
 export default class Movies {
-  /**
-   * Создаёт модель для управления списком фильмов
-   */
   constructor() {
     this._films = [];
+    this._activeFilterType = FilterType.ALL;
+
+    this._filterChangeHandlers = [];
   }
 
   get films() {
-    return this._films;
+    return getFilmsByFilter(this._films, this._activeFilterType);
   }
 
   get allFilms() {
@@ -21,12 +21,11 @@ export default class Movies {
     this._films = Array.from(films);
   }
 
-  /**
-   * Обновляет фильм
-   * @param {string} id - идентификатор фильма
-   * @param {Object} film - данные из объекта фильма
-   * @return {Boolean}
-   */
+  set filter(filterType) {
+    this._activeFilterType = filterType;
+    this._filterChangeHandlers.forEach((handler) => handler());
+  }
+
   updateFilm(id, film) {
     const index = this._films.findIndex((movie) => movie.id === id);
 
@@ -37,5 +36,9 @@ export default class Movies {
     this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
 
     return true;
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
   }
 }
