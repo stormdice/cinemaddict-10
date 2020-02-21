@@ -9,14 +9,6 @@ import {RenderPosition, render, remove} from '../utils/render.js';
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
-/**
- * Отрисовывает фильмы
- * @param {HTMLElement} filmListElement - контейнер в который будет вставлять
- * @param {Object[]} films - массив объектов с фильмами
- * @param {Function} onDataChange - изменяет данные компонента
- * @param {Function} onViewChange - показывает стандартное состояние карточки
- * @return {Object} - Возвращает контроллер с фильмами
- */
 const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
   return films.map((film) => {
     const movieController = new MovieController(filmListElement, onDataChange, onViewChange);
@@ -26,15 +18,7 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
   });
 };
 
-/**
- * Класс, отвечающий за отрисовку фильмов
- */
 export default class PageController {
-  /**
-   * Создаёт контейнер
-   * @param {HTMLElement} container - контейнер для вставки блоков с фильмами
-   * @param {Object} moviesModel - модель фильмов
-   */
   constructor(container, moviesModel) {
     this._container = container;
     this._moviesModel = moviesModel;
@@ -54,10 +38,6 @@ export default class PageController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  /**
-   * Отображает основной блок с фильмами, кнопку загрузить больше и дополнительные блоки с лучшими фильмами
-   * @param {Array} films - массив объектов с данными фильмов
-   */
   render() {
     const container = this._container.getElement();
     const films = this._moviesModel.films;
@@ -79,10 +59,6 @@ export default class PageController {
     this._renderTopFilms(container, `comments`, `Most commented`);
   }
 
-  /**
-   * Отрисовывает карточки фильмов
-   * @param {Object[]} films - массив с данными фильмов
-   */
   _renderFilms(films) {
     const filmListElement = this._filmListComponent.getElement();
 
@@ -91,9 +67,6 @@ export default class PageController {
     this._showingFilmsCount = this._showedFilmControllers.length;
   }
 
-  /**
-   * Удаляет карточки фильмов
-   */
   _removeFilms() {
     const filmListContainerElement = this._filmListComponent.getElement().querySelector(`.films-list__container`);
 
@@ -102,12 +75,6 @@ export default class PageController {
     this._showedFilmControllers = [];
   }
 
-  /**
-   * Изменяет данные объекта
-   * @param {Object} movieController контроллер фильмов
-   * @param {Object} oldData - станые данные
-   * @param {Object} newData - новые данные
-   */
   _onDataChange(movieController, oldData, newData) {
     const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
 
@@ -116,18 +83,12 @@ export default class PageController {
     }
   }
 
-  /**
-   * Переводит все карточки с фильмами в стандартный режим(закрывает все попапы)
-   */
   _onViewChange() {
     this._showedFilmControllers.forEach((it) => {
       it.setDefaultView();
     });
   }
 
-  /**
-   * Отрисовывает кнопку показать больше
-   */
   _renderShowMoreButton() {
     remove(this._showMoreButtonComponent);
 
@@ -141,9 +102,6 @@ export default class PageController {
     this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
   }
 
-  /**
-   * показывает очередное количество фильмов
-   */
   _onShowMoreButtonClick() {
     const prevFilmsCount = this._showingFilmsCount;
     const films = this._moviesModel.films;
@@ -157,10 +115,6 @@ export default class PageController {
     }
   }
 
-  /**
-   * Сортирует фильмы
-   * @param {string} sortType - тип сортировки
-   */
   _onSortTypeChange(sortType) {
     let sortedFilms = [];
     const films = this._moviesModel.films;
@@ -187,12 +141,6 @@ export default class PageController {
     }
   }
 
-  /**
-   * Отрисовывает блок с двумя лучшими фильмами
-   * @param {HTMLElement} container - контейнер для вставки
-   * @param {string} props - свойство из объекта фильма
-   * @param {string} title - заголовок блока
-   */
   _renderTopFilms(container, props, title) {
     const topFilms = this._moviesModel.films
       .sort((a, b) => b[props] - a[props])

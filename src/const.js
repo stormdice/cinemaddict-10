@@ -21,10 +21,10 @@ const userRanks = {
 };
 
 const FilterType = {
-  ALL: `All movies`,
-  WATCHLIST: `Watchlist`,
-  HISTORY: `History`,
-  FAVORITES: `Favorites`,
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
 };
 
 export {userRanks, EMOTIONS, SortType, FilterType};

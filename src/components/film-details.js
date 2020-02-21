@@ -2,11 +2,6 @@ import AbstractSmartComponent from './abstract-smart-component';
 import {formatDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
 
-/**
- * Создаёт и возвращает разметку жанра
- * @param {Set} genres - сет жанров
- * @return {string}
- */
 const createGenreMarkup = (genres) => {
   return Array.from(genres)
     .map((filmGenre) => {
@@ -17,11 +12,6 @@ const createGenreMarkup = (genres) => {
     .join(`\n`);
 };
 
-/**
- * Создаёт и возвращает разметку блока оценки фильма
- * @param {Object} film - данные из объекта фильма
- * @return {string}
- */
 const createUserRatingMarkup = (film) => {
   const {title, poster} = film;
 
@@ -78,11 +68,6 @@ const createUserRatingMarkup = (film) => {
   );
 };
 
-/**
- * Создаёт и возвращает разметку эмодзи
- * @param {string[]} emotions
- * @return {string}
- */
 const createEmotionsMarkup = (emotions) => {
   return emotions
     .map((emotion) => {
@@ -96,10 +81,6 @@ const createEmotionsMarkup = (emotions) => {
     .join(`\n`);
 };
 
-/**
- * Создаёт и возвращает разметку нового комментария
- * @return {string}
- */
 const createNewCommentMarkup = () => {
   const emotions = createEmotionsMarkup(EMOTIONS);
 
@@ -116,11 +97,6 @@ const createNewCommentMarkup = () => {
   );
 };
 
-/**
- * Создаёт и возвращает разметку попапа
- * @param {Object} film - данные из объекта фильма
- * @return {string}
- */
 const createFilmDetailsTemplate = (film) => {
   const {poster, ageRating, title, originalTitle, country, genre, totalRating, releaseDate, runtime, description, isWatchlist, isWatched, isFavorite} = film;
 
@@ -269,15 +245,7 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-/**
- * Класс, представляющий попап
- * @extends AbstractComponent
- */
 export default class FilmDetails extends AbstractSmartComponent {
-  /**
-   * Создаёт карточку фильма
-   * @param {Object} film - фильм
-   */
   constructor(film) {
     super();
 
@@ -286,10 +254,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
@@ -298,35 +262,19 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchlistInputChangeHandler(handler) {
     this.getElement().querySelector(`#watchlist`).addEventListener(`change`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchedInputChangeHandler(handler) {
     this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setFavoriteInputChangeHandler(handler) {
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
   }

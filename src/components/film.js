@@ -1,19 +1,9 @@
 import AbstractComponent from './abstract-component.js';
 
-/**
- * Возвращает 1 жанр для карточки фильма
- * @param {Set} genres - сет жанров
- * @return {Array}
- */
 const generateGenre = (genres) => {
   return Array.from(genres).slice(0, 1);
 };
 
-/**
- * Создаёт и возвращает разметку фильма
- * @param {Object} film - данные из объекта фильма
- * @return {string}
- */
 const createFilmTemplate = (film) => {
   const {title, totalRating, releaseDate, runtime, description, poster, genre, isWatchlist, isWatched, isFavorite, comments} = film;
 
@@ -45,59 +35,31 @@ const createFilmTemplate = (film) => {
   );
 };
 
-/**
- * Класс, представляющий карточку фильма
- * @extends AbstractComponent
- */
 export default class Film extends AbstractComponent {
-  /**
-   * Создаёт карточку фильма
-   * @param {Object} film - данные из объека фильма
-   */
   constructor(film) {
     super();
 
     this._film = film;
   }
 
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
   getTemplate() {
     return createFilmTemplate(this._film);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setOpenDetailsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchlistClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }

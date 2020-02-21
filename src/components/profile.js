@@ -1,12 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 import {userRanks} from '../const.js';
 
-
-/**
- * Возвращает звание пользователя в зависимости от количества просмотренных фильмов
- * @param {number} moviesWatched - количество просмотренных фильмов
- * @return {string}
- */
 const getUserRank = (moviesWatched) => {
   if (moviesWatched >= userRanks.novice.min && moviesWatched <= userRanks.novice.max) {
     return `Novice`;
@@ -23,11 +17,6 @@ const getUserRank = (moviesWatched) => {
   return ``;
 };
 
-/**
- * Создаёт и возвращает разметку звания пользователя
- * @param {number} count - количество просмотренных фильмов
- * @return {string}
- */
 const createProfileTemplate = (count) => {
   return (
     `<section class="header__profile profile">
@@ -37,25 +26,13 @@ const createProfileTemplate = (count) => {
   );
 };
 
-/**
- * Класс, представляющий профиль
- * @extends AbstractComponent
- */
 export default class Profile extends AbstractComponent {
-  /**
-   * Создаёт количество просмотренных фильмов
-   * @param {Object} count - количество просмотренных фильмов
-   */
   constructor(count) {
     super();
 
     this._count = count;
   }
 
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
   getTemplate() {
     return createProfileTemplate(this._count);
   }

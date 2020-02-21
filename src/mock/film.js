@@ -60,76 +60,38 @@ const COUNTRIES = [
 
 const DESCRIPTION_TEXT = TEXT.split(`. `);
 
-/**
- * Возвращает случайное число из выбранного диапазона
- * @param {number} min - минимальное число
- * @param {number} max - максимальное число
- * @return {number}
- */
 const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(max * Math.random());
 };
 
-/**
- * Возвращает случайный элемент из массива
- * @param {Array} array - исходный массив
- * @return {Array}
- */
 const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntegerNumber(0, array.length);
 
   return array[randomIndex];
 };
 
-/**
- * Генерирует рейтинг фильма
- * @return {number}
- */
 const generateRating = () => {
   return (getRandomIntegerNumber(0, 10) + Math.random()).toFixed(1);
 };
 
-/**
- * Генерирует дату для фильма в миллисекундах
- * @return {number}
- */
 const generateReleaseDate = () => {
   return getRandomIntegerNumber(Math.pow(8, 13), Math.pow(8.5, 13));
 };
 
-/**
- * Разбирает дату и показывает только год
- * @param {Date} date
- * @return {Date}
- */
 const parseReleaseDate = (date) => {
   return new Date(date);
 };
 
-/**
- * Генерирует продолжительность фильма
- * @return {number}
- */
 const generateRuntime = () => {
   return getRandomIntegerNumber(45, 200);
 };
 
-/**
- * Генерирует жанры фильма
- * @param {Array} genres - массив жанров
- * @return {Array}
- */
 const generateGenres = (genres) => {
   return genres
     .filter(() => Math.random() > 0.5)
     .slice(0, 3);
 };
 
-/**
- * Генерирует описание для фильма
- * @param {Array} descriptions - массив описаний
- * @return {string}
- */
 const generateDescriptions = (descriptions) => {
   return descriptions
     .filter(() => Math.random() > 0.5)
@@ -137,10 +99,6 @@ const generateDescriptions = (descriptions) => {
     .join(`. `);
 };
 
-/**
- * Создаёт и возвращает объект даннных задачи
- * @return {Object}
- */
 const generateFilm = () => {
   return {
     id: String(new Date() + Math.random()),
@@ -161,11 +119,6 @@ const generateFilm = () => {
   };
 };
 
-/**
- * Создаёт и возвращает массив с заданным количеством зачад
- * @param {number} count - количество задач
- * @return {Array}
- */
 const generateFilms = (count) => {
   return new Array(count)
     .fill(``)

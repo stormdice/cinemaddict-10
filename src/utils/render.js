@@ -3,11 +3,6 @@ const RenderPosition = {
   BEFOREEND: `beforeend`,
 };
 
-/**
- * Возвращает DOM элемент
- * @param {string} template - разметка в виде строки
- * @return {HTMLElement}
- */
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -15,12 +10,6 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-/**
- * Вставляет DOM элемент в указанное место
- * @param {HTMLElement} container - элемент относительно которого идёт вставка
- * @param {Object} component - компонент
- * @param {string} place - позиция для вставки
- */
 const render = (container, component, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
@@ -34,20 +23,11 @@ const render = (container, component, place) => {
   }
 };
 
-/**
- * Удаляет компонент
- * @param {Object} component - компонент
- */
 const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
 
-/**
- * Заменяет компоненты
- * @param {Object} newComponent - новый компонент
- * @param {Object} oldComponent - старый компонент
- */
 const replace = (newComponent, oldComponent) => {
   const parentElement = oldComponent.getElement().parentElement;
   const newElement = newComponent.getElement();

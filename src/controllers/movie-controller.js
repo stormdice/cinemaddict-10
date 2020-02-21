@@ -8,12 +8,6 @@ const Mode = {
 };
 
 export default class MovieController {
-  /**
-   * Создаёт контейнер
-   * @param {HTMLElement} container - контейнер для вставки
-   * @param {Function} onDataChange - измененяет объект данных
-   * @param {Function} onViewChange - запрет на открытие нескольких попапов
-   */
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
@@ -27,10 +21,6 @@ export default class MovieController {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
-  /**
-   * Отрисовывает фильм
-   * @param {Object} film - данные из объекта фильмов
-   */
   render(film) {
     const oldFilmComponent = this._filmComponent;
     const oldFilmDetailsComponent = this._filmDetailsComponent;
@@ -95,18 +85,12 @@ export default class MovieController {
     }
   }
 
-  /**
-   * Показывает стандартное состояние карточки фильма
-   */
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
       this._closeFilmDetails();
     }
   }
 
-  /**
-   * Показывает попап
-   */
   _openFilmDetails() {
     this._onViewChange();
 
@@ -116,19 +100,12 @@ export default class MovieController {
     this._mode = Mode.DETAILS;
   }
 
-  /**
-   * Убирает попап
-   */
   _closeFilmDetails() {
     this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DEFAULT;
   }
 
-  /**
-   * Удаляет DOM элемент попапа с фильмом
-   * @param {Event} evt - объект событие
-   */
   _onEscKeyDown(evt) {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 

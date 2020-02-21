@@ -17,11 +17,6 @@ const formatDate = (date) => {
   return `${date.getDay()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
 };
 
-/**
- * Конвертирует продолжительность фильма в формат «1h 36m»
- * @param {number} duration - продолжительность фильма
- * @return {string}
- */
 const formatDuration = (duration) => {
   const hours = Math.trunc(duration / 60);
   const minutes = duration % 60;
@@ -29,4 +24,12 @@ const formatDuration = (duration) => {
   return `${hours}h ${minutes}m`;
 };
 
-export {formatDuration, formatDate};
+const getFilterName = (name) => {
+  if (name === `all`) {
+    return `All movies`;
+  }
+
+  return name[0].toUpperCase().concat(name.slice(1));
+};
+
+export {formatDuration, formatDate, getFilterName};

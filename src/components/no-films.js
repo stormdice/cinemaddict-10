@@ -1,9 +1,5 @@
 import AbstractComponent from './abstract-component.js';
 
-/**
- * Создаёт и возвращает разметку раздела без фильмов
- * @return {string}
- */
 const createNoFilmsTemplate = () => {
   return (
     `<section class="films-list">
@@ -12,15 +8,7 @@ const createNoFilmsTemplate = () => {
   );
 };
 
-/**
- * Класс, представляющий отсутствие фильмов
- * @extends AbstractComponent
- */
 export default class NoFilms extends AbstractComponent {
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
   getTemplate() {
     return createNoFilmsTemplate();
   }
