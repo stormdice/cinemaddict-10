@@ -13,6 +13,10 @@ export default class Movies {
     return this._films;
   }
 
+  get allFilms() {
+    return this._films;
+  }
+
   set films(films) {
     this._films = Array.from(films);
   }
