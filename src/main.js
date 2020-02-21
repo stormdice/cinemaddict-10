@@ -1,5 +1,5 @@
 import ProfileComponent from './components/profile.js';
-import MenuComponent from './components/menu.js';
+import FilterComponent from './components/filter.js';
 import FilmsSectionComponent from './components/film-section.js';
 import PageController from './controllers/page-controller.js';
 import MoviesModel from './models/movies.js';
@@ -27,7 +27,7 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
 render(siteHeaderElement, new ProfileComponent(countOfMoviesWatched), RenderPosition.BEFOREEND);
-render(siteMainElement, new MenuComponent(menuItems), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilterComponent(menuItems), RenderPosition.BEFOREEND);
 
 const filmsSectionComponent = new FilmsSectionComponent();
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);

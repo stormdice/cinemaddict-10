@@ -28,7 +28,7 @@ const checkTitle = (name) => {
  * @param {boolean} isActive - активен ли пункт
  * @return {string}
  */
-const createMenuItemTemplate = (item, isActive) => {
+const createFilterItemTemplate = (item, isActive) => {
   const [name, count] = item;
 
   const title = checkTitle(name);
@@ -43,15 +43,15 @@ const createMenuItemTemplate = (item, isActive) => {
 
 /**
  * Создаёт и возвращает разметку меню
- * @param {string[]} menu - массив пунктов меню
+ * @param {string[]} filters - массив пунктов меню
  * @return {string}
  */
-const createMenuTemplate = (menu) => {
-  const menuMarkup = Object.entries(menu).map((item, index) => createMenuItemTemplate(item, index === 0)).join(`\n`);
+const createFilterTemplate = (filters) => {
+  const filterMarkup = Object.entries(filters).map((item, index) => createFilterItemTemplate(item, index === 0)).join(`\n`);
 
   return (
     `<nav class="main-navigation">
-      ${menuMarkup}
+      ${filterMarkup}
     </nav>`
   );
 };
@@ -60,15 +60,15 @@ const createMenuTemplate = (menu) => {
  * Класс, представляющий меню
  * @extends AbstractComponent
  */
-export default class Menu extends AbstractComponent {
+export default class Filter extends AbstractComponent {
   /**
    * Создаёт меню
-   * @param {Object} menu - данные из объека меню
+   * @param {Object} filters - данные из объека меню
    */
-  constructor(menu) {
+  constructor(filters) {
     super();
 
-    this._menu = menu;
+    this._filters = filters;
   }
 
   /**
@@ -76,6 +76,6 @@ export default class Menu extends AbstractComponent {
    * @return {Function}
    */
   getTemplate() {
-    return createMenuTemplate(this._menu);
+    return createFilterTemplate(this._filters);
   }
 }
