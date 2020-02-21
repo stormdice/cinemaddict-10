@@ -10,8 +10,6 @@ export default class FilterController {
 
     this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
-
-    this._onFilterChange = this._onFilterChange.bind(this);
   }
 
   render() {
@@ -21,24 +19,17 @@ export default class FilterController {
       return {
         name: filterType,
         count: getFilmsByFilter(allFilms, filterType).length,
-        checked: filterType === this._activeFilterType,
+        active: filterType === this._activeFilterType,
       };
     });
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new FilterComponent(filters);
-    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
       render(container, this._filterComponent, RenderPosition.BEFOREEND);
     }
-    console.log(this._filterComponent);
-  }
-
-  _onFilterChange(filterType) {
-    this._moviesModel.setFilter(filterType);
-    this._activeFilterType = filterType;
   }
 }
