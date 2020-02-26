@@ -1,4 +1,5 @@
 import {formatDuration} from '../utils/common.js';
+import {getRandomIntegerNumber, getRandomArrayItem} from '../utils/common.js';
 
 const FILM_TITLES = [
   `The Lighthouse`,
@@ -59,16 +60,6 @@ const COUNTRIES = [
 ];
 
 const DESCRIPTION_TEXT = TEXT.split(`. `);
-
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(max * Math.random());
-};
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
 
 const generateRating = () => {
   return (getRandomIntegerNumber(0, 10) + Math.random()).toFixed(1);

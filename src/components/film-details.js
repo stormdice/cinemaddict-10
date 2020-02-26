@@ -1,6 +1,11 @@
 import AbstractSmartComponent from './abstract-smart-component';
+import {generateComments} from '../mock/comment.js';
 import {formatDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
+import moment from 'moment';
+
+const COMMENTS_COUNT = 4;
+const commentsList = generateComments(COMMENTS_COUNT);
 
 const createGenreMarkup = (genres) => {
   return Array.from(genres)
@@ -98,21 +103,27 @@ const createNewCommentMarkup = () => {
 };
 
 const createCommentMarkup = () => {
-  return (
-    `<li class="film-details__comment">
-      <span class="film-details__comment-emoji">
-        <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">
-      </span>
-      <div>
-        <p class="film-details__comment-text">Interesting setting and a good cast</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">Tim Macoveev</span>
-          <span class="film-details__comment-day">2019/12/31 23:59</span>
-          <button class="film-details__comment-delete">Delete</button>
-        </p>
-      </div>
-    </li>`
-  );
+  return commentsList.map((comment) => {
+    const {author, text, date, emotion} = comment;
+    const commentDate = moment(date).format(`L`);
+
+    return (
+      `<li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${text}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${author}</span>
+            <span class="film-details__comment-day">${commentDate}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>`
+    );
+  })
+  .join(`\n`);
 };
 
 const createCommentsMarkup = () => {
@@ -122,9 +133,6 @@ const createCommentsMarkup = () => {
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
 
         <ul class="film-details__comments-list">
-          ${createCommentMarkup()}
-          ${createCommentMarkup()}
-          ${createCommentMarkup()}
           ${createCommentMarkup()}
         </ul>
 

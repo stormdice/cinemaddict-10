@@ -1,3 +1,13 @@
+const getRandomIntegerNumber = (min, max) => {
+  return min + Math.floor(max * Math.random());
+};
+
+const getRandomArrayItem = (array) => {
+  const randomIndex = getRandomIntegerNumber(0, array.length);
+
+  return array[randomIndex];
+};
+
 const MONTH_NAMES = [
   `January`,
   `February`,
@@ -32,4 +42,4 @@ const getFilterTitle = (title) => {
   return title[0].toUpperCase().concat(title.slice(1));
 };
 
-export {formatDuration, formatDate, getFilterTitle};
+export {getRandomIntegerNumber, getRandomArrayItem, formatDuration, formatDate, getFilterTitle};
