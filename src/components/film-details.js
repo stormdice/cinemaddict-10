@@ -139,6 +139,7 @@ const createFilmDetailsTemplate = (film) => {
 
   const release = formatDate(releaseDate);
   const filmGenre = createGenreMarkup(genre);
+  const comments = createCommentsMarkup();
 
   return (
     `<section class="film-details">
@@ -215,7 +216,7 @@ const createFilmDetailsTemplate = (film) => {
 
         ${isWatched ? createUserRatingMarkup(film) : ``}
 
-        ${createCommentsMarkup()}
+        ${comments}
       </form>
     </section>`
   );
@@ -253,6 +254,16 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   setFavoriteInputChangeHandler(handler) {
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+  }
+
+  setCommentsDeleteClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__comment-delete`)
+      .forEach((deleteButton) => {
+        deleteButton.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+          handler();
+        });
+      });
   }
 
   _subscribeOnEvents() {

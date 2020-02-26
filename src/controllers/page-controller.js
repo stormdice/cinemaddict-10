@@ -78,10 +78,14 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
+    if (newData === null) {
+      console.log(`Удаляйся`);
+    } else {
+      const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
 
-    if (isSuccess) {
-      movieController.render(newData);
+      if (isSuccess) {
+        movieController.render(newData);
+      }
     }
   }
 
