@@ -1,11 +1,7 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import CommentComponent from './comment.js';
-import {generateComments} from '../mock/comment.js';
 import {formatDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
-
-const COMMENTS_COUNT = 4;
-const commentsList = generateComments(COMMENTS_COUNT);
 
 const createGenreMarkup = (genres) => {
   return Array.from(genres)
@@ -102,31 +98,20 @@ const createNewCommentMarkup = () => {
   );
 };
 
-const createCommentsMarkup = () => {
-  return commentsList.map((comment) => {
+const createCommentsMarkup = (comments) => {
+  return comments.map((comment) => {
     return new CommentComponent(comment).getTemplate();
   })
   .join(`\n`);
 };
 
-const createCommentsSectionMarkup = () => {
-  return (
-    `<div class="form-details__bottom-container">
-      <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
-        <ul class="film-details__comments-list">${createCommentsMarkup()}</ul>
-        ${createNewCommentMarkup()}
-      </section>
-    </div>`
-  );
-};
-
 const createFilmDetailsTemplate = (film) => {
-  const {poster, ageRating, title, originalTitle, country, genre, totalRating, releaseDate, runtime, description, isWatchlist, isWatched, isFavorite} = film;
+  const {poster, ageRating, title, originalTitle, country, genre, totalRating, releaseDate, runtime, description, isWatchlist, isWatched, isFavorite, comments} = film;
 
   const release = formatDate(releaseDate);
   const filmGenre = createGenreMarkup(genre);
-  const comments = createCommentsSectionMarkup();
+  const commentsList = createCommentsMarkup(comments);
+  const createNewComment = createNewCommentMarkup();
 
   return (
     `<section class="film-details">
@@ -203,7 +188,14 @@ const createFilmDetailsTemplate = (film) => {
 
         ${isWatched ? createUserRatingMarkup(film) : ``}
 
-        ${comments}
+        <div class="form-details__bottom-container">
+          <section class="film-details__comments-wrap">
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+            <ul class="film-details__comments-list">${commentsList}</ul>
+
+            ${createNewComment}
+          </section>
+        </div>
       </form>
     </section>`
   );

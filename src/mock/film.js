@@ -1,5 +1,6 @@
 import {formatDuration} from '../utils/common.js';
 import {getRandomIntegerNumber, getRandomArrayItem} from '../utils/common.js';
+import {generateComments} from './comment.js';
 
 const FILM_TITLES = [
   `The Lighthouse`,
@@ -77,6 +78,10 @@ const generateRuntime = () => {
   return getRandomIntegerNumber(45, 200);
 };
 
+const generateCommentsCount = () => {
+  return getRandomIntegerNumber(0, 8);
+};
+
 const generateGenres = (genres) => {
   return genres
     .filter(() => Math.random() > 0.5)
@@ -106,7 +111,7 @@ const generateFilm = () => {
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
-    comments: getRandomIntegerNumber(0, 20)
+    comments: generateComments(generateCommentsCount()),
   };
 };
 
