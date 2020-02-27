@@ -1,8 +1,8 @@
-import AbstractSmartComponent from './abstract-smart-component';
+import AbstractSmartComponent from './abstract-smart-component.js';
+import CommentComponent from './comment.js';
 import {generateComments} from '../mock/comment.js';
 import {formatDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
-import moment from 'moment';
 
 const COMMENTS_COUNT = 4;
 const commentsList = generateComments(COMMENTS_COUNT);
@@ -102,40 +102,19 @@ const createNewCommentMarkup = () => {
   );
 };
 
-const createCommentMarkup = () => {
+const createCommentsMarkup = () => {
   return commentsList.map((comment) => {
-    const {author, text, date, emotion} = comment;
-    const commentDate = moment(date).format(`L`);
-
-    return (
-      `<li class="film-details__comment">
-        <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
-        </span>
-        <div>
-          <p class="film-details__comment-text">${text}</p>
-          <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${commentDate}</span>
-            <button class="film-details__comment-delete">Delete</button>
-          </p>
-        </div>
-      </li>`
-    );
+    return new CommentComponent(comment).getTemplate();
   })
   .join(`\n`);
 };
 
-const createCommentsMarkup = () => {
+const createCommentsSectionMarkup = () => {
   return (
     `<div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
-
-        <ul class="film-details__comments-list">
-          ${createCommentMarkup()}
-        </ul>
-
+        <ul class="film-details__comments-list">${createCommentsMarkup()}</ul>
         ${createNewCommentMarkup()}
       </section>
     </div>`
@@ -147,7 +126,7 @@ const createFilmDetailsTemplate = (film) => {
 
   const release = formatDate(releaseDate);
   const filmGenre = createGenreMarkup(genre);
-  const comments = createCommentsMarkup();
+  const comments = createCommentsSectionMarkup();
 
   return (
     `<section class="film-details">
