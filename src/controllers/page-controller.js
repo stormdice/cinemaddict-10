@@ -77,9 +77,17 @@ export default class PageController {
     this._showedFilmControllers = [];
   }
 
+  _updateFilms(count) {
+    this._removeFilms();
+    this._renderFilms(this._moviesModel.films.slice(0, count));
+    this._renderShowMoreButton();
+  }
+
   _onDataChange(movieController, oldData, newData, commentId = false) {
-    if (newData === null && commentId) {
+    if (newData === null) {
       this._moviesModel.removeComment(oldData.id, commentId);
+      this._updateFilms(this._showingFilmsCount);
+      movieController._filmDetailsComponent.rerender();
     } else {
       const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
 

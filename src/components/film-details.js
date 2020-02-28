@@ -245,6 +245,8 @@ export default class FilmDetails extends AbstractSmartComponent {
           evt.preventDefault();
           const commentId = evt.target.closest(`li`).id;
           handler(commentId);
+
+          this._commentsDeleteClickHandler = handler(commentId);
         });
       });
   }
