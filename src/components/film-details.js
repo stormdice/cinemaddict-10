@@ -215,12 +215,15 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
+    this.setCloseButtonClickHandler(this._closeButtonClickHandler);
     this._subscribeOnEvents();
   }
 
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
+
+    this._closeButtonClickHandler = handler;
   }
 
   setWatchlistInputChangeHandler(handler) {
