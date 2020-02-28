@@ -18,6 +18,18 @@ export default class Movies {
     return this._films;
   }
 
+  get topRatedFilms() {
+    return this._films.slice().sort((a, b) => b.totalRating - a.totalRating)
+      .slice(0, 2)
+      .filter((film) => film.totalRating);
+  }
+
+  get mostCommentedFilms() {
+    return this._films.slice().sort((a, b) => b.comments.length - a.comments.length)
+      .slice(0, 2)
+      .filter((film) => film.comments.length);
+  }
+
   set films(films) {
     this._films = Array.from(films);
   }

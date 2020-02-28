@@ -29,6 +29,8 @@ export default class PageController {
     this._noFilmsComponent = new NoFilmsComponent();
     this._filmListComponent = new FilmsListComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._topRatedFilmList = new FilmsListComponent(`Top rated`);
+    this._mostCommentedFilmList = new FilmsListComponent(`Most commented`);
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
@@ -57,8 +59,7 @@ export default class PageController {
 
     this._renderShowMoreButton();
 
-    this._renderTopFilms(container, `totalRating`, `Top rated`);
-    this._renderTopFilms(container, `comments`, `Most commented`);
+    this._renderExtraFilms();
   }
 
   _renderFilms(films) {
@@ -81,6 +82,8 @@ export default class PageController {
     this._removeFilms();
     this._renderFilms(this._moviesModel.films.slice(0, count));
     this._renderShowMoreButton();
+    this._renderTopFilms(this._moviesModel.topRatedFilms, this._topRatedFilmList);
+    this._renderTopFilms(this._moviesModel.mostCommentedFilms, this._mostCommentedFilmList);
   }
 
   _onDataChange(movieController, oldData, newData, commentId = false) {
@@ -161,16 +164,18 @@ export default class PageController {
     this._renderShowMoreButton();
   }
 
-  _renderTopFilms(container, props, title) {
-    const topFilms = this._moviesModel.films
-      .sort((a, b) => b[props] - a[props])
-      .slice(0, 2)
-      .filter((film) => film[props]);
+  _renderTopFilms(films, filmsList) {
+    remove(filmsList);
 
-    if (topFilms.length) {
-      const topFilmsList = new FilmsListComponent(title);
-      render(container, topFilmsList, RenderPosition.BEFOREEND);
-      renderFilms(topFilmsList.getElement(), topFilms, this._onDataChange, this._onViewChange);
+    if (films.length) {
+      const container = this._container.getElement();
+      render(container, filmsList, RenderPosition.BEFOREEND);
+      renderFilms(filmsList.getElement(), films, this._onDataChange, this._onViewChange);
     }
+  }
+
+  _renderExtraFilms() {
+    this._renderTopFilms(this._moviesModel.topRatedFilms, this._topRatedFilmList);
+    this._renderTopFilms(this._moviesModel.mostCommentedFilms, this._mostCommentedFilmList);
   }
 }

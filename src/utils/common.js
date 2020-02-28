@@ -37,4 +37,12 @@ const getFilterTitle = (title) => {
   return title[0].toUpperCase().concat(title.slice(1));
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, filmDetailsFormatRuntime, filmCardFormatReleaseDate, filmDetailsFormatReleaseDate, commentFormatDate, getFilterTitle};
+export {
+  getRandomIntegerNumber,
+  getRandomArrayItem,
+  filmDetailsFormatRuntime,
+  filmCardFormatReleaseDate,
+  filmDetailsFormatReleaseDate,
+  commentFormatDate,
+  getFilterTitle
+};
