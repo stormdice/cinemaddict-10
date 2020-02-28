@@ -216,6 +216,7 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setCloseButtonClickHandler(this._closeButtonClickHandler);
+    this.setCommentsDeleteClickHandler(this._commentsDeleteClickHandler);
     this._subscribeOnEvents();
   }
 
@@ -245,10 +246,10 @@ export default class FilmDetails extends AbstractSmartComponent {
           evt.preventDefault();
           const commentId = evt.target.closest(`li`).id;
           handler(commentId);
-
-          this._commentsDeleteClickHandler = handler(commentId);
         });
       });
+
+    this._commentsDeleteClickHandler = handler;
   }
 
   _subscribeOnEvents() {
