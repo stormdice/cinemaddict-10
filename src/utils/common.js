@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(max * Math.random());
 };
@@ -8,30 +10,23 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-const MONTH_NAMES = [
-  `January`,
-  `February`,
-  `March`,
-  `April`,
-  `May`,
-  `June`,
-  `July`,
-  `August`,
-  `September`,
-  `October`,
-  `November`,
-  `December`
-];
-
-const formatDate = (date) => {
-  return `${date.getDay()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+const filmCardFormatReleaseDate = (date) => {
+  return moment(date).format(`YYYY`);
 };
 
-const formatDuration = (duration) => {
-  const hours = Math.trunc(duration / 60);
-  const minutes = duration % 60;
+const filmDetailsFormatReleaseDate = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
+};
+
+const filmDetailsFormatRuntime = (runtime) => {
+  const hours = Math.trunc(runtime / 60);
+  const minutes = runtime % 60;
 
   return `${hours}h ${minutes}m`;
+};
+
+const commentFormatDate = (date) => {
+  return moment(date).format(`YYYY/MM/DD`);
 };
 
 const getFilterTitle = (title) => {
@@ -42,4 +37,4 @@ const getFilterTitle = (title) => {
   return title[0].toUpperCase().concat(title.slice(1));
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, formatDuration, formatDate, getFilterTitle};
+export {getRandomIntegerNumber, getRandomArrayItem, filmDetailsFormatRuntime, filmCardFormatReleaseDate, filmDetailsFormatReleaseDate, commentFormatDate, getFilterTitle};

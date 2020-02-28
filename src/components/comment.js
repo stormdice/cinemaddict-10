@@ -1,9 +1,9 @@
 import AbstractComponent from './abstract-component.js';
-import moment from 'moment';
+import {commentFormatDate} from '../utils/common.js';
 
 const createCommentTemplate = (comment) => {
   const {id, author, text, date, emotion} = comment;
-  const commentDate = moment(date).format(`L`);
+  const commentDate = commentFormatDate(date);
 
   return (
     `<li class="film-details__comment" id="${id}">

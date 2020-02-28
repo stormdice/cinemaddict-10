@@ -1,4 +1,4 @@
-import {formatDuration} from '../utils/common.js';
+import {filmDetailsFormatRuntime} from '../utils/common.js';
 import {getRandomIntegerNumber, getRandomArrayItem} from '../utils/common.js';
 import {generateComments} from './comment.js';
 
@@ -105,7 +105,7 @@ const generateFilm = () => {
     poster: getRandomArrayItem(POSTERS),
     ageRating: getRandomArrayItem(AGES_RATING),
     releaseDate: parseReleaseDate(generateReleaseDate()),
-    runtime: formatDuration(generateRuntime()),
+    runtime: filmDetailsFormatRuntime(generateRuntime()),
     genre: new Set(generateGenres(GENRES)),
     description: generateDescriptions(DESCRIPTION_TEXT),
     isWatchlist: Math.random() > 0.5,

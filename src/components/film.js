@@ -1,4 +1,5 @@
 import AbstractComponent from './abstract-component.js';
+import {filmCardFormatReleaseDate} from '../utils/common.js';
 
 const generateGenre = (genres) => {
   return Array.from(genres).slice(0, 1);
@@ -7,7 +8,7 @@ const generateGenre = (genres) => {
 const createFilmTemplate = (film) => {
   const {title, totalRating, releaseDate, runtime, description, poster, genre, isWatchlist, isWatched, isFavorite, comments} = film;
 
-  const release = releaseDate.getFullYear();
+  const release = filmCardFormatReleaseDate(releaseDate);
   const filmGenre = generateGenre(genre);
   const commentsCount = comments.length;
 
