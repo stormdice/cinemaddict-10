@@ -77,9 +77,9 @@ export default class PageController {
     this._showedFilmControllers = [];
   }
 
-  _onDataChange(movieController, oldData, newData) {
-    if (newData === null) {
-      console.log(`Удаляйся`);
+  _onDataChange(movieController, oldData, newData, commentId = false) {
+    if (newData === null && commentId) {
+      this._moviesModel.removeComment(oldData.id, commentId);
     } else {
       const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
 

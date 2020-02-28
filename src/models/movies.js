@@ -38,6 +38,19 @@ export default class Movies {
     return true;
   }
 
+  removeComment(movieId, commentId) {
+    const movie = this._films.find((it) => it.id === movieId);
+    const commentIndex = movie.comments.findIndex((it) => it.id === commentId);
+
+    if (commentIndex === -1) {
+      return false;
+    }
+
+    movie.comments = [].concat(this._films.slice(0, commentIndex), this._films.slice(commentIndex + 1));
+
+    return true;
+  }
+
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }

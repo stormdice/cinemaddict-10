@@ -77,8 +77,8 @@ export default class MovieController {
       }));
     });
 
-    this._filmDetailsComponent.setCommentsDeleteClickHandler(() => {
-      this._onDataChange(this, film, null);
+    this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
+      this._onDataChange(this, film, null, commentId);
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {

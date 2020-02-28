@@ -16,7 +16,7 @@ const COMMENT_TEXTS = [
 
 const generateComment = () => {
   return {
-    id: String(new Date() + Math.random()),
+    id: String(Math.random()),
     author: getRandomArrayItem(AUTORS),
     text: getRandomArrayItem(COMMENT_TEXTS),
     date: `2019-05-11T16:12:32.554Z`,

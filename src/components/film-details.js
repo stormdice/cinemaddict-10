@@ -240,7 +240,8 @@ export default class FilmDetails extends AbstractSmartComponent {
       .forEach((deleteButton) => {
         deleteButton.addEventListener(`click`, (evt) => {
           evt.preventDefault();
-          handler();
+          const commentId = evt.target.closest(`li`).id;
+          handler(commentId);
         });
       });
   }

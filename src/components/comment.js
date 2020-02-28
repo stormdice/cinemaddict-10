@@ -2,11 +2,11 @@ import AbstractComponent from './abstract-component.js';
 import moment from 'moment';
 
 const createCommentTemplate = (comment) => {
-  const {author, text, date, emotion} = comment;
+  const {id, author, text, date, emotion} = comment;
   const commentDate = moment(date).format(`L`);
 
   return (
-    `<li class="film-details__comment">
+    `<li class="film-details__comment" id="${id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
       </span>
