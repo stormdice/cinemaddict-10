@@ -101,12 +101,16 @@ export default class MovieController {
     this._filmDetailsComponent.getElement().style = `animation: bounceInRight 0.3s;`;
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    document.addEventListener(`keydown`, this._onCtrEnterKeyDown);
     this._mode = Mode.DETAILS;
   }
 
   _closeFilmDetails() {
     this._filmDetailsComponent.getElement().remove();
+
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    document.removeEventListener(`keydown`, this._onCtrEnterKeyDown);
+
     this._mode = Mode.DEFAULT;
   }
 
@@ -117,6 +121,18 @@ export default class MovieController {
       this._filmDetailsComponent.getElement().remove();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+      document.removeEventListener(`keydown`, this._onCtrEnterKeyDown);
+    }
+  }
+
+  _onCtrEnterKeyDown(evt) {
+    const ctrlOrCommandKey = evt.ctrlKey || evt.metaKey;
+    const enterKey = evt.key === `Enter`;
+
+    if (ctrlOrCommandKey && enterKey) {
+      console.log(`Коментарий отправляйся`);
+
+      document.removeEventListener(`keydown`, this._onCtrEnterKeyDown);
     }
   }
 }
