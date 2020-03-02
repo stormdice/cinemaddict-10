@@ -201,6 +201,14 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
+const parseFormData = (formData) => {
+  return {
+    text: formData.get(`comment`),
+    date: new Date(),
+    emotion: formData.get(`comment-emoji`),
+  };
+};
+
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
@@ -218,6 +226,13 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setCloseButtonClickHandler(this._closeButtonClickHandler);
     this.setCommentsDeleteClickHandler(this._commentsDeleteClickHandler);
     this._subscribeOnEvents();
+  }
+
+  getData() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+
+    return parseFormData(formData);
   }
 
   setCloseButtonClickHandler(handler) {
