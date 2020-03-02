@@ -25,6 +25,20 @@ const createFilterTemplate = (filters) => {
   );
 };
 
+const setActiveClass = (element, evt) => {
+  element.querySelectorAll(`a`).forEach((link) => {
+    link.classList.remove(`main-navigation__item--active`);
+  });
+
+  if (evt.target.tagName === `A`) {
+    evt.target.classList.add(`main-navigation__item--active`);
+  }
+
+  if (evt.target.parentElement.tagName === `A`) {
+    evt.target.parentElement.classList.add(`main-navigation__item--active`);
+  }
+};
+
 export default class Filter extends AbstractComponent {
   constructor(filters) {
     super();
@@ -56,6 +70,8 @@ export default class Filter extends AbstractComponent {
       }
 
       this._currentFilterType = filterName;
+
+      setActiveClass(this.getElement(), evt);
 
       handler(filterName);
     });
