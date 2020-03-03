@@ -15,11 +15,11 @@ function getRandomDate(start, end) {
 }
 
 const filmCardFormatReleaseDate = (date) => {
-  return moment(date).format(`YYYY`);
+  return moment.utc(date).format(`YYYY`);
 };
 
 const filmDetailsFormatReleaseDate = (date) => {
-  return moment(date).format(`DD MMMM YYYY`);
+  return moment.utc(date).format(`DD MMMM YYYY`);
 };
 
 const filmDetailsFormatRuntime = (runtime) => {
@@ -30,8 +30,7 @@ const filmDetailsFormatRuntime = (runtime) => {
 };
 
 const commentFormatDate = (date) => {
-  // return moment(date).format(`YYYY/MM/DD HH:MM`);
-  return moment().to(date);
+  return moment.utc().to(date);
 };
 
 const getFilterTitle = (title) => {
