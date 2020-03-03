@@ -203,6 +203,8 @@ const createFilmDetailsTemplate = (film) => {
 
 const parseFormData = (formData) => {
   return {
+    id: String(Math.random()),
+    author: `You`,
     text: formData.get(`comment`),
     date: new Date(),
     emotion: formData.get(`comment-emoji`),
@@ -225,6 +227,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   recoveryListeners() {
     this.setCloseButtonClickHandler(this._closeButtonClickHandler);
     this.setCommentsDeleteClickHandler(this._commentsDeleteClickHandler);
+    this.setCommentSubmitHandler(this._commentSubmitHandler);
     this._subscribeOnEvents();
   }
 
@@ -267,10 +270,24 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._commentsDeleteClickHandler = handler;
   }
 
+  setCommentSubmitHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, (evt) => {
+        const ctrlOrCommandKey = evt.ctrlKey || evt.metaKey;
+        const enterKey = evt.key === `Enter`;
+
+        if (ctrlOrCommandKey && enterKey) {
+          handler();
+        }
+      });
+
+    this._commentSubmitHandler = handler;
+  }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    element.querySelector(`.film-details__new-comment`)
+    element.querySelector(`.film-details__emoji-list`)
       .addEventListener(`click`, function (evt) {
         if (evt.target.tagName !== `INPUT`) {
           return;

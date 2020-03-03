@@ -10,6 +10,10 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
+function getRandomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
 const filmCardFormatReleaseDate = (date) => {
   return moment(date).format(`YYYY`);
 };
@@ -26,7 +30,8 @@ const filmDetailsFormatRuntime = (runtime) => {
 };
 
 const commentFormatDate = (date) => {
-  return moment(date).format(`YYYY/MM/DD`);
+  // return moment(date).format(`YYYY/MM/DD HH:MM`);
+  return moment().to(date);
 };
 
 const getFilterTitle = (title) => {
@@ -40,6 +45,7 @@ const getFilterTitle = (title) => {
 export {
   getRandomIntegerNumber,
   getRandomArrayItem,
+  getRandomDate,
   filmDetailsFormatRuntime,
   filmCardFormatReleaseDate,
   filmDetailsFormatReleaseDate,

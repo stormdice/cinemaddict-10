@@ -1,4 +1,4 @@
-import {getRandomArrayItem} from '../utils/common.js';
+import {getRandomArrayItem, getRandomDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
 
 const AUTORS = [
@@ -19,7 +19,7 @@ const generateComment = () => {
     id: String(Math.random()),
     author: getRandomArrayItem(AUTORS),
     text: getRandomArrayItem(COMMENT_TEXTS),
-    date: `2019-05-11T16:12:32.554Z`,
+    date: getRandomDate(new Date(2020, 0, 1), new Date()),
     emotion: getRandomArrayItem(EMOTIONS),
   };
 };

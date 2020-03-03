@@ -52,6 +52,13 @@ export default class Movies {
     return true;
   }
 
+  addComment(movieId, comment) {
+    const movie = this._films.find((it) => it.id === movieId);
+
+    movie.comments = [].concat(comment, movie.comments);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
   removeComment(movieId, commentId) {
     const movie = this._films.find((it) => it.id === movieId);
     const commentIndex = movie.comments.findIndex((it) => it.id === commentId);

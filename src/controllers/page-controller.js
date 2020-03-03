@@ -87,7 +87,11 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData, commentId = false) {
-    if (newData === null) {
+    if (commentId === null) {
+      this._moviesModel.addComment(oldData.id, newData);
+      this._updateFilms(this._showingFilmsCount);
+      movieController._filmDetailsComponent.rerender();
+    } else if (newData === null) {
       this._moviesModel.removeComment(oldData.id, commentId);
       this._updateFilms(this._showingFilmsCount);
       movieController._filmDetailsComponent.rerender();
