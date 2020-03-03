@@ -1,15 +1,23 @@
 import AbstractComponent from './abstract-component.js';
 import {filmCardFormatReleaseDate} from '../utils/common.js';
 
+const MAX_DESCRIPTION_LENGTH = 140;
+
+const checkDescriptionLength = (description) => {
+  const length = description.length;
+
+  return length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
+};
+
 const generateGenre = (genres) => {
   return Array.from(genres).slice(0, 1);
 };
 
 const createFilmTemplate = (film) => {
   const {title, totalRating, releaseDate, runtime, description, poster, genre, isWatchlist, isWatched, isFavorite, comments} = film;
-
   const release = filmCardFormatReleaseDate(releaseDate);
   const filmGenre = generateGenre(genre);
+  const shortDescription = checkDescriptionLength(description);
   const commentsCount = comments.length;
 
   const setActiveClass = (isActive) => {
@@ -26,7 +34,7 @@ const createFilmTemplate = (film) => {
         <span class="film-card__genre">${filmGenre}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${shortDescription}</p>
       <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setActiveClass(isWatchlist)}">Add to watchlist</button>
