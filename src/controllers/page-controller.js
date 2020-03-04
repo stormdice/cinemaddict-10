@@ -71,7 +71,8 @@ export default class PageController {
   }
 
   _removeFilms() {
-    const filmListContainerElement = this._filmListComponent.getElement().querySelector(`.films-list__container`);
+    const filmListContainerElement = this._filmListComponent.getElement()
+      .querySelector(`.films-list__container`);
 
     filmListContainerElement.innerHTML = ``;
 

@@ -106,7 +106,22 @@ const createCommentsMarkup = (comments) => {
 };
 
 const createFilmDetailsTemplate = (film) => {
-  const {poster, ageRating, title, originalTitle, country, genre, totalRating, releaseDate, runtime, description, isWatchlist, isWatched, isFavorite, comments} = film;
+  const {
+    poster,
+    ageRating,
+    title,
+    originalTitle,
+    country,
+    genre,
+    totalRating,
+    releaseDate,
+    runtime,
+    description,
+    isWatchlist,
+    isWatched,
+    isFavorite,
+    comments
+  } = film;
 
   const sortComments = comments.sort((a, b) => a.date - b.date);
   const release = filmDetailsFormatReleaseDate(releaseDate);
