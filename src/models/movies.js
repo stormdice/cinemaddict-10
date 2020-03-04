@@ -52,27 +52,6 @@ export default class Movies {
     return true;
   }
 
-  addComment(movieId, comment) {
-    const movie = this._films.find((it) => it.id === movieId);
-
-    movie.comments = [].concat(comment, movie.comments);
-    this._callHandlers(this._dataChangeHandlers);
-  }
-
-  removeComment(movieId, commentId) {
-    const movie = this._films.find((it) => it.id === movieId);
-    const commentIndex = movie.comments.findIndex((it) => it.id === commentId);
-
-    if (commentIndex === -1) {
-      return false;
-    }
-
-    movie.comments = [].concat(movie.comments.slice(0, commentIndex), movie.comments.slice(commentIndex + 1));
-    this._callHandlers(this._dataChangeHandlers);
-
-    return true;
-  }
-
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }

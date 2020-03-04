@@ -78,29 +78,14 @@ export default class PageController {
     this._showedFilmControllers = [];
   }
 
-  _updateFilms(count) {
-    this._removeFilms();
-    this._renderFilms(this._moviesModel.films.slice(0, count));
-    this._renderShowMoreButton();
-    this._renderExtraFilms();
-  }
+  _onDataChange(movieController, oldData, newData) {
+    const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
 
-  _onDataChange(movieController, oldData, newData, commentId = false) {
-    if (commentId === null) {
-      this._moviesModel.addComment(oldData.id, newData);
-      this._updateFilms(this._showingFilmsCount);
-      movieController.updateFilmDetails();
-    } else if (newData === null) {
-      this._moviesModel.removeComment(oldData.id, commentId);
-      this._updateFilms(this._showingFilmsCount);
-      movieController.updateFilmDetails();
-    } else {
-      const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
-
-      if (isSuccess) {
-        movieController.render(newData);
-      }
+    if (isSuccess) {
+      movieController.render(newData);
     }
+
+    this._renderExtraFilms();
   }
 
   _onViewChange() {
