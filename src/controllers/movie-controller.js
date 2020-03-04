@@ -75,7 +75,6 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
-      //логика которая будет удалять добавлять коменти ниже передавать уже новые и старые данные фильма
       this._onDataChange(this, film, null, commentId);
     });
 
@@ -96,6 +95,10 @@ export default class MovieController {
     if (this._mode !== Mode.DEFAULT) {
       this._closeFilmDetails();
     }
+  }
+
+  updateFilmDetails() {
+    this._filmDetailsComponent.rerender();
   }
 
   _openFilmDetails() {
