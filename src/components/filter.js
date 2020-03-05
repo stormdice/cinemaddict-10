@@ -5,9 +5,17 @@ import {getFilterTitle} from '../utils/common.js';
 const createFilterMarkup = (filter) => {
   const {name, count, active} = filter;
 
+  const createFiltersCountMarkup = () => {
+    if (name === FilterType.ALL) {
+      return ``;
+    }
+
+    return count > 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``;
+  };
+
   const title = getFilterTitle(name);
-  const countMarkup = count > 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``;
   const activeClass = active ? `main-navigation__item--active` : ``;
+  const countMarkup = createFiltersCountMarkup();
 
   return (
     `<a href="#${name}" class="main-navigation__item ${activeClass}" data-filter-type="${name}">${title} ${countMarkup}</a>`
