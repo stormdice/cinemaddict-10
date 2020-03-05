@@ -1,7 +1,8 @@
 import ProfileComponent from './components/profile.js';
 import FilterController from './controllers/filter-controller.js';
-import FilmsSectionComponent from './components/film-section.js';
 import PageController from './controllers/page-controller.js';
+import FilmsSectionComponent from './components/film-section.js';
+import StatisticsComponent from './components/statistics.js';
 import MoviesModel from './models/movies.js';
 import {generateFilms} from './mock/film.js';
 import {RenderPosition, render} from './utils/render.js';
@@ -20,7 +21,9 @@ const filterController = new FilterController(siteMainElement, moviesModel);
 filterController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
+const statisticsComponent = new StatisticsComponent();
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
+render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsSectionComponent, moviesModel);
 pageController.render();
