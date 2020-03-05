@@ -2,6 +2,7 @@ import AbstractSmartComponent from './abstract-smart-component.js';
 import CommentComponent from './comment.js';
 import {filmDetailsFormatReleaseDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
+import he from 'he';
 
 const createGenreMarkup = (genres) => {
   return Array.from(genres)
@@ -87,6 +88,7 @@ const createNewCommentMarkup = () => {
 
   return (
     `<div class="film-details__new-comment">
+      <span class="film-details__comment-error-message">Please fill in the comment and choose an emotion.</span>
       <div for="add-emoji" class="film-details__add-emoji-label"></div>
 
       <label class="film-details__comment-label">
@@ -221,7 +223,7 @@ const parseFormData = (formData) => {
   return {
     id: String(Math.random()),
     author: `You`,
-    text: formData.get(`comment`),
+    text: he.encode(formData.get(`comment`)),
     date: new Date(),
     emotion: formData.get(`comment-emoji`),
   };

@@ -81,9 +81,18 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setCommentSubmitHandler(() => {
-      const newFilm = this._addComment(film);
+      const newComment = this._validateComment();
 
-      this._onDataChange(this, film, newFilm);
+      if (!newComment) {
+        const textarea = this._filmDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
+        textarea.classList.add(`invalid`);
+
+        return;
+      }
+
+      const updatedFilm = this._addComment(film, newComment);
+
+      this._onDataChange(this, film, updatedFilm);
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
@@ -104,10 +113,18 @@ export default class MovieController {
     this._filmDetailsComponent.rerender();
   }
 
-  _addComment(film) {
-    const newFilm = Object.assign({}, film);
-    const newComment = this._filmDetailsComponent.getData();
+  _validateComment() {
+    const comment = this._filmDetailsComponent.getData();
 
+    if (!comment.emotion || !comment.text) {
+      return false;
+    }
+
+    return comment;
+  }
+
+  _addComment(film, newComment) {
+    const newFilm = Object.assign({}, film);
     newFilm.comments = [].concat(newComment, newFilm.comments);
 
     return newFilm;
