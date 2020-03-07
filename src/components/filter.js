@@ -39,6 +39,7 @@ export default class Filter extends AbstractComponent {
 
     this._filters = filters;
     this._currentFilterType = FilterType.ALL;
+    this._linkElements = this.getElement().querySelectorAll(`.main-navigation__item`);
   }
 
   getTemplate() {
@@ -48,10 +49,12 @@ export default class Filter extends AbstractComponent {
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-
       let filterName = evt.target.dataset.filterType;
+      const isFilterName = filterName !== undefined;
+      const isFilterChildNode = evt.target.parentElement.dataset.filterType !== undefined;
+      const isStatistics = evt.target.classList.contains(`main-navigation__item--additional`);
 
-      if (filterName === undefined && evt.target.parentElement.dataset.filterType === undefined) {
+      if (!isFilterName && !isFilterChildNode && !isStatistics) {
         return;
       }
 
@@ -72,7 +75,7 @@ export default class Filter extends AbstractComponent {
   }
 
   _setActiveClass(evt) {
-    this.getElement().querySelectorAll(`.main-navigation__item`).forEach((link) => {
+    this._linkElements.forEach((link) => {
       link.classList.remove(`main-navigation__item--active`);
     });
 
