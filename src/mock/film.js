@@ -95,6 +95,8 @@ const generateDescriptions = (descriptions) => {
     .join(`. `);
 };
 
+const sortCommentsByDate = (comments) => comments.sort((a, b) => a.date - b.date);
+
 const generateFilm = () => {
   return {
     id: String(new Date() + Math.random()),
@@ -111,7 +113,7 @@ const generateFilm = () => {
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
-    comments: generateComments(generateCommentsCount()),
+    comments: sortCommentsByDate(generateComments(generateCommentsCount())),
   };
 };
 

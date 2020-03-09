@@ -58,7 +58,7 @@ export default class Filter extends AbstractComponent {
         return;
       }
 
-      if (evt.target.parentElement.dataset.filterType !== undefined) {
+      if (isFilterChildNode) {
         filterName = evt.target.parentElement.dataset.filterType;
       }
 

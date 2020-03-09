@@ -125,10 +125,9 @@ const createFilmDetailsTemplate = (film) => {
     comments
   } = film;
 
-  const sortComments = comments.sort((a, b) => a.date - b.date);
   const release = filmDetailsFormatReleaseDate(releaseDate);
   const filmGenre = createGenreMarkup(genre);
-  const commentsList = createCommentsMarkup(sortComments);
+  const commentsList = createCommentsMarkup(comments);
   const createNewComment = createNewCommentMarkup();
 
   return (
@@ -249,7 +248,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  getData() {
+  getAddCommentFormData() {
     const form = this.getElement().querySelector(`.film-details__inner`);
     const formData = new FormData(form);
 

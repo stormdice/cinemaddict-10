@@ -17,6 +17,7 @@ export default class MovieController {
 
     this._filmComponent = null;
     this._filmDetailsComponent = null;
+    this._addCommentFormTextField = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -27,6 +28,7 @@ export default class MovieController {
 
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
+    this._addCommentFormTextField = this._filmDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
@@ -35,21 +37,21 @@ export default class MovieController {
     });
 
     this._filmComponent.setWatchlistClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isWatchlist: !film.isWatchlist,
-      }));
+      });
     });
 
     this._filmComponent.setWatchedClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isWatched: !film.isWatched,
-      }));
+      });
     });
 
     this._filmComponent.setFavoriteClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isFavorite: !film.isFavorite,
-      }));
+      });
     });
 
     this._filmDetailsComponent.setCloseButtonClickHandler(() => {
@@ -57,21 +59,21 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setWatchlistInputChangeHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isWatchlist: !film.isWatchlist,
-      }));
+      });
     });
 
     this._filmDetailsComponent.setWatchedInputChangeHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isWatched: !film.isWatched,
-      }));
+      });
     });
 
     this._filmDetailsComponent.setFavoriteInputChangeHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isFavorite: !film.isFavorite,
-      }));
+      });
     });
 
     this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
@@ -81,11 +83,12 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setCommentSubmitHandler(() => {
-      const newComment = this._validateComment();
+      const newComment = this._filmDetailsComponent.getAddCommentFormData();
 
-      if (!newComment) {
-        const textarea = this._filmDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
-        textarea.classList.add(`invalid`);
+      const isCommentValid = this._validateComment(newComment);
+
+      if (!isCommentValid) {
+        this._addCommentFormTextField.classList.add(`invalid`);
 
         return;
       }
@@ -113,32 +116,21 @@ export default class MovieController {
     this._filmDetailsComponent.rerender();
   }
 
-  _validateComment() {
-    const comment = this._filmDetailsComponent.getData();
-
-    if (!comment.emotion || !comment.text) {
-      return false;
-    }
-
-    return comment;
+  _validateComment({emotion, text}) {
+    return !!emotion && !!text;
   }
 
   _addComment(film, newComment) {
     const newFilm = Object.assign({}, film);
-    newFilm.comments = [].concat(newComment, newFilm.comments);
+    newFilm.comments = [...newFilm.comments, newComment];
 
     return newFilm;
   }
 
   _deleteComment(film, commentId) {
     const newFilm = Object.assign({}, film);
-    const commentIndex = newFilm.comments.findIndex((it) => it.id === commentId);
 
-    if (commentIndex === -1) {
-      return false;
-    }
-
-    newFilm.comments = [].concat(newFilm.comments.slice(0, commentIndex), newFilm.comments.slice(commentIndex + 1));
+    newFilm.comments = newFilm.comments.filter(({id}) => id !== commentId);
 
     return newFilm;
   }

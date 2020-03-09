@@ -87,11 +87,12 @@ export default class PageController {
     this._showedFilmControllers = [];
   }
 
-  _onDataChange(movieController, oldData, newData) {
-    const isSuccess = this._moviesModel.updateFilm(oldData.id, newData);
+  _onDataChange(movieController, film, newData) {
+    const updatedFilm = Object.assign({}, film, newData);
+    const isSuccess = this._moviesModel.updateFilm(film.id, updatedFilm);
 
     if (isSuccess) {
-      movieController.render(newData);
+      movieController.render(updatedFilm);
     }
 
     this._renderExtraFilms();
