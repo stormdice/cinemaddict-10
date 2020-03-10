@@ -22,7 +22,7 @@ const filmDetailsFormatReleaseDate = (date) => {
   return moment.utc(date).format(`DD MMMM YYYY`);
 };
 
-const filmDetailsFormatRuntime = (runtime) => {
+const formatRuntime = (runtime) => {
   const hours = Math.trunc(runtime / 60);
   const minutes = runtime % 60;
 
@@ -45,7 +45,7 @@ export {
   getRandomIntegerNumber,
   getRandomArrayItem,
   getRandomDate,
-  filmDetailsFormatRuntime,
+  formatRuntime,
   filmCardFormatReleaseDate,
   filmDetailsFormatReleaseDate,
   commentFormatDate,
