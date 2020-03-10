@@ -26,6 +26,18 @@ render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsSectionComponent, moviesModel);
+statisticsComponent.hide();
 pageController.render();
 
 document.querySelector(`.footer__statistics p`).textContent = `${FILMS_COUNT} movies inside`;
+
+filterController._filterComponent.setClickHandler((filterName) => {
+  if (filterName === `stats`) {
+    pageController.hide();
+    statisticsComponent.show();
+  } else {
+    pageController.show();
+    statisticsComponent.hide();
+    filterController.onFilterChange(filterName);
+  }
+});

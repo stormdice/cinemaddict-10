@@ -12,7 +12,6 @@ export default class FilterController {
     this._filterComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
-    this._onFilterChange = this._onFilterChange.bind(this);
 
     this._moviesModel.setDataChangeHandler(this._onDataChange);
   }
@@ -32,7 +31,6 @@ export default class FilterController {
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new FilterComponent(filters);
-    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
@@ -41,7 +39,7 @@ export default class FilterController {
     }
   }
 
-  _onFilterChange(filterType) {
+  onFilterChange(filterType) {
     this._moviesModel.filter = filterType;
     this._activeFilterType = filterType;
   }

@@ -18,17 +18,17 @@ const createFilterMarkup = (filter) => {
   const countMarkup = createFiltersCountMarkup();
 
   return (
-    `<a href="#${name}" class="main-navigation__item ${activeClass}" data-filter-type="${name}">${title} ${countMarkup}</a>`
+    `<a href="#${name}" class="main-navigation__item ${activeClass}" data-menu-item-name="${name}">${title} ${countMarkup}</a>`
   );
 };
 
-const createFilterTemplate = (filters) => {
-  const filterMarkup = filters.map((filter) => createFilterMarkup(filter)).join(`\n`);
+const createMenuTemplate = (menuItem) => {
+  const filterMarkup = menuItem.map((filter) => createFilterMarkup(filter)).join(`\n`);
 
   return (
     `<nav class="main-navigation">
       ${filterMarkup}
-      <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
+      <a href="#stats" class="main-navigation__item main-navigation__item--additional" data-menu-item-name="stats">Stats</a>
     </nav>`
   );
 };
@@ -43,23 +43,22 @@ export default class Filter extends AbstractComponent {
   }
 
   getTemplate() {
-    return createFilterTemplate(this._filters);
+    return createMenuTemplate(this._filters);
   }
 
-  setFilterChangeHandler(handler) {
+  setClickHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      let filterName = evt.target.dataset.filterType;
+      let filterName = evt.target.dataset.menuItemName;
       const isFilterName = filterName !== undefined;
-      const isFilterChildNode = evt.target.parentElement.dataset.filterType !== undefined;
-      const isStatistics = evt.target.classList.contains(`main-navigation__item--additional`);
+      const isFilterChildNode = evt.target.parentElement.dataset.menuItemName !== undefined;
 
-      if (!isFilterName && !isFilterChildNode && !isStatistics) {
+      if (!isFilterName && !isFilterChildNode) {
         return;
       }
 
       if (isFilterChildNode) {
-        filterName = evt.target.parentElement.dataset.filterType;
+        filterName = evt.target.parentElement.dataset.menuItemName;
       }
 
       if (this._currentFilterType === filterName) {
