@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {filmCardFormatReleaseDate} from '../utils/common.js';
+import {formatRuntime ,filmCardFormatReleaseDate} from '../utils/common.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
@@ -14,9 +14,23 @@ const generateGenre = (genres) => {
 };
 
 const createFilmTemplate = (film) => {
-  const {title, totalRating, releaseDate, runtime, description, poster, genre, isWatchlist, isWatched, isFavorite, comments} = film;
+  const {
+    title,
+    totalRating,
+    releaseDate,
+    runtime,
+    description,
+    poster,
+    genre,
+    isWatchlist,
+    isWatched,
+    isFavorite,
+    comments
+  } = film;
+
   const release = filmCardFormatReleaseDate(releaseDate);
   const filmGenre = generateGenre(genre);
+  const filmRuntime = formatRuntime(runtime);
   const shortDescription = checkDescriptionLength(description);
   const commentsCount = comments.length;
 
@@ -30,7 +44,7 @@ const createFilmTemplate = (film) => {
       <p class="film-card__rating">${totalRating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${release}</span>
-        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__duration">${filmRuntime}</span>
         <span class="film-card__genre">${filmGenre}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">

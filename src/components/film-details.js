@@ -1,6 +1,6 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import CommentComponent from './comment.js';
-import {filmDetailsFormatReleaseDate} from '../utils/common.js';
+import {formatRuntime, filmDetailsFormatReleaseDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
 import he from 'he';
 
@@ -126,6 +126,7 @@ const createFilmDetailsTemplate = (film) => {
   } = film;
 
   const release = filmDetailsFormatReleaseDate(releaseDate);
+  const filmRuntime = formatRuntime(runtime);
   const filmGenre = createGenreMarkup(genre);
   const commentsList = createCommentsMarkup(comments);
   const createNewComment = createNewCommentMarkup();
@@ -175,7 +176,7 @@ const createFilmDetailsTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${filmRuntime}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
