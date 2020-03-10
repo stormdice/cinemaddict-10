@@ -18,6 +18,11 @@ export default class Movies {
     return this._films;
   }
 
+  get watchedFilms() {
+    return this._films
+      .filter((film) => film.isWatched);
+  }
+
   get topRatedFilms() {
     return this._films
       .sort((a, b) => b.totalRating - a.totalRating)
