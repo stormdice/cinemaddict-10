@@ -7,21 +7,21 @@ import MoviesModel from './models/movies.js';
 import {generateFilms} from './mock/film.js';
 import {RenderPosition, render} from './utils/render.js';
 
-const siteHeaderElement = document.querySelector(`.header`);
-const siteMainElement = document.querySelector(`.main`);
-
-render(siteHeaderElement, new ProfileComponent(1), RenderPosition.BEFOREEND);
-
-const FILMS_COUNT = 8;
+const FILMS_COUNT = 16;
 const films = generateFilms(FILMS_COUNT);
 const moviesModel = new MoviesModel();
 moviesModel.films = films;
+
+const siteHeaderElement = document.querySelector(`.header`);
+const siteMainElement = document.querySelector(`.main`);
+
+render(siteHeaderElement, new ProfileComponent(moviesModel.watchedFilms.length), RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(siteMainElement, moviesModel);
 filterController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
-const statisticsComponent = new StatisticsComponent();
+const statisticsComponent = new StatisticsComponent(moviesModel);
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 

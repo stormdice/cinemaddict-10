@@ -1,55 +1,97 @@
 import AbstractComponent from "./abstract-component.js";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {getUserRank} from './profile.js';
 
+const getUniqItems = (item, index, array) => {
+  return array.indexOf(item) === index;
+};
 
-const renderChart = (ctx) => {
+const renderChart = (ctx, films) => {
+  const genreLabels = films
+    .map((film) => film.genre)
+    .reduce((acc, genres) => {
+      return acc.concat(Array.from(genres));
+    }, [])
+    .filter(getUniqItems);
+
   return new Chart(ctx, {
-    type: `bar`,
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
     data: {
-      labels: [`Red`, `Blue`, `Yellow`, `Green`, `Purple`, `Orange`],
+      labels: genreLabels,
       datasets: [{
-        label: `# of Votes`,
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          `rgba(255, 99, 132, 0.2)`,
-          `rgba(54, 162, 235, 0.2)`,
-          `rgba(255, 206, 86, 0.2)`,
-          `rgba(75, 192, 192, 0.2)`,
-          `rgba(153, 102, 255, 0.2)`,
-          `rgba(255, 159, 64, 0.2)`
-        ],
-        borderColor: [
-          `rgba(255, 99, 132, 1)`,
-          `rgba(54, 162, 235, 1)`,
-          `rgba(255, 206, 86, 1)`,
-          `rgba(75, 192, 192, 1)`,
-          `rgba(153, 102, 255, 1)`,
-          `rgba(255, 159, 64, 1)`
-        ],
-        borderWidth: 1
+        data: genreLabels
+          .map((genre) => films.reduce((acc, film) => {
+            const targetFilmsCount = Array.from(film.genre)
+              .filter((it) => it === genre).length;
+
+            return acc + targetFilmsCount;
+          }, 0)),
+        backgroundColor: genreLabels.map(() => `#ffe800`),
       }]
     },
     options: {
+      plugins: {
+        datalabels: {
+          display: false
+        },
+      },
       scales: {
-        yAxes: [{
+        xAxes: [{
           ticks: {
-            beginAtZero: true
-          }
+            display: false,
+            beginAtZero: true,
+            stepSize: 1
+          },
         }]
+      },
+      legend: {
+        display: false
       }
     }
   });
 };
 
-const createStatisticsTemplate = () => {
+const createUserRankTemplate = (count) => {
+  return (
+    `<p class="statistic__rank">
+      Your rank
+      <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+      <span class="statistic__rank-label">${getUserRank(count)}</span>
+    </p>`
+  )
+};
+
+const createStatisticsTemplate = (watchedFilms) => {
+  const watchedFilmsCount = watchedFilms.length;
+
+  const checkTotalDurationCount = (films) => {
+    if (!films.length) {
+      return films.length;
+    }
+
+    return films
+      .map((film) => film.runtime)
+      .reduce((acc, runtime) => acc + runtime);
+  };
+
+  const totalDurationCount = checkTotalDurationCount(watchedFilms);
+
+  const DURATION = {
+    HOURS: Math.trunc(totalDurationCount / 60),
+    MINUTES: totalDurationCount % 60,
+  };
+
+  // const getwatchedFilmsGenres = watchedFilms
+  //   .map((film) => Array.from(film.genre));
+
+  // const getFavoriteGenres = getwatchedFilmsGenres
+  //   .map((film) => Array.from(film));
+
   return (
     `<section class="statistic">
-      <p class="statistic__rank">
-        Your rank
-        <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        <span class="statistic__rank-label">Sci-Fighter</span>
-      </p>
+      ${watchedFilmsCount ? createUserRankTemplate(watchedFilmsCount) : ``}
 
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>
@@ -73,15 +115,15 @@ const createStatisticsTemplate = () => {
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+          <p class="statistic__item-text">${watchedFilmsCount}<span class="statistic__item-description">movies</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+          <p class="statistic__item-text">${DURATION.HOURS} <span class="statistic__item-description">h</span> ${DURATION.MINUTES} <span class="statistic__item-description">m</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">Sci-Fi</p>
+          <p class="statistic__item-text">пока хз</p>
         </li>
       </ul>
 
@@ -94,14 +136,16 @@ const createStatisticsTemplate = () => {
 };
 
 export default class Statistics extends AbstractComponent {
-  constructor() {
+  constructor(films) {
     super();
+
+    this._films = films;
 
     this._renderCharts();
   }
 
   getTemplate() {
-    return createStatisticsTemplate();
+    return createStatisticsTemplate(this._films.watchedFilms);
   }
 
   _renderCharts() {
@@ -109,6 +153,6 @@ export default class Statistics extends AbstractComponent {
 
     const ctx = element.querySelector(`.statistic__chart`);
 
-    this._genresChart = renderChart(ctx);
+    this._genresChart = renderChart(ctx, this._films.watchedFilms);
   }
 }
