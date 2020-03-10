@@ -37,3 +37,5 @@ export default class Profile extends AbstractComponent {
     return createProfileTemplate(this._count);
   }
 }
+
+export {getUserRank};
