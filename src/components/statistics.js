@@ -144,9 +144,24 @@ const createStatisticsTemplate = (watchedFilms) => {
   );
 };
 
-const getTodayWatchedFIlms = (films) => {
+const getTodayWatchedFilms = (films) => {
   return films
-    .map((film) => film.watchingDate);
+    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`day`), moment().endOf(`day`)));
+};
+
+const getWeekWatchedFilms = (films) => {
+  return films
+    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`isoWeek`), moment().endOf(`isoWeek`)));
+};
+
+const getMonthWatchedFilms = (films) => {
+  return films
+    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`month`), moment().endOf(`month`)));
+};
+
+const getYearWatchedFilms = (films) => {
+  return films
+    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`year`), moment().endOf(`year`)));
 };
 
 export default class Statistics extends AbstractComponent {
@@ -156,11 +171,15 @@ export default class Statistics extends AbstractComponent {
     this._films = films;
     this._currentFilterType = FilterType.ALL_TIME;
 
+    this._todayWatchedFilms = getTodayWatchedFilms(this._films);
+    this._weekWatchedFIlms = getWeekWatchedFilms(this._films);
+    this._monthWatchedFIlms = getMonthWatchedFilms(this._films);
+    this._yearWatchedFIlms = getYearWatchedFilms(this._films);
+
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._onFilterChange(this._currentFilterType);
     this._setFilterChangeHandler(this._onFilterChange);
-    console.log(getTodayWatchedFIlms(this._films));
   }
 
   getTemplate() {
@@ -195,16 +214,16 @@ export default class Statistics extends AbstractComponent {
         this._renderCharts(this._films);
         break;
       case FilterType.TODAY:
-        console.log(`sad`);
+        this._renderCharts(this._todayWatchedFilms);
         break;
       case FilterType.WEEK:
-        console.log(`За неделю`);
+        this._renderCharts(this._weekWatchedFIlms);
         break;
       case FilterType.MONTH:
-        console.log(`За месяц`);
+        this._renderCharts(this._monthWatchedFIlms);
         break;
       case FilterType.YEAR:
-        console.log(`За год`);
+        this._renderCharts(this._yearWatchedFIlms);
         break;
     }
   }
