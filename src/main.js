@@ -7,7 +7,7 @@ import MoviesModel from './models/movies.js';
 import {generateFilms} from './mock/film.js';
 import {RenderPosition, render} from './utils/render.js';
 
-const FILMS_COUNT = 16;
+const FILMS_COUNT = 24;
 const films = generateFilms(FILMS_COUNT);
 const moviesModel = new MoviesModel();
 moviesModel.films = films;

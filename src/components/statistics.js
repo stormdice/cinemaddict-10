@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
@@ -164,13 +164,14 @@ const getYearWatchedFilms = (films) => {
     .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`year`), moment().endOf(`year`)));
 };
 
-export default class Statistics extends AbstractComponent {
+export default class Statistics extends AbstractSmartComponent {
   constructor(films) {
     super();
 
     this._films = films;
     this._currentFilterType = FilterType.ALL_TIME;
 
+    this._genresChart = null;
     this._todayWatchedFilms = getTodayWatchedFilms(this._films);
     this._weekWatchedFIlms = getWeekWatchedFilms(this._films);
     this._monthWatchedFIlms = getMonthWatchedFilms(this._films);
@@ -186,12 +187,38 @@ export default class Statistics extends AbstractComponent {
     return createStatisticsTemplate(this._films);
   }
 
+  show() {
+    super.show();
+
+    this.rerender(this._films);
+  }
+
+  recoveryListeners() {
+    this._setFilterChangeHandler(this._onFilterChange);
+  }
+
+  rerender(films) {
+    this._films = films;
+
+    super.rerender();
+
+    this._renderCharts(this._films);
+  }
+
   _renderCharts(films) {
     const element = this.getElement();
-
     const ctx = element.querySelector(`.statistic__chart`);
 
+    this._resetChart();
+
     this._genresChart = renderChart(ctx, films);
+  }
+
+  _resetChart() {
+    if (this._genresChart) {
+      this._genresChart.destroy();
+      this._genresChart = null;
+    }
   }
 
   _setFilterChangeHandler(handler) {
