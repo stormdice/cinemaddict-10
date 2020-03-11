@@ -101,7 +101,6 @@ const generateDescriptions = (descriptions) => {
 };
 
 const sortCommentsByDate = (comments) => comments.sort((a, b) => a.date - b.date);
-
 const generateFilm = () => {
   return {
     id: String(new Date() + Math.random()),
@@ -113,7 +112,7 @@ const generateFilm = () => {
     ageRating: getRandomArrayItem(AGES_RATING),
     releaseDate: parseReleaseDate(generateReleaseDate()),
     runtime: generateRuntime(),
-    genre: new Set(generateGenres(GENRES)),
+    genres: [...new Set(generateGenres(GENRES))],
     description: generateDescriptions(DESCRIPTION_TEXT),
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,

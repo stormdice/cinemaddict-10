@@ -21,7 +21,7 @@ const createFilmTemplate = (film) => {
     runtime,
     description,
     poster,
-    genre,
+    genres,
     isWatchlist,
     isWatched,
     isFavorite,
@@ -29,7 +29,7 @@ const createFilmTemplate = (film) => {
   } = film;
 
   const release = filmCardFormatReleaseDate(releaseDate);
-  const filmGenre = generateGenre(genre);
+  const filmGenre = generateGenre(genres);
   const filmRuntime = formatRuntime(runtime);
   const shortDescription = checkDescriptionLength(description);
   const commentsCount = comments.length;

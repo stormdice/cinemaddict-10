@@ -49,8 +49,9 @@ Chart.helpers.merge(Chart.defaults, {
 });
 
 const renderChart = (ctx, films) => {
+  // TODO сгенерировать данные лейблов и даты для чарта - массив объектов , объект = {label,count}
   const genreLabels = films
-    .map((film) => film.genre)
+    .map((film) => film.genres)
     .reduce((acc, genres) => {
       return acc.concat(Array.from(genres));
     }, [])
@@ -64,7 +65,7 @@ const renderChart = (ctx, films) => {
       datasets: [{
         data: genreLabels
           .map((genre) => films.reduce((acc, film) => {
-            const targetFilmsCount = Array.from(film.genre)
+            const targetFilmsCount = film.genres
               .filter((it) => it === genre).length;
 
             return acc + targetFilmsCount;

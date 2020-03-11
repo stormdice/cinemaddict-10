@@ -114,7 +114,7 @@ const createFilmDetailsTemplate = (film) => {
     title,
     originalTitle,
     country,
-    genre,
+    genres,
     totalRating,
     releaseDate,
     runtime,
@@ -127,7 +127,7 @@ const createFilmDetailsTemplate = (film) => {
 
   const release = filmDetailsFormatReleaseDate(releaseDate);
   const filmRuntime = formatRuntime(runtime);
-  const filmGenre = createGenreMarkup(genre);
+  const filmGenre = createGenreMarkup(genres);
   const commentsList = createCommentsMarkup(comments);
   const createNewComment = createNewCommentMarkup();
 
@@ -183,7 +183,7 @@ const createFilmDetailsTemplate = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genre.size <= 1 ? `Genre` : `Genres`}</td>
+                  <td class="film-details__term">${genres.length <= 1 ? `Genre` : `Genres`}</td>
                   <td class="film-details__cell">${filmGenre}</td>
                 </tr>
               </table>
