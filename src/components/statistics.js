@@ -3,6 +3,14 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {getUserRank} from './profile.js';
 
+const FilterType = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
 const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
 };
@@ -34,7 +42,7 @@ const renderChart = (ctx, films) => {
     options: {
       plugins: {
         datalabels: {
-          display: false
+          display: true
         },
       },
       scales: {
@@ -60,7 +68,7 @@ const createUserRankTemplate = (count) => {
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
       <span class="statistic__rank-label">${getUserRank(count)}</span>
     </p>`
-  )
+  );
 };
 
 const createStatisticsTemplate = (watchedFilms) => {
@@ -140,19 +148,55 @@ export default class Statistics extends AbstractComponent {
     super();
 
     this._films = films;
+    this._currentFilterType = FilterType.ALL_TIME;
 
-    this._renderCharts();
+    this._onFilterChange(this._currentFilterType);
+    this._setFilterChangeHandler(this._onFilterChange);
   }
 
   getTemplate() {
     return createStatisticsTemplate(this._films.watchedFilms);
   }
 
-  _renderCharts() {
+  _renderCharts(films) {
     const element = this.getElement();
 
     const ctx = element.querySelector(`.statistic__chart`);
 
-    this._genresChart = renderChart(ctx, this._films.watchedFilms);
+    this._genresChart = renderChart(ctx, films);
+  }
+
+  _setFilterChangeHandler(handler) {
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, (evt) => {
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
+
+      const filter = evt.target.value;
+
+      this._currentFilterType = filter;
+
+      handler(filter);
+    });
+  }
+
+  _onFilterChange(filter) {
+    switch (filter) {
+      case FilterType.ALL_TIME:
+        this._renderCharts(this._films.watchedFilms);
+        break;
+      case FilterType.TODAY:
+        console.log(`За сегодня`);
+        break;
+      case FilterType.WEEK:
+        console.log(`За неделю`);
+        break;
+      case FilterType.MONTH:
+        console.log(`За месяц`);
+        break;
+      case FilterType.YEAR:
+        console.log(`За год`);
+        break;
+    }
   }
 }
