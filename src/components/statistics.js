@@ -1,6 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import moment from 'moment';
 import {getUserRank} from './profile.js';
 
 const FilterType = {
@@ -143,6 +144,11 @@ const createStatisticsTemplate = (watchedFilms) => {
   );
 };
 
+const getTodayWatchedFIlms = (films) => {
+  return films
+    .map((film) => film.watchingDate);
+};
+
 export default class Statistics extends AbstractComponent {
   constructor(films) {
     super();
@@ -150,12 +156,15 @@ export default class Statistics extends AbstractComponent {
     this._films = films;
     this._currentFilterType = FilterType.ALL_TIME;
 
+    this._onFilterChange = this._onFilterChange.bind(this);
+
     this._onFilterChange(this._currentFilterType);
     this._setFilterChangeHandler(this._onFilterChange);
+    console.log(getTodayWatchedFIlms(this._films));
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films.watchedFilms);
+    return createStatisticsTemplate(this._films);
   }
 
   _renderCharts(films) {
@@ -183,10 +192,10 @@ export default class Statistics extends AbstractComponent {
   _onFilterChange(filter) {
     switch (filter) {
       case FilterType.ALL_TIME:
-        this._renderCharts(this._films.watchedFilms);
+        this._renderCharts(this._films);
         break;
       case FilterType.TODAY:
-        console.log(`За сегодня`);
+        console.log(`sad`);
         break;
       case FilterType.WEEK:
         console.log(`За неделю`);
