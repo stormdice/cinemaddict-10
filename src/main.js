@@ -21,7 +21,7 @@ const filterController = new FilterController(siteMainElement, moviesModel);
 filterController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
-const statisticsComponent = new StatisticsComponent(moviesModel);
+const statisticsComponent = new StatisticsComponent(moviesModel.watchedFilms);
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 
