@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from '../utils/common.js';
+import {getRandomDate, getRandomIntegerNumber, getRandomArrayItem} from '../utils/common.js';
 import {generateComments} from './comment.js';
 
 const FILM_TITLES = [
@@ -69,6 +69,12 @@ const generateReleaseDate = () => {
   return getRandomIntegerNumber(Math.pow(8, 13), Math.pow(8.5, 13));
 };
 
+const generateWatchingDate = () => {
+  const thisYear = new Date().getFullYear();
+
+  return getRandomDate(new Date(thisYear, 0, 1), new Date());
+};
+
 const parseReleaseDate = (date) => {
   return new Date(date);
 };
@@ -113,6 +119,7 @@ const generateFilm = () => {
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
     comments: sortCommentsByDate(generateComments(generateCommentsCount())),
+    watchingDate: generateWatchingDate(),
   };
 };
 
