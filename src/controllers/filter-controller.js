@@ -39,6 +39,10 @@ export default class FilterController {
     }
   }
 
+  onMenuClick(handler) {
+    this._filterComponent.setClickHandler(handler);
+  }
+
   onFilterChange(filterType) {
     this._moviesModel.filter = filterType;
     this._activeFilterType = filterType;

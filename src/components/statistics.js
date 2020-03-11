@@ -16,6 +16,38 @@ const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
 };
 
+Chart.helpers.merge(Chart.defaults, {
+  scale: {
+    ticks: {
+      fontColor: `#ffffff`,
+      padding: 110,
+      fontSize: `20`,
+      fontFamily: `Open Sans`,
+    },
+  },
+  global: {
+    tooltips: {
+      enabled: false,
+    },
+    legend: {
+      display: false,
+    },
+    plugins: {
+      datalabels: {
+        align: `start`,
+        anchor: `start`,
+        clamp: true,
+        color: `#ffffff`,
+        font: {
+          size: `20`,
+          family: `Open Sans`,
+        },
+        offset: 50,
+      },
+    },
+  },
+});
+
 const renderChart = (ctx, films) => {
   const genreLabels = films
     .map((film) => film.genre)
@@ -37,27 +69,22 @@ const renderChart = (ctx, films) => {
 
             return acc + targetFilmsCount;
           }, 0)),
-        backgroundColor: genreLabels.map(() => `#ffe800`),
+        backgroundColor: `#ffe800`,
       }]
     },
     options: {
-      plugins: {
-        datalabels: {
-          display: true
-        },
+      animation: {
+        duration: 2000,
       },
       scales: {
         xAxes: [{
           ticks: {
             display: false,
             beginAtZero: true,
-            stepSize: 1
+            stepSize: 1,
           },
         }]
       },
-      legend: {
-        display: false
-      }
     }
   });
 };
@@ -91,12 +118,6 @@ const createStatisticsTemplate = (watchedFilms) => {
     HOURS: Math.trunc(totalDurationCount / 60),
     MINUTES: totalDurationCount % 60,
   };
-
-  // const getwatchedFilmsGenres = watchedFilms
-  //   .map((film) => Array.from(film.genre));
-
-  // const getFavoriteGenres = getwatchedFilmsGenres
-  //   .map((film) => Array.from(film));
 
   return (
     `<section class="statistic">

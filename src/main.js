@@ -7,7 +7,7 @@ import MoviesModel from './models/movies.js';
 import {generateFilms} from './mock/film.js';
 import {RenderPosition, render} from './utils/render.js';
 
-const FILMS_COUNT = 24;
+const FILMS_COUNT = 40;
 const films = generateFilms(FILMS_COUNT);
 const moviesModel = new MoviesModel();
 moviesModel.films = films;
@@ -31,7 +31,7 @@ pageController.render();
 
 document.querySelector(`.footer__statistics p`).textContent = `${FILMS_COUNT} movies inside`;
 
-filterController._filterComponent.setClickHandler((filterName) => {
+filterController.onMenuClick((filterName) => {
   if (filterName === `stats`) {
     pageController.hide();
     statisticsComponent.show();
