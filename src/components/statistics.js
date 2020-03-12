@@ -12,8 +12,39 @@ const FilterType = {
   YEAR: `year`
 };
 
-const getUniqItems = (item, index, array) => {
-  return array.indexOf(item) === index;
+const getFilmsGenres = (films) => {
+  return films
+    .map((film) => film.genres)
+    .reduce((acc, genre) => [...acc, ...genre], [])
+    .reduce((obj, genre) => {
+      if (!obj[genre]) {
+        obj[genre] = 1;
+      } else {
+        obj[genre]++;
+      }
+
+      return obj;
+    }, {});
+};
+
+const checkTotalDurationCount = (films) => {
+  if (!films.length) {
+    return films.length;
+  }
+
+  return films
+    .map((film) => film.runtime)
+    .reduce((acc, runtime) => acc + runtime);
+};
+
+const getFavoriteGenre = (filmGenres) => {
+  const sortedGenres = Object.entries(filmGenres).sort((a, b) => b[1] - a[1]);
+
+  if (sortedGenres[0][1] === sortedGenres[1][1]) {
+    return `–`;
+  }
+
+  return sortedGenres.slice(0, 1)[0][0];
 };
 
 Chart.helpers.merge(Chart.defaults, {
@@ -49,27 +80,15 @@ Chart.helpers.merge(Chart.defaults, {
 });
 
 const renderChart = (ctx, films) => {
-  // TODO сгенерировать данные лейблов и даты для чарта - массив объектов , объект = {label,count}
-  const genreLabels = films
-    .map((film) => film.genres)
-    .reduce((acc, genres) => {
-      return acc.concat(Array.from(genres));
-    }, [])
-    .filter(getUniqItems);
+  const genres = getFilmsGenres(films);
 
   return new Chart(ctx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: genreLabels,
+      labels: Object.keys(genres),
       datasets: [{
-        data: genreLabels
-          .map((genre) => films.reduce((acc, film) => {
-            const targetFilmsCount = film.genres
-              .filter((it) => it === genre).length;
-
-            return acc + targetFilmsCount;
-          }, 0)),
+        data: Object.values(genres),
         backgroundColor: `#ffe800`,
       }]
     },
@@ -103,22 +122,14 @@ const createUserRankTemplate = (count) => {
 const createStatisticsTemplate = (watchedFilms) => {
   const watchedFilmsCount = watchedFilms.length;
 
-  const checkTotalDurationCount = (films) => {
-    if (!films.length) {
-      return films.length;
-    }
-
-    return films
-      .map((film) => film.runtime)
-      .reduce((acc, runtime) => acc + runtime);
-  };
-
   const totalDurationCount = checkTotalDurationCount(watchedFilms);
 
   const DURATION = {
     HOURS: Math.trunc(totalDurationCount / 60),
     MINUTES: totalDurationCount % 60,
   };
+
+  const favoriteGenre = getFavoriteGenre(getFilmsGenres(watchedFilms));
 
   return (
     `<section class="statistic">
@@ -154,7 +165,7 @@ const createStatisticsTemplate = (watchedFilms) => {
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">пока хз</p>
+          <p class="statistic__item-text">${favoriteGenre}</p>
         </li>
       </ul>
 

@@ -72,8 +72,9 @@ const generateReleaseDate = () => {
 const generateWatchingDate = () => {
   const thisYear = new Date().getFullYear();
 
-  return getRandomDate(new Date(thisYear, 0, 1), new Date());
+  return getRandomDate(new Date(thisYear, 0, 1), new Date()).toISOString();
 };
+
 
 const parseReleaseDate = (date) => {
   return new Date(date);
