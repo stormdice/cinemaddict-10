@@ -1,4 +1,4 @@
-import FilterComponent from '../components/filter.js';
+import MenuComponent from '../components/menu.js';
 import {FilterType} from '../const.js';
 import {render, replace, RenderPosition} from '../utils/render.js';
 import {getFilmsByFilter} from '../utils/filter.js';
@@ -30,7 +30,7 @@ export default class FilterController {
 
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new FilterComponent(filters);
+    this._filterComponent = new MenuComponent(filters);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
