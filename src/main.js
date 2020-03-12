@@ -1,4 +1,5 @@
 import ProfileComponent from './components/profile.js';
+import FooterComponent from './components/footer.js';
 import FilterController from './controllers/filter-controller.js';
 import PageController from './controllers/page-controller.js';
 import FilmsSectionComponent from './components/film-section.js';
@@ -29,7 +30,8 @@ const pageController = new PageController(filmsSectionComponent, moviesModel);
 statisticsComponent.hide();
 pageController.render();
 
-document.querySelector(`.footer__statistics p`).textContent = `${FILMS_COUNT} movies inside`;
+const footerComponent = new FooterComponent(moviesModel.allFilms.length);
+render(siteMainElement, footerComponent, RenderPosition.BEFOREEND);
 
 filterController.onMenuClick((filterName) => {
   if (filterName === `stats`) {
