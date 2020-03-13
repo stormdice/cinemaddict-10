@@ -22,12 +22,10 @@ const filterController = new FilterController(siteMainElement, moviesModel);
 filterController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
-const statisticsComponent = new StatisticsComponent(moviesModel.watchedFilms);
+let statisticsComponent = null;
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
-render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsSectionComponent, moviesModel);
-statisticsComponent.hide();
 pageController.render();
 
 const footerComponent = new FooterComponent(moviesModel.allFilms.length);
@@ -36,10 +34,22 @@ render(siteMainElement, footerComponent, RenderPosition.BEFOREEND);
 filterController.onMenuClick((filterName) => {
   if (filterName === `stats`) {
     pageController.hide();
-    statisticsComponent.show();
+
+    if (statisticsComponent === null) {
+      statisticsComponent = new StatisticsComponent(moviesModel.watchedFilms);
+      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+    } else {
+      statisticsComponent.show();
+    }
+
   } else {
     pageController.show();
-    statisticsComponent.hide();
     filterController.onFilterChange(filterName);
+
+    if (statisticsComponent === null) {
+      return;
+    } else {
+      statisticsComponent.hide();
+    }
   }
 });
