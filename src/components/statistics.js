@@ -39,12 +39,15 @@ const checkTotalDurationCount = (films) => {
 
 const getFavoriteGenre = (filmGenres) => {
   const sortedGenres = Object.entries(filmGenres).sort((a, b) => b[1] - a[1]);
+  const filmsCountFirstFavoriteGenre = sortedGenres[0][1];
+  const filmsCountSecondFavoriteGenre = sortedGenres[1][1];
+  const favoriteGenre = sortedGenres[0][0];
 
-  if (sortedGenres[0][1] === sortedGenres[1][1]) {
+  if (filmsCountFirstFavoriteGenre === filmsCountSecondFavoriteGenre) {
     return `–`;
   }
 
-  return sortedGenres.slice(0, 1)[0][0];
+  return favoriteGenre;
 };
 
 Chart.helpers.merge(Chart.defaults, {
