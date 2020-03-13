@@ -31,7 +31,7 @@ pageController.render();
 const footerComponent = new FooterComponent(moviesModel.allFilms.length);
 render(siteMainElement, footerComponent, RenderPosition.BEFOREEND);
 
-filterController.onMenuClick((filterName) => {
+filterController.setScreenChange((filterName) => {
   if (filterName === `stats`) {
     pageController.hide();
 

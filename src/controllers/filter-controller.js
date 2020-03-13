@@ -10,6 +10,7 @@ export default class FilterController {
 
     this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
+    this._handler = null;
 
     this._onDataChange = this._onDataChange.bind(this);
 
@@ -37,10 +38,15 @@ export default class FilterController {
     } else {
       render(container, this._filterComponent, RenderPosition.BEFOREEND);
     }
+
+    if (this._handler) {
+      this.setScreenChange(this._handler);
+    }
   }
 
-  onMenuClick(handler) {
+  setScreenChange(handler) {
     this._filterComponent.setClickHandler(handler);
+    this._handler = handler;
   }
 
   onFilterChange(filterType) {
