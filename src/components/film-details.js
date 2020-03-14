@@ -1,13 +1,9 @@
-import AbstractSmartComponent from './abstract-smart-component';
-import {formatDate} from '../utils/common.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
+import CommentComponent from './comment.js';
+import {formatRuntime, filmDetailsFormatReleaseDate} from '../utils/common.js';
+import {EMOTIONS} from '../const.js';
+import he from 'he';
 
-const EMOTIONS = [`smile`, `sleeping`, `puke`, `angry`];
-
-/**
- * Создаёт и возвращает разметку жанра
- * @param {Set} genres - сет жанров
- * @return {string}
- */
 const createGenreMarkup = (genres) => {
   return Array.from(genres)
     .map((filmGenre) => {
@@ -18,11 +14,6 @@ const createGenreMarkup = (genres) => {
     .join(`\n`);
 };
 
-/**
- * Создаёт и возвращает разметку блока оценки фильма
- * @param {Object} film - данные из объекта фильма
- * @return {string}
- */
 const createUserRatingMarkup = (film) => {
   const {title, poster} = film;
 
@@ -79,11 +70,6 @@ const createUserRatingMarkup = (film) => {
   );
 };
 
-/**
- * Создаёт и возвращает разметку эмодзи
- * @param {string[]} emotions
- * @return {string}
- */
 const createEmotionsMarkup = (emotions) => {
   return emotions
     .map((emotion) => {
@@ -97,15 +83,12 @@ const createEmotionsMarkup = (emotions) => {
     .join(`\n`);
 };
 
-/**
- * Создаёт и возвращает разметку нового комментария
- * @return {string}
- */
 const createNewCommentMarkup = () => {
   const emotions = createEmotionsMarkup(EMOTIONS);
 
   return (
     `<div class="film-details__new-comment">
+      <span class="film-details__comment-error-message">Please fill in the comment and choose an emotion.</span>
       <div for="add-emoji" class="film-details__add-emoji-label"></div>
 
       <label class="film-details__comment-label">
@@ -117,16 +100,36 @@ const createNewCommentMarkup = () => {
   );
 };
 
-/**
- * Создаёт и возвращает разметку попапа
- * @param {Object} film - данные из объекта фильма
- * @return {string}
- */
-const createFilmDetailsTemplate = (film) => {
-  const {poster, ageRating, title, originalTitle, country, genre, totalRating, releaseDate, runtime, description, isWatchlist, isWatched, isFavorite} = film;
+const createCommentsMarkup = (comments) => {
+  return comments.map((comment) => {
+    return new CommentComponent(comment).getTemplate();
+  })
+  .join(`\n`);
+};
 
-  const release = formatDate(releaseDate);
-  const filmGenre = createGenreMarkup(genre);
+const createFilmDetailsTemplate = (film) => {
+  const {
+    poster,
+    ageRating,
+    title,
+    originalTitle,
+    country,
+    genres,
+    totalRating,
+    releaseDate,
+    runtime,
+    description,
+    isWatchlist,
+    isWatched,
+    isFavorite,
+    comments
+  } = film;
+
+  const release = filmDetailsFormatReleaseDate(releaseDate);
+  const filmRuntime = formatRuntime(runtime);
+  const filmGenre = createGenreMarkup(genres);
+  const commentsList = createCommentsMarkup(comments);
+  const createNewComment = createNewCommentMarkup();
 
   return (
     `<section class="film-details">
@@ -173,14 +176,14 @@ const createFilmDetailsTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${filmRuntime}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genre.size <= 1 ? `Genre` : `Genres`}</td>
+                  <td class="film-details__term">${genres.length <= 1 ? `Genre` : `Genres`}</td>
                   <td class="film-details__cell">${filmGenre}</td>
                 </tr>
               </table>
@@ -205,64 +208,10 @@ const createFilmDetailsTemplate = (film) => {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+            <ul class="film-details__comments-list">${commentsList}</ul>
 
-            <ul class="film-details__comments-list">
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Interesting setting and a good cast</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">Tim Macoveev</span>
-                    <span class="film-details__comment-day">2019/12/31 23:59</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Booooooooooring</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Very very old. Meh</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Almost two hours? Seriously?</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">Today</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-            </ul>
-
-            ${createNewCommentMarkup()}
+            ${createNewComment}
           </section>
         </div>
       </form>
@@ -270,15 +219,17 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-/**
- * Класс, представляющий попап
- * @extends AbstractComponent
- */
+const parseFormData = (formData) => {
+  return {
+    id: String(Math.random()),
+    author: `You`,
+    text: he.encode(formData.get(`comment`)),
+    date: new Date(),
+    emotion: formData.get(`comment-emoji`),
+  };
+};
+
 export default class FilmDetails extends AbstractSmartComponent {
-  /**
-   * Создаёт карточку фильма
-   * @param {Object} film - фильм
-   */
   constructor(film) {
     super();
 
@@ -287,55 +238,74 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
   recoveryListeners() {
+    this.setCloseButtonClickHandler(this._closeButtonClickHandler);
+    this.setCommentsDeleteClickHandler(this._commentsDeleteClickHandler);
+    this.setCommentSubmitHandler(this._commentSubmitHandler);
     this._subscribeOnEvents();
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
+  getAddCommentFormData() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+
+    return parseFormData(formData);
+  }
+
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
+
+    this._closeButtonClickHandler = handler;
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchlistInputChangeHandler(handler) {
     this.getElement().querySelector(`#watchlist`).addEventListener(`change`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchedInputChangeHandler(handler) {
     this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setFavoriteInputChangeHandler(handler) {
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+  }
+
+  setCommentsDeleteClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__comment-delete`)
+      .forEach((deleteButton) => {
+        deleteButton.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+          const commentId = evt.target.closest(`li`).id;
+          handler(commentId);
+        });
+      });
+
+    this._commentsDeleteClickHandler = handler;
+  }
+
+  setCommentSubmitHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, (evt) => {
+        const ctrlOrCommandKey = evt.ctrlKey || evt.metaKey;
+        const enterKey = evt.key === `Enter`;
+
+        if (ctrlOrCommandKey && enterKey) {
+          handler();
+        }
+      });
+
+    this._commentSubmitHandler = handler;
   }
 
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    element.querySelector(`.film-details__new-comment`)
+    element.querySelector(`.film-details__emoji-list`)
       .addEventListener(`click`, function (evt) {
         if (evt.target.tagName !== `INPUT`) {
           return;

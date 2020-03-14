@@ -1,24 +1,38 @@
 import AbstractComponent from './abstract-component.js';
+import {formatRuntime ,filmCardFormatReleaseDate} from '../utils/common.js';
 
-/**
- * Возвращает 1 жанр для карточки фильма
- * @param {Set} genres - сет жанров
- * @return {Array}
- */
+const MAX_DESCRIPTION_LENGTH = 140;
+
+const checkDescriptionLength = (description) => {
+  const length = description.length;
+
+  return length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
+};
+
 const generateGenre = (genres) => {
   return Array.from(genres).slice(0, 1);
 };
 
-/**
- * Создаёт и возвращает разметку фильма
- * @param {Object} film - данные из объекта фильма
- * @return {string}
- */
 const createFilmTemplate = (film) => {
-  const {title, totalRating, releaseDate, runtime, description, poster, genre, isWatchlist, isWatched, isFavorite, comments} = film;
+  const {
+    title,
+    totalRating,
+    releaseDate,
+    runtime,
+    description,
+    poster,
+    genres,
+    isWatchlist,
+    isWatched,
+    isFavorite,
+    comments
+  } = film;
 
-  const release = releaseDate.getFullYear();
-  const filmGenre = generateGenre(genre);
+  const release = filmCardFormatReleaseDate(releaseDate);
+  const filmGenre = generateGenre(genres);
+  const filmRuntime = formatRuntime(runtime);
+  const shortDescription = checkDescriptionLength(description);
+  const commentsCount = comments.length;
 
   const setActiveClass = (isActive) => {
     return isActive ? `film-card__controls-item--active` : ``;
@@ -30,12 +44,12 @@ const createFilmTemplate = (film) => {
       <p class="film-card__rating">${totalRating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${release}</span>
-        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__duration">${filmRuntime}</span>
         <span class="film-card__genre">${filmGenre}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
-      <a class="film-card__comments">${comments} comments</a>
+      <p class="film-card__description">${shortDescription}</p>
+      <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setActiveClass(isWatchlist)}">Add to watchlist</button>
         <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${setActiveClass(isWatched)}">Mark as watched</button>
@@ -45,60 +59,44 @@ const createFilmTemplate = (film) => {
   );
 };
 
-/**
- * Класс, представляющий карточку фильма
- * @extends AbstractComponent
- */
 export default class Film extends AbstractComponent {
-  /**
-   * Создаёт карточку фильма
-   * @param {Object} film - данные из объека фильма
-   */
   constructor(film) {
     super();
 
     this._film = film;
   }
 
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
   getTemplate() {
     return createFilmTemplate(this._film);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setOpenDetailsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
   }
 }

@@ -229,6 +229,7 @@ button {
   font-weight: 500;
   padding: 0 10px;
   width: 1em;
+  pointer-events: none;
 }
 
 .main-navigation__item--active {
@@ -753,6 +754,9 @@ button {
   padding-bottom: 60px;
   position: relative;
 }
+.film-details__new-comment.invalid .film-details__comment-error-message {
+  display: block;
+}
 .film-details__add-emoji-label {
   width: 79px;
   height: 68px;
@@ -863,6 +867,21 @@ button {
   font-size: 20px;
   resize: none;
   outline: none;
+  transition: border-color 0.2s;
+}
+.film-details__comment-error-message {
+  display: none;
+  position: absolute;
+  top: -25px;
+  left: 85px;
+
+  color: var(--text-color-poor);
+  font-weight: bold;
+
+  padding: 5px 10px;
+  background-color: #ffffff;
+  border: 1px solid var(--text-color-poor);
+  border-radius: 5px;
 }
 .film-details__comment-input::placeholder {
   color: #212126;
@@ -1048,6 +1067,9 @@ button {
   justify-content: space-around;
   list-style: none;
   margin-bottom: 100px;
+}
+.statistic__text-item:last-child {
+  text-align: center;
 }
 .statistic__item-title {
   margin: 0;

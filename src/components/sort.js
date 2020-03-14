@@ -1,15 +1,6 @@
 import AbstractComponent from './abstract-component.js';
+import {SortType} from '../const.js';
 
-const SortType = {
-  DEFAULT: `default`,
-  DATE: `date`,
-  RATING: `rating`,
-};
-
-/**
- * Создаёт и возвращает разметку сортировки
- * @return {string}
- */
 const createSortTemplate = () => {
   return (
     `<ul class="sort">
@@ -20,31 +11,17 @@ const createSortTemplate = () => {
   );
 };
 
-/**
- * Класс, представляющий сортировку
- * @extends AbstractComponent
- */
 export default class Sort extends AbstractComponent {
-  /**
-   * Создаёт текущий тип сортировки
-   */
   constructor() {
     super();
 
     this._currentSortType = SortType.DEFAULT;
   }
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
+
   getTemplate() {
     return createSortTemplate();
   }
 
-  /**
-   * Устанавливает слушатель событий
-   * @param {Function} handler - функция для слушателя
-   */
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
@@ -70,5 +47,3 @@ export default class Sort extends AbstractComponent {
     });
   }
 }
-
-export {SortType};

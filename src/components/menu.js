@@ -1,81 +1,89 @@
 import AbstractComponent from './abstract-component.js';
+import {FilterType} from '../const.js';
+import {getFilterTitle} from '../utils/common.js';
 
-/**
- * Сделать первую букву большой
- * @param {string} string - строка
- * @return {string}
- */
-const toUppercaseFirstLetter = (string) => {
-  return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
-};
+const createFilterMarkup = (filter) => {
+  const {name, count, active} = filter;
 
-/**
- * Проверить заголовок на соответствие
- * @param {string} name - название пукта меню из объекта данных меню
- * @return {string}
- */
-const checkTitle = (name) => {
-  if (name === `all`) {
-    return `${toUppercaseFirstLetter(name)} movies`;
-  }
+  const createFiltersCountMarkup = () => {
+    if (name === FilterType.ALL) {
+      return ``;
+    }
 
-  return toUppercaseFirstLetter(name);
-};
+    return count > 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``;
+  };
 
-/**
- * Создаёт и возвращает разметку пунктов меню
- * @param {Object} item - данные из объекта пунктов меню
- * @param {boolean} isActive - активен ли пункт
- * @return {string}
- */
-const createMenuItemTemplate = (item, isActive) => {
-  const [name, count] = item;
-
-  const title = checkTitle(name);
-  const countMarkup = count > 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``;
-  const activeClass = isActive ? `main-navigation__item--active` : ``;
-  const additionalClass = name === `stats` ? `main-navigation__item--additional` : ``;
+  const title = getFilterTitle(name);
+  const activeClass = active ? `main-navigation__item--active` : ``;
+  const countMarkup = createFiltersCountMarkup();
 
   return (
-    `<a href="#${name}" class="main-navigation__item ${activeClass} ${additionalClass}">${title} ${countMarkup}</a>`
+    `<a href="#${name}" class="main-navigation__item ${activeClass}" data-menu-item-name="${name}">${title} ${countMarkup}</a>`
   );
 };
 
-/**
- * Создаёт и возвращает разметку меню
- * @param {string[]} menu - массив пунктов меню
- * @return {string}
- */
-const createMenuTemplate = (menu) => {
-  const menuMarkup = Object.entries(menu).map((item, index) => createMenuItemTemplate(item, index === 0)).join(`\n`);
+const createMenuTemplate = (menuItem) => {
+  const filterMarkup = menuItem.map((filter) => createFilterMarkup(filter)).join(`\n`);
 
   return (
     `<nav class="main-navigation">
-      ${menuMarkup}
+      ${filterMarkup}
+      <a href="#stats" class="main-navigation__item main-navigation__item--additional" data-menu-item-name="stats">Stats</a>
     </nav>`
   );
 };
 
-/**
- * Класс, представляющий меню
- * @extends AbstractComponent
- */
-export default class Menu extends AbstractComponent {
-  /**
-   * Создаёт меню
-   * @param {Object} menu - данные из объека меню
-   */
-  constructor(menu) {
+export default class Filter extends AbstractComponent {
+  constructor(filters) {
     super();
 
-    this._menu = menu;
+    this._filters = filters;
+    this._currentFilterType = FilterType.ALL;
+    this._linkElements = this.getElement().querySelectorAll(`.main-navigation__item`);
   }
 
-  /**
-   * Возвращает функцию создания разметки
-   * @return {Function}
-   */
   getTemplate() {
-    return createMenuTemplate(this._menu);
+    return createMenuTemplate(this._filters);
+  }
+
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      let filterName = evt.target.dataset.menuItemName;
+      const isFilterName = filterName !== undefined;
+      const isFilterChildNode = evt.target.parentElement.dataset.menuItemName !== undefined;
+
+      if (!isFilterName && !isFilterChildNode) {
+        return;
+      }
+
+      if (isFilterChildNode) {
+        filterName = evt.target.parentElement.dataset.menuItemName;
+      }
+
+      if (this._currentFilterType === filterName) {
+        return;
+      }
+
+      this._currentFilterType = filterName;
+
+      this._setActiveClass(evt);
+
+      handler(filterName);
+    });
+  }
+
+  _setActiveClass(evt) {
+    this._linkElements.forEach((link) => {
+      link.classList.remove(`main-navigation__item--active`);
+    });
+
+    if (evt.target.tagName === `A`) {
+      evt.target.classList.add(`main-navigation__item--active`);
+    }
+
+    if (evt.target.parentElement.tagName === `A`) {
+      evt.target.parentElement.classList.add(`main-navigation__item--active`);
+    }
   }
 }

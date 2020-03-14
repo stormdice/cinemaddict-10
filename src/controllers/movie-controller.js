@@ -8,12 +8,6 @@ const Mode = {
 };
 
 export default class MovieController {
-  /**
-   * Создаёт контейнер
-   * @param {HTMLElement} container - контейнер для вставки
-   * @param {Function} onDataChange - измененяет объект данных
-   * @param {Function} onViewChange - запрет на открытие нескольких попапов
-   */
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
@@ -23,20 +17,18 @@ export default class MovieController {
 
     this._filmComponent = null;
     this._filmDetailsComponent = null;
+    this._addCommentFormTextField = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
-  /**
-   * Отрисовывает фильм
-   * @param {Object} film - данные из объекта фильмов
-   */
   render(film) {
     const oldFilmComponent = this._filmComponent;
     const oldFilmDetailsComponent = this._filmDetailsComponent;
 
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
+    this._addCommentFormTextField = this._filmDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
@@ -44,25 +36,22 @@ export default class MovieController {
       this._openFilmDetails();
     });
 
-    this._filmComponent.setWatchlistClickHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
+    this._filmComponent.setWatchlistClickHandler(() => {
+      this._onDataChange(this, film, {
         isWatchlist: !film.isWatchlist,
-      }));
+      });
     });
 
-    this._filmComponent.setWatchedClickHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
+    this._filmComponent.setWatchedClickHandler(() => {
+      this._onDataChange(this, film, {
         isWatched: !film.isWatched,
-      }));
+      });
     });
 
-    this._filmComponent.setFavoriteClickHandler((evt) => {
-      evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
+    this._filmComponent.setFavoriteClickHandler(() => {
+      this._onDataChange(this, film, {
         isFavorite: !film.isFavorite,
-      }));
+      });
     });
 
     this._filmDetailsComponent.setCloseButtonClickHandler(() => {
@@ -70,21 +59,43 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setWatchlistInputChangeHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isWatchlist: !film.isWatchlist,
-      }));
+      });
     });
 
     this._filmDetailsComponent.setWatchedInputChangeHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isWatched: !film.isWatched,
-      }));
+      });
     });
 
     this._filmDetailsComponent.setFavoriteInputChangeHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film, {
         isFavorite: !film.isFavorite,
-      }));
+      });
+    });
+
+    this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
+      const newFilm = this._deleteComment(film, commentId);
+
+      this._onDataChange(this, film, newFilm);
+    });
+
+    this._filmDetailsComponent.setCommentSubmitHandler(() => {
+      const newComment = this._filmDetailsComponent.getAddCommentFormData();
+
+      const isCommentValid = this._validateComment(newComment);
+
+      if (!isCommentValid) {
+        this._addCommentFormTextField.classList.add(`invalid`);
+
+        return;
+      }
+
+      const updatedFilm = this._addComment(film, newComment);
+
+      this._onDataChange(this, film, updatedFilm);
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
@@ -95,18 +106,35 @@ export default class MovieController {
     }
   }
 
-  /**
-   * Показывает стандартное состояние карточки фильма
-   */
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
       this._closeFilmDetails();
     }
   }
 
-  /**
-   * Показывает попап
-   */
+  updateFilmDetails() {
+    this._filmDetailsComponent.rerender();
+  }
+
+  _validateComment({emotion, text}) {
+    return !!emotion && !!text;
+  }
+
+  _addComment(film, newComment) {
+    const newFilm = Object.assign({}, film);
+    newFilm.comments = [...newFilm.comments, newComment];
+
+    return newFilm;
+  }
+
+  _deleteComment(film, commentId) {
+    const newFilm = Object.assign({}, film);
+
+    newFilm.comments = newFilm.comments.filter(({id}) => id !== commentId);
+
+    return newFilm;
+  }
+
   _openFilmDetails() {
     this._onViewChange();
 
@@ -116,19 +144,14 @@ export default class MovieController {
     this._mode = Mode.DETAILS;
   }
 
-  /**
-   * Убирает попап
-   */
   _closeFilmDetails() {
     this._filmDetailsComponent.getElement().remove();
+
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+
     this._mode = Mode.DEFAULT;
   }
 
-  /**
-   * Удаляет DOM элемент попапа с фильмом
-   * @param {Event} evt - объект событие
-   */
   _onEscKeyDown(evt) {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 

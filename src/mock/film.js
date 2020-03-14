@@ -1,4 +1,5 @@
-import {formatDuration} from '../utils/common.js';
+import {getRandomDate, getRandomIntegerNumber, getRandomArrayItem} from '../utils/common.js';
+import {generateComments} from './comment.js';
 
 const FILM_TITLES = [
   `The Lighthouse`,
@@ -60,76 +61,39 @@ const COUNTRIES = [
 
 const DESCRIPTION_TEXT = TEXT.split(`. `);
 
-/**
- * Возвращает случайное число из выбранного диапазона
- * @param {number} min - минимальное число
- * @param {number} max - максимальное число
- * @return {number}
- */
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(max * Math.random());
-};
-
-/**
- * Возвращает случайный элемент из массива
- * @param {Array} array - исходный массив
- * @return {Array}
- */
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
-
-/**
- * Генерирует рейтинг фильма
- * @return {number}
- */
 const generateRating = () => {
   return (getRandomIntegerNumber(0, 10) + Math.random()).toFixed(1);
 };
 
-/**
- * Генерирует дату для фильма в миллисекундах
- * @return {number}
- */
 const generateReleaseDate = () => {
   return getRandomIntegerNumber(Math.pow(8, 13), Math.pow(8.5, 13));
 };
 
-/**
- * Разбирает дату и показывает только год
- * @param {Date} date
- * @return {Date}
- */
+const generateWatchingDate = () => {
+  const thisYear = new Date().getFullYear();
+
+  return getRandomDate(new Date(thisYear, 0, 1), new Date()).toISOString();
+};
+
+
 const parseReleaseDate = (date) => {
   return new Date(date);
 };
 
-/**
- * Генерирует продолжительность фильма
- * @return {number}
- */
 const generateRuntime = () => {
   return getRandomIntegerNumber(45, 200);
 };
 
-/**
- * Генерирует жанры фильма
- * @param {Array} genres - массив жанров
- * @return {Array}
- */
+const generateCommentsCount = () => {
+  return getRandomIntegerNumber(0, 8);
+};
+
 const generateGenres = (genres) => {
   return genres
     .filter(() => Math.random() > 0.5)
     .slice(0, 3);
 };
 
-/**
- * Генерирует описание для фильма
- * @param {Array} descriptions - массив описаний
- * @return {string}
- */
 const generateDescriptions = (descriptions) => {
   return descriptions
     .filter(() => Math.random() > 0.5)
@@ -137,12 +101,10 @@ const generateDescriptions = (descriptions) => {
     .join(`. `);
 };
 
-/**
- * Создаёт и возвращает объект даннных задачи
- * @return {Object}
- */
+const sortCommentsByDate = (comments) => comments.sort((a, b) => a.date - b.date);
 const generateFilm = () => {
   return {
+    id: String(new Date() + Math.random()),
     title: getRandomArrayItem(FILM_TITLES),
     originalTitle: getRandomArrayItem(FILM_TITLES),
     totalRating: generateRating(),
@@ -150,21 +112,17 @@ const generateFilm = () => {
     poster: getRandomArrayItem(POSTERS),
     ageRating: getRandomArrayItem(AGES_RATING),
     releaseDate: parseReleaseDate(generateReleaseDate()),
-    runtime: formatDuration(generateRuntime()),
-    genre: new Set(generateGenres(GENRES)),
+    runtime: generateRuntime(),
+    genres: [...new Set(generateGenres(GENRES))],
     description: generateDescriptions(DESCRIPTION_TEXT),
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
-    comments: getRandomIntegerNumber(0, 20)
+    comments: sortCommentsByDate(generateComments(generateCommentsCount())),
+    watchingDate: generateWatchingDate(),
   };
 };
 
-/**
- * Создаёт и возвращает массив с заданным количеством зачад
- * @param {number} count - количество задач
- * @return {Array}
- */
 const generateFilms = (count) => {
   return new Array(count)
     .fill(``)
