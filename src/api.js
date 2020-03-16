@@ -1,3 +1,5 @@
+import Movie from './models/movie.js';
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -17,5 +19,21 @@ export default class API {
   constructor(endPoint, authorization) {
     this._endpoint = endPoint;
     this._authorization = authorization;
+  }
+
+  get movies() {
+    return this._load({url: `movies`})
+      .then((response) => response.json())
+      .then(Movie.parseMovies);
+  }
+
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(`${this._endpoint}/${url}`, {method, body, headers})
+      .then(checkStatus)
+      .catch((err) => {
+        throw err;
+      });
   }
 }
