@@ -116,6 +116,9 @@ const createFilmDetailsTemplate = (film) => {
     country,
     genres,
     totalRating,
+    director,
+    writers,
+    actors,
     releaseDate,
     runtime,
     description,
@@ -130,6 +133,8 @@ const createFilmDetailsTemplate = (film) => {
   const filmGenre = createGenreMarkup(genres);
   const commentsList = createCommentsMarkup(comments);
   const createNewComment = createNewCommentMarkup();
+  const filmWriters = writers.join(`, `);
+  const filmActors = actors.join(`, `);
 
   return (
     `<section class="film-details">
@@ -160,15 +165,15 @@ const createFilmDetailsTemplate = (film) => {
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">Anthony Mann</td>
+                  <td class="film-details__cell">${director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                  <td class="film-details__cell">${filmWriters}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                  <td class="film-details__cell">${filmActors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
