@@ -1,3 +1,4 @@
+import API from './api.js';
 import ProfileComponent from './components/profile.js';
 import FooterComponent from './components/footer.js';
 import FilterController from './controllers/filter-controller.js';
@@ -5,13 +6,13 @@ import PageController from './controllers/page-controller.js';
 import FilmsSectionComponent from './components/film-section.js';
 import StatisticsComponent from './components/statistics.js';
 import MoviesModel from './models/movies.js';
-import {generateFilms} from './mock/film.js';
 import {RenderPosition, render} from './utils/render.js';
 
-const FILMS_COUNT = 40;
-const films = generateFilms(FILMS_COUNT);
+const AUTHORIZATION = `Basic stormdiceCinema`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict/`;
+
+const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
-moviesModel.films = films;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
@@ -26,7 +27,6 @@ let statisticsComponent = null;
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsSectionComponent, moviesModel);
-pageController.render();
 
 const footerComponent = new FooterComponent(moviesModel.allFilms.length);
 render(siteMainElement, footerComponent, RenderPosition.BEFOREEND);
@@ -53,3 +53,10 @@ filterController.setScreenChange((filterName) => {
     }
   }
 });
+
+api.movies
+  .then((movies) => {
+    moviesModel.films = movies;
+    // console.log(movies);
+    pageController.render();
+  });
