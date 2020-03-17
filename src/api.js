@@ -1,4 +1,10 @@
 import Movie from './models/movie.js';
+import Comment from './models/comment.js';
+
+const SUCCESS_STATUS = {
+  MIN: 200,
+  MAX: 226
+};
 
 const Method = {
   GET: `GET`,
@@ -8,7 +14,7 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= SUCCESS_STATUS.MIN && response.status < SUCCESS_STATUS.MAX) {
     return response;
   } else {
     throw new Error(`${response.status}:${response.statusText}`);
@@ -21,10 +27,16 @@ export default class API {
     this._authorization = authorization;
   }
 
-  get movies() {
+  getMovies() {
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then(Movie.parseMovies);
+  }
+
+  getComments(movieId) {
+    return this._load({url: `comments/${movieId}`})
+      .then((response) => response.json())
+      .then(Comment.parseComments);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
