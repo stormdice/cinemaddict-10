@@ -1,6 +1,6 @@
 import API from './api.js';
 import ProfileComponent from './components/profile.js';
-import FilterController from './controllers/filter-controller.js';
+import MenuController from './controllers/menu-controller.js';
 import PageController from './controllers/page-controller.js';
 import FilmsSectionComponent from './components/film-section.js';
 import StatisticsComponent from './components/statistics.js';
@@ -19,8 +19,8 @@ const footerFilmsCount = document.querySelector(`.footer__statistics p`);
 
 render(siteHeaderElement, new ProfileComponent(moviesModel.watchedFilms.length), RenderPosition.BEFOREEND);
 
-const filterController = new FilterController(siteMainElement, moviesModel);
-filterController.render();
+const menuController = new MenuController(siteMainElement, moviesModel);
+menuController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
 let statisticsComponent = null;
@@ -28,7 +28,7 @@ render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsSectionComponent, moviesModel);
 
-filterController.setScreenChange((filterName) => {
+menuController.setScreenChange((filterName) => {
   if (filterName === `stats`) {
     pageController.hide();
 
@@ -41,7 +41,7 @@ filterController.setScreenChange((filterName) => {
 
   } else {
     pageController.show();
-    filterController.onFilterChange(filterName);
+    menuController.onFilterChange(filterName);
 
     if (statisticsComponent === null) {
       return;
@@ -53,18 +53,17 @@ filterController.setScreenChange((filterName) => {
 
 api.getMovies()
   .then((movies) => {
-    const commentsPromises = movies
-      .map((movie) => {
-        return api.getComments(movie.id)
-          .then((commentList) => {
-            movie.comments = commentList;
-          });
-      });
+    const commentsPromises = movies.map((movie) => {
+      return api.getComments(movie.id)
+        .then((commentList) => {
+          movie.comments = commentList;
+        });
+    });
 
     Promise.all(commentsPromises)
       .then(() => {
         moviesModel.films = movies;
-        filterController.render();
+        menuController.render();
         pageController.render();
         footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
       });
