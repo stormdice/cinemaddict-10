@@ -1,40 +1,40 @@
 import AbstractComponent from './abstract-component.js';
 import {userRanks} from '../const.js';
 
-const getUserRank = (moviesWatched) => {
-  if (moviesWatched >= userRanks.novice.min && moviesWatched <= userRanks.novice.max) {
+const getUserRank = (watchedMovies) => {
+  if (watchedMovies >= userRanks.novice.min && watchedMovies <= userRanks.novice.max) {
     return `Novice`;
   }
 
-  if (moviesWatched >= userRanks.fan.min && moviesWatched <= userRanks.fan.max) {
+  if (watchedMovies >= userRanks.fan.min && watchedMovies <= userRanks.fan.max) {
     return `Fan`;
   }
 
-  if (moviesWatched >= userRanks.movieBuff.min) {
+  if (watchedMovies >= userRanks.movieBuff.min) {
     return `Movie buff`;
   }
 
   return ``;
 };
 
-const createProfileTemplate = (count) => {
+const createProfileTemplate = (watchedMoviesCount) => {
   return (
     `<section class="header__profile profile">
-      <p class="profile__rating">${getUserRank(count)}</p>
+      <p class="profile__rating">${getUserRank(watchedMoviesCount)}</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`
   );
 };
 
 export default class Profile extends AbstractComponent {
-  constructor(count) {
+  constructor(watchedMovies) {
     super();
 
-    this._count = count;
+    this._watchedMovies = watchedMovies;
   }
 
   getTemplate() {
-    return createProfileTemplate(this._count);
+    return createProfileTemplate(this._watchedMovies);
   }
 }
 

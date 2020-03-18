@@ -1,5 +1,5 @@
 import API from './api.js';
-import ProfileComponent from './components/profile.js';
+import ProfileController from './controllers/profile-controller.js';
 import MenuController from './controllers/menu-controller.js';
 import PageController from './controllers/page-controller.js';
 import FilmsSectionComponent from './components/film-section.js';
@@ -17,7 +17,8 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const footerFilmsCount = document.querySelector(`.footer__statistics p`);
 
-render(siteHeaderElement, new ProfileComponent(moviesModel.watchedFilms.length), RenderPosition.BEFOREEND);
+const profileController = new ProfileController(siteHeaderElement, moviesModel);
+profileController.render();
 
 const menuController = new MenuController(siteMainElement, moviesModel);
 menuController.render();
@@ -63,8 +64,11 @@ api.getMovies()
     Promise.all(commentsPromises)
       .then(() => {
         moviesModel.films = movies;
+
+        profileController.render();
         menuController.render();
         pageController.render();
+
         footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
       });
   });
