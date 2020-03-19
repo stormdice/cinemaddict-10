@@ -244,6 +244,10 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._film = film;
 
+    this._closeButtonClickHandler = null;
+    this._commentsDeleteClickHandler = null;
+    this._commentSubmitHandler = null;
+
     this._subscribeOnEvents();
   }
 

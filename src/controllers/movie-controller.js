@@ -1,6 +1,6 @@
 import FilmComponent from '../components/film.js';
 import FilmDetailsComponent from '../components/film-details.js';
-import {RenderPosition, render, replace} from '../utils/render.js';
+import {RenderPosition, render, replace, remove} from '../utils/render.js';
 
 const Mode = {
   DEFAULT: `default`,
@@ -139,26 +139,28 @@ export default class MovieController {
     this._onViewChange();
 
     this._filmDetailsComponent.getElement().style = `animation: bounceInRight 0.3s;`;
+
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+
     document.addEventListener(`keydown`, this._onEscKeyDown);
+
     this._mode = Mode.DETAILS;
   }
 
   _closeFilmDetails() {
-    this._filmDetailsComponent.getElement().remove();
-
+    remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
 
     this._mode = Mode.DEFAULT;
+
+    this._filmDetailsComponent.recoveryListeners();
   }
 
   _onEscKeyDown(evt) {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
-      this._filmDetailsComponent.getElement().remove();
-
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._closeFilmDetails();
     }
   }
 }
