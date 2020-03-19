@@ -60,4 +60,8 @@ export default class Movie {
   static parseMovies(data) {
     return data.map(Movie.parseMovie);
   }
+
+  static clone(data) {
+    return new Movie(data.toJSON());
+  }
 }
