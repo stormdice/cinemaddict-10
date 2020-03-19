@@ -33,6 +33,17 @@ export default class API {
       .then(Movie.parseMovies);
   }
 
+  updateMovie(id, data) {
+    return this._load({
+      url: `movies/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data.toJSON()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+    .then((response) => response.json())
+    .then(Movie.parseMovie);
+  }
+
   getComments(movieId) {
     return this._load({url: `comments/${movieId}`})
       .then((response) => response.json())
