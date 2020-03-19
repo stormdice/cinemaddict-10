@@ -2,7 +2,6 @@ import AbstractSmartComponent from './abstract-smart-component.js';
 import CommentComponent from './comment.js';
 import {formatRuntime, filmDetailsFormatReleaseDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
-import he from 'he';
 
 const RATING_SCORE = 9;
 
@@ -228,25 +227,11 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-const parseFormData = (formData) => {
-  return {
-    id: String(Math.random()),
-    author: `You`,
-    text: he.encode(formData.get(`comment`)),
-    date: new Date(),
-    emotion: formData.get(`comment-emoji`),
-  };
-};
-
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
 
     this._film = film;
-
-    this._closeButtonClickHandler = null;
-    this._commentsDeleteClickHandler = null;
-    this._commentSubmitHandler = null;
 
     this._subscribeOnEvents();
   }
@@ -255,25 +240,15 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
-  recoveryListeners() {
-    this.setCloseButtonClickHandler(this._closeButtonClickHandler);
-    this.setCommentsDeleteClickHandler(this._commentsDeleteClickHandler);
-    this.setCommentSubmitHandler(this._commentSubmitHandler);
-    this._subscribeOnEvents();
-  }
 
   getAddCommentFormData() {
     const form = this.getElement().querySelector(`.film-details__inner`);
-    const formData = new FormData(form);
-
-    return parseFormData(formData);
+    return new FormData(form);
   }
 
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
-
-    this._closeButtonClickHandler = handler;
   }
 
   setWatchlistInputChangeHandler(handler) {
@@ -297,8 +272,6 @@ export default class FilmDetails extends AbstractSmartComponent {
           handler(commentId);
         });
       });
-
-    this._commentsDeleteClickHandler = handler;
   }
 
   setCommentSubmitHandler(handler) {
@@ -311,8 +284,6 @@ export default class FilmDetails extends AbstractSmartComponent {
           handler();
         }
       });
-
-    this._commentSubmitHandler = handler;
   }
 
   _subscribeOnEvents() {
