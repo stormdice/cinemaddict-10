@@ -8,7 +8,7 @@ import MoviesModel from './models/movies.js';
 import {RenderPosition, render} from './utils/render.js';
 
 const AUTHORIZATION = `Basic stormdiceCinema`;
-const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict/`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
@@ -27,7 +27,7 @@ const filmsSectionComponent = new FilmsSectionComponent();
 let statisticsComponent = null;
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 
-const pageController = new PageController(filmsSectionComponent, moviesModel);
+const pageController = new PageController(filmsSectionComponent, moviesModel, api);
 
 menuController.setScreenChange((filterName) => {
   if (filterName === `stats`) {

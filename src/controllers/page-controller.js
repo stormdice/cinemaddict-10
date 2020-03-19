@@ -1,9 +1,9 @@
-import SortComponent from '../components/sort.js';
-import {SortType} from '../const.js';
 import MovieController from './movie-controller.js';
+import SortComponent from '../components/sort.js';
 import FilmsListComponent from '../components/film-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
+import {SortType} from '../const.js';
 import {RenderPosition, render, remove} from '../utils/render.js';
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
@@ -19,9 +19,10 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
 };
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api) {
     this._container = container;
     this._moviesModel = moviesModel;
+    this._api = api;
 
     this._showedFilmControllers = [];
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
@@ -90,14 +91,16 @@ export default class PageController {
   }
 
   _onDataChange(movieController, film, newData) {
-    const updatedFilm = Object.assign({}, film, newData);
-    const isSuccess = this._moviesModel.updateFilm(film.id, updatedFilm);
+    this._api.updateMovie(film.id, newData)
+      .then((movieModel) => {
+        const isSuccess = this._moviesModel.updateFilm(film.id, movieModel);
 
-    if (isSuccess) {
-      movieController.render(updatedFilm);
-    }
+        if (isSuccess) {
+          movieController.render(movieModel);
 
-    this._renderExtraFilms();
+          this._renderExtraFilms();
+        }
+      });
   }
 
   _onViewChange() {

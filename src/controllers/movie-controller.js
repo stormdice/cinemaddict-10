@@ -1,10 +1,22 @@
 import FilmComponent from '../components/film.js';
 import FilmDetailsComponent from '../components/film-details.js';
-import {RenderPosition, render, replace, remove} from '../utils/render.js';
+import MovieModel from '../models/movie.js';
+import {RenderPosition, render, replace} from '../utils/render.js';
+import he from 'he';
 
 const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
+};
+
+const parseFormData = (formData) => {
+  return {
+    id: String(Math.random()),
+    author: `You`,
+    text: he.encode(formData.get(`comment`)),
+    date: new Date(),
+    emotion: formData.get(`comment-emoji`),
+  };
 };
 
 export default class MovieController {
@@ -37,9 +49,10 @@ export default class MovieController {
     });
 
     this._filmComponent.setWatchlistClickHandler(() => {
-      this._onDataChange(this, film, {
-        isWatchlist: !film.isWatchlist,
-      });
+      const updatedFilm = MovieModel.clone(film);
+      updatedFilm.isWatchlist = !updatedFilm.isWatchlist;
+
+      this._onDataChange(this, film, updatedFilm);
     });
 
     this._filmComponent.setWatchedClickHandler(() => {
@@ -148,12 +161,10 @@ export default class MovieController {
   }
 
   _closeFilmDetails() {
-    remove(this._filmDetailsComponent);
+    this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
 
     this._mode = Mode.DEFAULT;
-
-    this._filmDetailsComponent.recoveryListeners();
   }
 
   _onEscKeyDown(evt) {
