@@ -1,5 +1,4 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
-import CommentComponent from './comment.js';
 import {formatRuntime, filmDetailsFormatReleaseDate} from '../utils/common.js';
 import {EMOTIONS} from '../const.js';
 
@@ -102,13 +101,6 @@ const createNewCommentMarkup = () => {
   );
 };
 
-const createCommentsMarkup = (comments) => {
-  return comments.map((comment) => {
-    return new CommentComponent(comment).getTemplate();
-  })
-  .join(`\n`);
-};
-
 const createFilmDetailsTemplate = (film) => {
   const {
     poster,
@@ -128,13 +120,11 @@ const createFilmDetailsTemplate = (film) => {
     isWatchlist,
     isWatched,
     isFavorite,
-    comments
   } = film;
 
   const release = filmDetailsFormatReleaseDate(releaseDate);
   const filmRuntime = formatRuntime(runtime);
   const filmGenre = createGenreMarkup(genres);
-  const commentsList = createCommentsMarkup(comments);
   const createNewComment = createNewCommentMarkup();
   const filmWriters = writers.join(`, `);
   const filmActors = actors.join(`, `);
@@ -216,9 +206,6 @@ const createFilmDetailsTemplate = (film) => {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-            <ul class="film-details__comments-list">${commentsList}</ul>
-
             ${createNewComment}
           </section>
         </div>
@@ -240,7 +227,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
-
   getAddCommentFormData() {
     const form = this.getElement().querySelector(`.film-details__inner`);
     return new FormData(form);
@@ -261,17 +247,6 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   setFavoriteInputChangeHandler(handler) {
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
-  }
-
-  setCommentsDeleteClickHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__comment-delete`)
-      .forEach((deleteButton) => {
-        deleteButton.addEventListener(`click`, (evt) => {
-          evt.preventDefault();
-          const commentId = evt.target.closest(`li`).id;
-          handler(commentId);
-        });
-      });
   }
 
   setCommentSubmitHandler(handler) {
