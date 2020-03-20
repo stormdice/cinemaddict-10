@@ -9,8 +9,6 @@ export default class Comment {
 
   toRAW() {
     return {
-      'id': this.id,
-      'author': this.author,
       'comment': this.text,
       'date': this.date,
       'emotion': this.emotion

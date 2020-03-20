@@ -1,7 +1,8 @@
 import FilmComponent from '../components/film.js';
 import FilmDetailsComponent from '../components/film-details.js';
-import CommentsController from './comments-controller.js';
 import MovieModel from '../models/movie.js';
+import CommentModel from '../models/comment.js';
+import CommentsController from './comments-controller.js';
 import {RenderPosition, render, replace} from '../utils/render.js';
 import he from 'he';
 
@@ -11,13 +12,11 @@ const Mode = {
 };
 
 const parseFormData = (formData) => {
-  return {
-    id: String(Math.random()),
-    author: `You`,
-    text: he.encode(formData.get(`comment`)),
-    date: new Date(),
-    emotion: formData.get(`comment-emoji`),
-  };
+  return new CommentModel({
+    'comment': he.encode(formData.get(`comment`)),
+    'date': new Date().toISOString(),
+    'emotion': formData.get(`comment-emoji`),
+  });
 };
 
 export default class MovieController {
@@ -46,7 +45,6 @@ export default class MovieController {
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
-
       this._openFilmDetails(film);
     });
 
@@ -79,8 +77,8 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setCommentSubmitHandler(() => {
-      const newComment = this._filmDetailsComponent.getAddCommentFormData();
-
+      const formData = this._filmDetailsComponent.getAddCommentFormData();
+      const newComment = parseFormData(formData);
       const isCommentValid = this._validateComment(newComment);
 
       if (!isCommentValid) {
@@ -89,9 +87,11 @@ export default class MovieController {
         return;
       }
 
-      const updatedFilm = this._addComment(film, newComment);
-
-      this._onDataChange(this, film, updatedFilm);
+      this._api.createComment(film.id, newComment)
+        .then(() => {
+          this._addComment(film, newComment);
+          console.log(`rerender`);
+        });
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
@@ -127,10 +127,6 @@ export default class MovieController {
     updatedFilm.isFavorite = !updatedFilm.isFavorite;
 
     this._onDataChange(this, film, updatedFilm);
-  }
-
-  updateFilmDetails() {
-    this._filmDetailsComponent.rerender();
   }
 
   _validateComment({emotion, text}) {
