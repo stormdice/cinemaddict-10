@@ -51,22 +51,15 @@ export default class MovieController {
     });
 
     this._filmComponent.setWatchlistClickHandler(() => {
-      const updatedFilm = MovieModel.clone(film);
-      updatedFilm.isWatchlist = !updatedFilm.isWatchlist;
-
-      this._onDataChange(this, film, updatedFilm);
+      this._addToWatchlist(film);
     });
 
     this._filmComponent.setWatchedClickHandler(() => {
-      this._onDataChange(this, film, {
-        isWatched: !film.isWatched,
-      });
+      this._addToHistory(film);
     });
 
     this._filmComponent.setFavoriteClickHandler(() => {
-      this._onDataChange(this, film, {
-        isFavorite: !film.isFavorite,
-      });
+      this._addToFavorite(film);
     });
 
     this._filmDetailsComponent.setCloseButtonClickHandler(() => {
@@ -74,21 +67,15 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setWatchlistInputChangeHandler(() => {
-      this._onDataChange(this, film, {
-        isWatchlist: !film.isWatchlist,
-      });
+      this._addToWatchlist(film);
     });
 
     this._filmDetailsComponent.setWatchedInputChangeHandler(() => {
-      this._onDataChange(this, film, {
-        isWatched: !film.isWatched,
-      });
+      this._addToHistory(film);
     });
 
     this._filmDetailsComponent.setFavoriteInputChangeHandler(() => {
-      this._onDataChange(this, film, {
-        isFavorite: !film.isFavorite,
-      });
+      this._addToFavorite(film);
     });
 
     // this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
@@ -125,6 +112,27 @@ export default class MovieController {
     if (this._mode !== Mode.DEFAULT) {
       this._closeFilmDetails();
     }
+  }
+
+  _addToWatchlist(film) {
+    const updatedFilm = MovieModel.clone(film);
+    updatedFilm.isWatchlist = !updatedFilm.isWatchlist;
+
+    this._onDataChange(this, film, updatedFilm);
+  }
+
+  _addToHistory(film) {
+    const updatedFilm = MovieModel.clone(film);
+    updatedFilm.isWatched = !updatedFilm.isWatched;
+
+    this._onDataChange(this, film, updatedFilm);
+  }
+
+  _addToFavorite(film) {
+    const updatedFilm = MovieModel.clone(film);
+    updatedFilm.isFavorite = !updatedFilm.isFavorite;
+
+    this._onDataChange(this, film, updatedFilm);
   }
 
   updateFilmDetails() {
