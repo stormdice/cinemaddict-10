@@ -90,7 +90,8 @@ export default class MovieController {
       this._api.createComment(film.id, newComment)
         .then(() => {
           this._addComment(film, newComment);
-          console.log(`rerender`);
+          this.render(film);
+          this._loadComments(film);
         });
     });
 
@@ -155,9 +156,10 @@ export default class MovieController {
   }
 
   _loadComments({id}) {
+    const commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
+
     this._api.getComments(id)
       .then((comments) => {
-        const commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
         const commentsController = new CommentsController(commentsContainer, comments, this._api);
         commentsController.render();
       });
