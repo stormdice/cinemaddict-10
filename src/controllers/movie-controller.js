@@ -78,12 +78,6 @@ export default class MovieController {
       this._addToFavorite(film);
     });
 
-    // this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
-    //   const newFilm = this._deleteComment(film, commentId);
-
-    //   this._onDataChange(this, film, newFilm);
-    // });
-
     this._filmDetailsComponent.setCommentSubmitHandler(() => {
       const newComment = this._filmDetailsComponent.getAddCommentFormData();
 
@@ -150,14 +144,6 @@ export default class MovieController {
     return newFilm;
   }
 
-  _deleteComment(film, commentId) {
-    const newFilm = Object.assign({}, film);
-
-    newFilm.comments = newFilm.comments.filter(({id}) => id !== commentId);
-
-    return newFilm;
-  }
-
   _openFilmDetails(film) {
     this._onViewChange();
 
@@ -176,7 +162,7 @@ export default class MovieController {
     this._api.getComments(id)
       .then((comments) => {
         const commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-        const commentsController = new CommentsController(commentsContainer, comments);
+        const commentsController = new CommentsController(commentsContainer, comments, this._api);
         commentsController.render();
       });
   }

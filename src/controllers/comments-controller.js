@@ -2,27 +2,41 @@ import CommentsComponent from '../components/comments.js';
 import {render, replace, RenderPosition} from '../utils/render.js';
 
 export default class CommentController {
-  constructor(container, comments) {
+  constructor(container, comments, api) {
     this._container = container;
     this._comments = comments;
+    this._api = api;
 
-    this._commentComponent = null;
+    this._commentsComponent = null;
+
+    this._onDataChange = this._onDataChange.bind(this);
+    this._setCommentDelete = this._setCommentDelete.bind(this);
   }
 
   render() {
     const container = this._container;
-    const oldComponent = this._commentComponent;
+    const oldComponent = this._commentsComponent;
 
-    this._commentComponent = new CommentsComponent(this._comments);
+    this._commentsComponent = new CommentsComponent(this._comments);
+
+    this._commentsComponent.setCommentsDeleteClickHandler(this._setCommentDelete);
 
     if (oldComponent) {
-      replace(this._commentComponent, oldComponent);
+      replace(this._commentsComponent, oldComponent);
     } else {
-      render(container, this._commentComponent, RenderPosition.AFTERBEGIN);
+      render(container, this._commentsComponent, RenderPosition.AFTERBEGIN);
     }
   }
 
-  _setCommentDelete(handler) {
-    this._commentComponent.setCommentsDeleteClickHandler(handler);
+  _onDataChange() {
+    this.render();
+  }
+
+  _setCommentDelete(id) {
+    this._api.deleteComment(id)
+      .then(() => {
+        this._comments = this._comments.filter((it) => it.id !== id);
+        this._onDataChange();
+      });
   }
 }
