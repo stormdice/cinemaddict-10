@@ -54,21 +54,11 @@ menuController.setScreenChange((filterName) => {
 
 api.getMovies()
   .then((movies) => {
-    const commentsPromises = movies.map((movie) => {
-      return api.getComments(movie.id)
-        .then((commentList) => {
-          movie.comments = commentList;
-        });
-    });
+    moviesModel.films = movies;
 
-    Promise.all(commentsPromises)
-      .then(() => {
-        moviesModel.films = movies;
+    profileController.render();
+    menuController.render();
+    pageController.render();
 
-        profileController.render();
-        menuController.render();
-        pageController.render();
-
-        footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
-      });
+    footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
   });
