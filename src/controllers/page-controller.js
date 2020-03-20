@@ -9,9 +9,9 @@ import {RenderPosition, render, remove} from '../utils/render.js';
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
-const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
+const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) => {
   return films.map((film) => {
-    const movieController = new MovieController(filmListElement, onDataChange, onViewChange);
+    const movieController = new MovieController(filmListElement, onDataChange, onViewChange, api);
     movieController.render(film);
 
     return movieController;
@@ -76,7 +76,8 @@ export default class PageController {
   _renderFilms(films) {
     const filmListElement = this._filmListComponent.getElement();
 
-    const newFilms = renderFilms(filmListElement, films, this._onDataChange, this._onViewChange);
+    const newFilms = renderFilms(filmListElement, films, this._onDataChange, this._onViewChange, this._api);
+
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     this._showingFilmsCount = this._showedFilmControllers.length;
   }

@@ -1,5 +1,6 @@
 import FilmComponent from '../components/film.js';
 import FilmDetailsComponent from '../components/film-details.js';
+import CommentsController from './comments-controller.js';
 import MovieModel from '../models/movie.js';
 import {RenderPosition, render, replace} from '../utils/render.js';
 import he from 'he';
@@ -20,10 +21,11 @@ const parseFormData = (formData) => {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._api = api;
 
     this._mode = Mode.DEFAULT;
 
@@ -45,7 +47,7 @@ export default class MovieController {
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
 
-      this._openFilmDetails();
+      this._openFilmDetails(film);
     });
 
     this._filmComponent.setWatchlistClickHandler(() => {
@@ -89,11 +91,11 @@ export default class MovieController {
       });
     });
 
-    this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
-      const newFilm = this._deleteComment(film, commentId);
+    // this._filmDetailsComponent.setCommentsDeleteClickHandler((commentId) => {
+    //   const newFilm = this._deleteComment(film, commentId);
 
-      this._onDataChange(this, film, newFilm);
-    });
+    //   this._onDataChange(this, film, newFilm);
+    // });
 
     this._filmDetailsComponent.setCommentSubmitHandler(() => {
       const newComment = this._filmDetailsComponent.getAddCommentFormData();
@@ -148,7 +150,7 @@ export default class MovieController {
     return newFilm;
   }
 
-  _openFilmDetails() {
+  _openFilmDetails(film) {
     this._onViewChange();
 
     this._filmDetailsComponent.getElement().style = `animation: bounceInRight 0.3s;`;
@@ -158,6 +160,17 @@ export default class MovieController {
     document.addEventListener(`keydown`, this._onEscKeyDown);
 
     this._mode = Mode.DETAILS;
+
+    this._loadComments(film);
+  }
+
+  _loadComments({id}) {
+    this._api.getComments(id)
+      .then((comments) => {
+        const commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
+        const commentsController = new CommentsController(commentsContainer, comments);
+        commentsController.render();
+      });
   }
 
   _closeFilmDetails() {
