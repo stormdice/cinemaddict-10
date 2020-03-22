@@ -1,9 +1,11 @@
-import FilmComponent from '../components/film.js';
-import FilmDetailsComponent from '../components/film-details.js';
-import MovieModel from '../models/movie.js';
-import CommentModel from '../models/comment.js';
-import CommentsController from './comments-controller.js';
-import {RenderPosition, render, replace} from '../utils/render.js';
+import API from '../api';
+import FilmComponent from '../components/film';
+import FilmDetailsComponent from '../components/film-details';
+import CommentFormComponent from '../components/comment-form';
+import MovieModel from '../models/movie';
+import CommentModel from '../models/comment';
+import CommentsController from './comments-controller';
+import {RenderPosition, render, replace} from '../utils/render';
 import he from 'he';
 
 const Mode = {
@@ -20,16 +22,17 @@ const parseFormData = (formData) => {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange, api) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._api = api;
+    this._api = new API();
 
     this._mode = Mode.DEFAULT;
 
     this._filmComponent = null;
     this._filmDetailsComponent = null;
+    this._commentFormComponent = null;
     this._addCommentFormTextField = null;
     this._commentsContainer = null;
     this._commentsController = null;
@@ -43,8 +46,9 @@ export default class MovieController {
 
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
+    this._commentFormComponent = new CommentFormComponent();
 
-    this._addCommentFormTextField = this._filmDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
+    this._addCommentFormTextField = this._commentFormComponent.getElement();
 
     this._commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
     this._commentsController = new CommentsController(this._commentsContainer, this._api);
@@ -82,7 +86,7 @@ export default class MovieController {
       this._addToFavorite(film);
     });
 
-    this._filmDetailsComponent.setCommentSubmitHandler(() => {
+    this._commentFormComponent.setCommentSubmitHandler(() => {
       const formData = this._filmDetailsComponent.getAddCommentFormData();
       const newComment = parseFormData(formData);
       const isCommentValid = this._validateComment(newComment);
@@ -105,6 +109,8 @@ export default class MovieController {
     } else {
       render(this._container.querySelector(`.films-list__container`), this._filmComponent, RenderPosition.BEFOREEND);
     }
+
+    render(this._commentsContainer, this._commentFormComponent, RenderPosition.BEFOREEND);
   }
 
   setDefaultView() {
