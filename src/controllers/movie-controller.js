@@ -51,7 +51,7 @@ export default class MovieController {
     this._addCommentFormTextField = this._commentFormComponent.getElement();
 
     this._commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    this._commentsController = new CommentsController(this._commentsContainer, this._api);
+    this._commentsController = new CommentsController(this._commentsContainer, film);
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
@@ -165,8 +165,8 @@ export default class MovieController {
     this._loadComments(film.id);
   }
 
-  _loadComments(MovieId) {
-    this._api.getComments(MovieId)
+  _loadComments(movieId) {
+    this._api.getComments(movieId)
       .then((comments) => {
         this._commentsController.render(comments);
       });

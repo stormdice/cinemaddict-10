@@ -3,10 +3,11 @@ import CommentsComponent from '../components/comments';
 import {render, replace, RenderPosition} from '../utils/render';
 
 export default class CommentController {
-  constructor(container) {
+  constructor(container, film) {
     this._container = container;
-    this._api = new API();
+    this._film = film;
 
+    this._api = new API();
     this._commentsComponent = null;
     this._comments = null;
 
@@ -34,11 +35,21 @@ export default class CommentController {
     this.render(this._comments);
   }
 
-  _setCommentDelete(id) {
-    this._api.deleteComment(id)
+  _setCommentDelete(commentId) {
+    this._api.deleteComment(commentId)
       .then(() => {
-        this._comments = this._comments.filter((it) => it.id !== id);
+        this._comments = this._comments.filter((it) => it.id !== commentId);
         this._onDataChange();
+      })
+      .then(() => {
+        this._loadComments(this._film.id);
+      });
+  }
+
+  _loadComments(movieId) {
+    this._api.getComments(movieId)
+      .then((comments) => {
+        this.render(comments);
       });
   }
 }
