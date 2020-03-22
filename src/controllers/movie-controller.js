@@ -31,6 +31,8 @@ export default class MovieController {
     this._filmComponent = null;
     this._filmDetailsComponent = null;
     this._addCommentFormTextField = null;
+    this._commentsContainer = null;
+    this._commentsController = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -41,7 +43,11 @@ export default class MovieController {
 
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
+
     this._addCommentFormTextField = this._filmDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
+
+    this._commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
+    this._commentsController = new CommentsController(this._commentsContainer, this._api);
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
@@ -156,12 +162,9 @@ export default class MovieController {
   }
 
   _loadComments({id}) {
-    const commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-
     this._api.getComments(id)
       .then((comments) => {
-        const commentsController = new CommentsController(commentsContainer, comments, this._api);
-        commentsController.render();
+        this._commentsController.render(comments);
       });
   }
 
