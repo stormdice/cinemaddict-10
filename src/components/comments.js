@@ -46,15 +46,17 @@ export default class Comments extends AbstractComponent {
   getTemplate() {
     return createCommentsMarkup(this._comments);
   }
-  // TODO сделать делегирование
+
   setCommentsDeleteClickHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__comment-delete`)
-      .forEach((deleteButton) => {
-        deleteButton.addEventListener(`click`, (evt) => {
-          evt.preventDefault();
-          const commentId = evt.target.closest(`li`).id;
-          handler(commentId);
-        });
-      });
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      if (!evt.target.classList.contains(`film-details__comment-delete`)) {
+        return;
+      }
+
+      const commentId = evt.target.dataset.id;
+      handler(commentId);
+    });
   }
 }
