@@ -95,9 +95,7 @@ export default class MovieController {
 
       this._api.createComment(film.id, newComment)
         .then(() => {
-          this._addComment(film, newComment);
-          this.render(film);
-          this._loadComments(film);
+          this._loadComments(film.id);
         });
     });
 
@@ -158,11 +156,11 @@ export default class MovieController {
 
     this._mode = Mode.DETAILS;
 
-    this._loadComments(film);
+    this._loadComments(film.id);
   }
 
-  _loadComments({id}) {
-    this._api.getComments(id)
+  _loadComments(MovieId) {
+    this._api.getComments(MovieId)
       .then((comments) => {
         this._commentsController.render(comments);
       });
