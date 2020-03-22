@@ -1,10 +1,10 @@
-import MovieController from './movie-controller.js';
-import SortComponent from '../components/sort.js';
-import FilmsListComponent from '../components/film-list.js';
-import NoFilmsComponent from '../components/no-films.js';
-import ShowMoreButtonComponent from '../components/show-more-button.js';
-import {SortType} from '../const.js';
-import {RenderPosition, render, remove} from '../utils/render.js';
+import MovieController from './movie-controller';
+import SortComponent from '../components/sort';
+import FilmsListComponent from '../components/film-list';
+import NoFilmsComponent from '../components/no-films';
+import ShowMoreButtonComponent from '../components/show-more-button';
+import {SortType} from '../const';
+import {RenderPosition, render, remove} from '../utils/render';
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;

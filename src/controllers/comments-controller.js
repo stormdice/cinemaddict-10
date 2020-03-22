@@ -1,10 +1,11 @@
-import CommentsComponent from '../components/comments.js';
-import {render, replace, RenderPosition} from '../utils/render.js';
+import API from '../api';
+import CommentsComponent from '../components/comments';
+import {render, replace, RenderPosition} from '../utils/render';
 
 export default class CommentController {
-  constructor(container, api) {
+  constructor(container) {
     this._container = container;
-    this._api = api;
+    this._api = new API();
 
     this._commentsComponent = null;
     this._comments = null;

@@ -1,6 +1,6 @@
-import AbstractComponent from './abstract-component.js';
-import {FilterType} from '../const.js';
-import {getFilterTitle} from '../utils/common.js';
+import AbstractComponent from './abstract-component';
+import {FilterType} from '../const';
+import {getFilterTitle} from '../utils/common';
 
 const createFilterMarkup = (filter) => {
   const {name, count, active} = filter;

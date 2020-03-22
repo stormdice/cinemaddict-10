@@ -882,6 +882,7 @@ button {
   background-color: #ffffff;
   border: 1px solid var(--text-color-poor);
   border-radius: 5px;
+  user-select: none;
 }
 .film-details__comment-input::placeholder {
   color: #212126;

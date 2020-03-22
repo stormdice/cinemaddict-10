@@ -1,5 +1,5 @@
-import ProfileComponent from '../components/profile.js';
-import {render, replace, RenderPosition} from '../utils/render.js';
+import ProfileComponent from '../components/profile';
+import {render, replace, RenderPosition} from '../utils/render';
 
 export default class ProfileController {
   constructor(container, moviesModel) {

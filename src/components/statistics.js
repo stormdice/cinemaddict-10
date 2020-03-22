@@ -1,8 +1,8 @@
-import AbstractSmartComponent from "./abstract-smart-component.js";
+import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
-import {getUserRank} from './profile.js';
+import {getUserRank} from './profile';
 
 const FilterType = {
   ALL_TIME: `all-time`,

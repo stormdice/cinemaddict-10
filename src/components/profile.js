@@ -1,5 +1,5 @@
-import AbstractComponent from './abstract-component.js';
-import {userRanks} from '../const.js';
+import AbstractComponent from './abstract-component';
+import {userRanks} from '../const';
 
 const getUserRank = (watchedMovies) => {
   if (watchedMovies >= userRanks.novice.min && watchedMovies <= userRanks.novice.max) {

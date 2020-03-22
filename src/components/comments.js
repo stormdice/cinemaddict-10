@@ -1,12 +1,12 @@
-import AbstractComponent from './abstract-component.js';
-import {commentFormatDate} from '../utils/common.js';
+import AbstractComponent from './abstract-component';
+import {commentFormatDate} from '../utils/common';
 
 const createCommentTemplate = (comment) => {
   const {id, author, text, date, emotion} = comment;
   const commentDate = commentFormatDate(date);
 
   return (
-    `<li class="film-details__comment" id="${id}">
+    `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
       </span>
@@ -15,7 +15,7 @@ const createCommentTemplate = (comment) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button type="button" class="film-details__comment-delete" data-id="${id}">Delete</button>
         </p>
       </div>
     </li>`
@@ -46,7 +46,7 @@ export default class Comments extends AbstractComponent {
   getTemplate() {
     return createCommentsMarkup(this._comments);
   }
-
+  // TODO сделать делегирование
   setCommentsDeleteClickHandler(handler) {
     this.getElement().querySelectorAll(`.film-details__comment-delete`)
       .forEach((deleteButton) => {

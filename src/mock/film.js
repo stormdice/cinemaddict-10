@@ -1,5 +1,5 @@
-import {getRandomDate, getRandomIntegerNumber, getRandomArrayItem} from '../utils/common.js';
-import {generateComments} from './comment.js';
+import {getRandomDate, getRandomIntegerNumber, getRandomArrayItem} from '../utils/common';
+import {generateComments} from './comment';
 
 const FILM_TITLES = [
   `The Lighthouse`,
