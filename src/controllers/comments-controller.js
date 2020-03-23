@@ -64,10 +64,13 @@ export default class CommentController {
 
       this._addCommentFormTextField.classList.remove(`invalid`);
 
+      this._commentFormComponent.blockInput(true);
+
       this._api.createComment(this._film.id, newComment)
         .then(() => {
           this.loadComments(this._film.id);
           this._commentFormComponent.resetForm();
+          this._commentFormComponent.blockInput(false);
         });
     });
 
