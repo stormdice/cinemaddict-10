@@ -75,4 +75,9 @@ export default class CommentForm extends AbstractSmartComponent {
         emotionContainer.innerHTML = `<img src="./images/emoji/${selectedEmotion}.png" width="55" height="55" alt="emoji">`;
       });
   }
+
+  resetForm() {
+    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    this.getElement().querySelector(`.film-details__comment-input`).value = ``;
+  }
 }

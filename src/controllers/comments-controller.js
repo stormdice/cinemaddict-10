@@ -62,9 +62,12 @@ export default class CommentController {
         return;
       }
 
+      this._addCommentFormTextField.classList.remove(`invalid`);
+
       this._api.createComment(this._film.id, newComment)
         .then(() => {
-          this._loadComments(this._film.id);
+          this.loadComments(this._film.id);
+          this._commentFormComponent.resetForm();
         });
     });
 
@@ -86,11 +89,11 @@ export default class CommentController {
         this._onDataChange();
       })
       .then(() => {
-        this._loadComments(this._film.id);
+        this.loadComments(this._film.id);
       });
   }
 
-  _loadComments(movieId) {
+  loadComments(movieId) {
     this._api.getComments(movieId)
       .then((comments) => {
         this.render(comments);

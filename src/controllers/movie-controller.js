@@ -1,4 +1,3 @@
-import API from '../api';
 import FilmComponent from '../components/film';
 import FilmDetailsComponent from '../components/film-details';
 import MovieModel from '../models/movie';
@@ -15,7 +14,6 @@ export default class MovieController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._api = new API();
 
     this._mode = Mode.DEFAULT;
 
@@ -117,14 +115,7 @@ export default class MovieController {
 
     this._mode = Mode.DETAILS;
 
-    this._loadComments(film.id);
-  }
-
-  _loadComments(movieId) {
-    this._api.getComments(movieId)
-      .then((comments) => {
-        this._commentsController.render(comments);
-      });
+    this._commentsController.loadComments(film.id);
   }
 
   _closeFilmDetails() {
