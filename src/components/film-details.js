@@ -191,11 +191,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
-  getAddCommentFormData() {
-    const form = this.getElement().querySelector(`.film-details__inner`);
-    return new FormData(form);
-  }
-
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);

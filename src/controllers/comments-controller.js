@@ -52,7 +52,7 @@ export default class CommentController {
     this._addCommentFormTextField = this._commentFormComponent.getElement();
 
     this._commentFormComponent.setCommentSubmitHandler(() => {
-      const formData = this._filmDetailsComponent.getAddCommentFormData();
+      const formData = this._commentFormComponent.getAddCommentFormData();
       const newComment = parseFormData(formData);
       const isCommentValid = this._validateComment(newComment);
 

@@ -43,6 +43,11 @@ export default class CommentForm extends AbstractSmartComponent {
     return createNewCommentMarkup();
   }
 
+  getAddCommentFormData() {
+    const form = this.getElement().closest(`.film-details__inner`);
+    return new FormData(form);
+  }
+
   setCommentSubmitHandler(handler) {
     this.getElement().querySelector(`.film-details__comment-input`)
       .addEventListener(`keydown`, (evt) => {
