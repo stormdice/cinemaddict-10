@@ -1,24 +1,13 @@
 import API from '../api';
 import FilmComponent from '../components/film';
 import FilmDetailsComponent from '../components/film-details';
-import CommentFormComponent from '../components/comment-form';
 import MovieModel from '../models/movie';
-import CommentModel from '../models/comment';
 import CommentsController from './comments-controller';
 import {RenderPosition, render, replace} from '../utils/render';
-import he from 'he';
 
 const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
-};
-
-const parseFormData = (formData) => {
-  return new CommentModel({
-    'comment': he.encode(formData.get(`comment`)),
-    'date': new Date().toISOString(),
-    'emotion': formData.get(`comment-emoji`),
-  });
 };
 
 export default class MovieController {
@@ -32,8 +21,6 @@ export default class MovieController {
 
     this._filmComponent = null;
     this._filmDetailsComponent = null;
-    this._commentFormComponent = null;
-    this._addCommentFormTextField = null;
     this._commentsContainer = null;
     this._commentsController = null;
 
@@ -46,10 +33,6 @@ export default class MovieController {
 
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
-    this._commentFormComponent = new CommentFormComponent();
-
-    this._addCommentFormTextField = this._commentFormComponent.getElement();
-
     this._commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
     this._commentsController = new CommentsController(this._commentsContainer, film);
 
@@ -86,23 +69,6 @@ export default class MovieController {
       this._addToFavorite(film);
     });
 
-    this._commentFormComponent.setCommentSubmitHandler(() => {
-      const formData = this._filmDetailsComponent.getAddCommentFormData();
-      const newComment = parseFormData(formData);
-      const isCommentValid = this._validateComment(newComment);
-
-      if (!isCommentValid) {
-        this._addCommentFormTextField.classList.add(`invalid`);
-
-        return;
-      }
-
-      this._api.createComment(film.id, newComment)
-        .then(() => {
-          this._loadComments(film.id);
-        });
-    });
-
     if (oldFilmComponent && oldFilmDetailsComponent) {
       replace(this._filmComponent, oldFilmComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
@@ -110,7 +76,7 @@ export default class MovieController {
       render(this._container.querySelector(`.films-list__container`), this._filmComponent, RenderPosition.BEFOREEND);
     }
 
-    render(this._commentsContainer, this._commentFormComponent, RenderPosition.BEFOREEND);
+    this._commentsController.renderCommentsForm();
   }
 
   setDefaultView() {
@@ -138,17 +104,6 @@ export default class MovieController {
     updatedFilm.isFavorite = !updatedFilm.isFavorite;
 
     this._onDataChange(this, film, updatedFilm);
-  }
-
-  _validateComment({emotion, text}) {
-    return !!emotion && !!text;
-  }
-
-  _addComment(film, newComment) {
-    const newFilm = Object.assign({}, film);
-    newFilm.comments = [...newFilm.comments, newComment];
-
-    return newFilm;
   }
 
   _openFilmDetails(film) {

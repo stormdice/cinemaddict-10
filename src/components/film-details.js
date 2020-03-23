@@ -185,8 +185,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
 
     this._film = film;
-
-    // this._subscribeOnEvents();
   }
 
   getTemplate() {
