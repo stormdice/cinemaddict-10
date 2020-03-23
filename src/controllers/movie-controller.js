@@ -4,6 +4,8 @@ import MovieModel from '../models/movie';
 import CommentsController from './comments-controller';
 import {RenderPosition, render, replace} from '../utils/render';
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
@@ -23,6 +25,7 @@ export default class MovieController {
     this._commentsController = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._shake = this._shake.bind(this);
   }
 
   render(film) {
@@ -31,8 +34,12 @@ export default class MovieController {
 
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
+
     this._commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
+
     this._commentsController = new CommentsController(this._commentsContainer, film);
+
+    this._commentsController.shake = this._shake;
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
@@ -81,6 +88,14 @@ export default class MovieController {
     if (this._mode !== Mode.DEFAULT) {
       this._closeFilmDetails();
     }
+  }
+
+  _shake() {
+    this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._filmDetailsComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _addToWatchlist(film) {

@@ -19,6 +19,7 @@ export default class CommentController {
     this._film = film;
 
     this._api = new API();
+    this._shake = null;
     this._commentsComponent = null;
     this._comments = null;
     this._commentFormComponent = null;
@@ -26,6 +27,10 @@ export default class CommentController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._setCommentDelete = this._setCommentDelete.bind(this);
+  }
+
+  set shake(handler) {
+    this._shake = handler;
   }
 
   render(comments) {
@@ -71,6 +76,12 @@ export default class CommentController {
           this.loadComments(this._film.id);
           this._commentFormComponent.resetForm();
           this._commentFormComponent.blockInput(false);
+        })
+        .catch(() => {
+          if (this._shake !== null) {
+            this._shake();
+            this._commentFormComponent.blockInput(false);
+          }
         });
     });
 
