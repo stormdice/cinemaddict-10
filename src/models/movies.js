@@ -25,6 +25,7 @@ export default class Movies {
 
   get topRatedFilms() {
     return this._films
+      .slice()
       .sort((a, b) => b.totalRating - a.totalRating)
       .slice(0, 2)
       .filter((film) => film.totalRating);
@@ -32,6 +33,7 @@ export default class Movies {
 
   get mostCommentedFilms() {
     return this._films
+      .slice()
       .sort((a, b) => b.comments.length - a.comments.length)
       .slice(0, 2)
       .filter((film) => film.comments.length);
