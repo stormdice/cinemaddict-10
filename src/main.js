@@ -7,7 +7,7 @@ import StatisticsComponent from './components/statistics';
 import MoviesModel from './models/movies';
 import {RenderPosition, render} from './utils/render';
 
-const AUTHORIZATION = `Basic stormdiceCinema`;
+const AUTHORIZATION = `Basic stormdice`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
@@ -55,7 +55,6 @@ menuController.setScreenChange((filterName) => {
 api.getMovies()
   .then((movies) => {
     moviesModel.films = movies;
-
     profileController.render();
     menuController.render();
     pageController.render();
