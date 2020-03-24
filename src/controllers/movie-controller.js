@@ -12,9 +12,10 @@ const Mode = {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onCommentsDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onCommentsDataChange = onCommentsDataChange;
     this._onViewChange = onViewChange;
 
     this._mode = Mode.DEFAULT;
@@ -26,6 +27,7 @@ export default class MovieController {
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._shake = this._shake.bind(this);
+    this._onCommentsControllerDataChange = this._onCommentsControllerDataChange.bind(this);
   }
 
   render(film) {
@@ -40,6 +42,7 @@ export default class MovieController {
     this._commentsController = new CommentsController(this._commentsContainer, film);
 
     this._commentsController.shake = this._shake;
+    this._commentsController.updateFilmCardComments = this._onCommentsControllerDataChange;
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
@@ -84,6 +87,35 @@ export default class MovieController {
     this._commentsController.renderCommentsForm();
   }
 
+  updateFilmCard(film) {
+    const oldFilmComponent = this._filmComponent;
+
+    this._filmComponent = new FilmComponent(film);
+
+    this._filmComponent.setOpenDetailsClickHandler((evt) => {
+      evt.preventDefault();
+      this._openFilmDetails(film);
+    });
+
+    this._filmComponent.setWatchlistClickHandler(() => {
+      this._addToWatchlist(film);
+    });
+
+    this._filmComponent.setWatchedClickHandler(() => {
+      this._addToHistory(film);
+    });
+
+    this._filmComponent.setFavoriteClickHandler(() => {
+      this._addToFavorite(film);
+    });
+
+    if (oldFilmComponent) {
+      replace(this._filmComponent, oldFilmComponent);
+    } else {
+      render(this._container.querySelector(`.films-list__container`), this._filmComponent, RenderPosition.BEFOREEND);
+    }
+  }
+
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
       this._closeFilmDetails();
@@ -96,6 +128,10 @@ export default class MovieController {
     setTimeout(() => {
       this._filmDetailsComponent.getElement().style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  _onCommentsControllerDataChange(film, updatedFilm) {
+    this._onCommentsDataChange(this, film, updatedFilm);
   }
 
   _addToWatchlist(film) {

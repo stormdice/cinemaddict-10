@@ -10,9 +10,9 @@ import {RenderPosition, render, remove} from '../utils/render';
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
-const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
+const renderFilms = (filmListElement, films, onDataChange, onCommentsDataChange, onViewChange) => {
   return films.map((film) => {
-    const movieController = new MovieController(filmListElement, onDataChange, onViewChange);
+    const movieController = new MovieController(filmListElement, onDataChange, onCommentsDataChange, onViewChange);
     movieController.render(film);
 
     return movieController;
@@ -36,6 +36,7 @@ export default class PageController {
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
@@ -77,7 +78,7 @@ export default class PageController {
   _renderFilms(films) {
     const filmListElement = this._filmListComponent.getElement();
 
-    const newFilms = renderFilms(filmListElement, films, this._onDataChange, this._onViewChange);
+    const newFilms = renderFilms(filmListElement, films, this._onDataChange, this._onCommentsDataChange, this._onViewChange);
 
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     this._showingFilmsCount = this._showedFilmControllers.length;
@@ -99,6 +100,21 @@ export default class PageController {
 
         if (isSuccess) {
           movieController.render(movieModel);
+
+          this._renderExtraFilms();
+        }
+      });
+  }
+
+  _onCommentsDataChange(movieController, film) {
+    this._api.updateMovie(film.id, film)
+      .then((movieModel) => {
+        const isSuccess = this._moviesModel.updateFilm(film.id, movieModel);
+
+        if (isSuccess) {
+          movieController.updateFilmCard(movieModel);
+          movieController._commentsController.loadComments(film.id);
+
           this._renderExtraFilms();
         }
       });
@@ -174,7 +190,7 @@ export default class PageController {
     if (films.length) {
       const container = this._container.getElement();
       render(container, filmsList, RenderPosition.BEFOREEND);
-      renderFilms(filmsList.getElement(), films, this._onDataChange, this._onViewChange);
+      renderFilms(filmsList.getElement(), films, this._onDataChange, this._onCommentsDataChange, this._onViewChange);
     }
   }
 
