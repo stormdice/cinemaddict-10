@@ -70,6 +70,7 @@ export default class Movies {
   }
 
   _callHandlers(handlers) {
+    debugger;
     handlers.forEach((handler) => handler());
   }
 }

@@ -1,5 +1,4 @@
 import API from '../api';
-import MovieModel from '../models/movie';
 import CommentsComponent from '../components/comments';
 import CommentFormComponent from '../components/comment-form';
 import CommentModel from '../models/comment';
@@ -21,7 +20,7 @@ export default class CommentController {
 
     this._api = new API();
     this._shake = null;
-    this._updateFilmCardComments = null;
+    this._updateFilmCardHandler = null;
     this._commentsComponent = null;
     this._comments = null;
     this._commentFormComponent = null;
@@ -35,8 +34,8 @@ export default class CommentController {
     this._shake = handler;
   }
 
-  set updateFilmCardComments(handler) {
-    this._updateFilmCardComments = handler;
+  onCommentsCountChangeHandler(handler) {
+    this._updateFilmCardHandler = handler;
   }
 
   render(comments) {
@@ -82,8 +81,8 @@ export default class CommentController {
           this._commentFormComponent.resetForm();
           this._commentFormComponent.blockInput(false);
 
-          if (this._updateFilmCardComments !== null) {
-            this._updateFilmCardComments(this._film);
+          if (this._updateFilmCardHandler !== null) {
+            this._updateFilmCardHandler(this._film);
           }
         })
         .catch(() => {

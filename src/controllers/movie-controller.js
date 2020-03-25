@@ -27,7 +27,7 @@ export default class MovieController {
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._shake = this._shake.bind(this);
-    this._onCommentsControllerDataChange = this._onCommentsControllerDataChange.bind(this);
+    this._onCommentsCountChange = this._onCommentsCountChange.bind(this);
   }
 
   render(film) {
@@ -42,7 +42,7 @@ export default class MovieController {
     this._commentsController = new CommentsController(this._commentsContainer, film);
 
     this._commentsController.shake = this._shake;
-    this._commentsController.updateFilmCardComments = this._onCommentsControllerDataChange;
+    this._commentsController.onCommentsCountChangeHandler(this._onCommentsCountChange);
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
       evt.preventDefault();
@@ -130,7 +130,7 @@ export default class MovieController {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-  _onCommentsControllerDataChange(film, updatedFilm) {
+  _onCommentsCountChange(film, updatedFilm) {
     this._onCommentsDataChange(this, film, updatedFilm);
   }
 

@@ -3,7 +3,7 @@ import {FilterType} from '../const';
 import {render, replace, RenderPosition} from '../utils/render';
 import {getFilmsByFilter} from '../utils/filter';
 
-export default class FilterController {
+export default class MenuController {
   constructor(container, moviesModel) {
     this._container = container;
     this._moviesModel = moviesModel;
