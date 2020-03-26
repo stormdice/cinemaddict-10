@@ -109,6 +109,10 @@ export default class CommentController {
       .then(() => {
         this._comments = this._comments.filter((it) => it.id !== commentId);
         this._onDataChange();
+
+        if (this._updateFilmCardHandler !== null) {
+          this._updateFilmCardHandler(this._film);
+        }
       })
       .then(() => {
         this.loadComments(this._film.id);
