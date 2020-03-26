@@ -93,6 +93,11 @@ export default class PageController {
     this._showedFilmControllers = [];
   }
 
+  _updateFilms(films) {
+    this._removeFilms();
+    this._renderFilms(films);
+  }
+
   _onDataChange(movieController, film, newData) {
     this._api.updateMovie(film.id, newData)
       .then((movieModel) => {
@@ -100,6 +105,8 @@ export default class PageController {
 
         if (isSuccess) {
           movieController.render(movieModel);
+
+          this._updateFilms(this._moviesModel.films.slice(0, this._showingFilmsCount));
 
           this._renderExtraFilms();
         }
@@ -114,6 +121,8 @@ export default class PageController {
         if (isSuccess) {
           movieController.updateFilmCard(movieModel);
           movieController._commentsController.loadComments(film.id);
+
+          this._updateFilms(this._moviesModel.films.slice(0, this._showingFilmsCount));
 
           this._renderExtraFilms();
         }
@@ -161,15 +170,14 @@ export default class PageController {
         sortedFilms = films.slice(0, this._showingFilmsCount);
         break;
       case SortType.DATE:
-        sortedFilms = films.slice().sort((a, b) => b.releaseDate - a.releaseDate);
+        sortedFilms = films.slice().sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
         break;
       case SortType.RATING:
         sortedFilms = films.slice().sort((a, b) => b.totalRating - a.totalRating);
         break;
     }
 
-    this._removeFilms();
-    this._renderFilms(sortedFilms);
+    this._updateFilms(sortedFilms);
 
     if (sortType === SortType.DEFAULT) {
       this._renderShowMoreButton();
@@ -179,8 +187,7 @@ export default class PageController {
   }
 
   _onFilterChange() {
-    this._removeFilms();
-    this._renderFilms(this._moviesModel.films.slice(0, SHOWING_FILMS_COUNT_ON_START));
+    this._updateFilms(this._moviesModel.films.slice(0, SHOWING_FILMS_COUNT_ON_START));
     this._renderShowMoreButton();
   }
 
