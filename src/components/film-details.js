@@ -33,9 +33,9 @@ const createRatingInputs = (rating) => {
   return new Array(RATING_SCORE)
     .fill(``)
     .map(() => {
-      const checked = score === rating ? true : false;
-
       score++;
+
+      const checked = score === rating ? true : false;
 
       return createScoreTemplate(score, checked);
     })
@@ -120,6 +120,7 @@ const createFilmDetailsTemplate = (film) => {
 
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${totalRating}</p>
+                  <p class="film-details__user-rating">Your rate ${personalRating}</p>
                 </div>
               </div>
 
