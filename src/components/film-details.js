@@ -208,4 +208,17 @@ export default class FilmDetails extends AbstractSmartComponent {
   setFavoriteInputChangeHandler(handler) {
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
   }
+
+  setUserRatingInputChangeHandler(handler) {
+    this.getElement().querySelector(`.film-details__user-rating-score`)
+      .addEventListener(`change`, (evt) => {
+        if (evt.target.tagName !== `INPUT`) {
+          return;
+        }
+
+        const score = evt.target.value;
+
+        handler(score);
+      });
+  }
 }

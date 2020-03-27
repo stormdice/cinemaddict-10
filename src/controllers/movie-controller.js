@@ -77,6 +77,10 @@ export default class MovieController {
       this._addToFavorite(film);
     });
 
+    this._filmDetailsComponent.setUserRatingInputChangeHandler((score) => {
+      console.log(score);
+    });
+
     if (oldFilmComponent && oldFilmDetailsComponent) {
       replace(this._filmComponent, oldFilmComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
