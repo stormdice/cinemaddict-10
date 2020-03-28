@@ -120,7 +120,7 @@ const createFilmDetailsTemplate = (film) => {
 
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${totalRating}</p>
-                  <p class="film-details__user-rating">Your rate ${personalRating}</p>
+                  ${(isWatched && personalRating !== 0) ? `<p class="film-details__user-rating">Your rate ${personalRating}</p>` : ``}
                 </div>
               </div>
 
@@ -198,26 +198,28 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setWatchlistInputChangeHandler(handler) {
-    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#watchlist`)
+      .addEventListener(`change`, handler);
   }
 
   setWatchedInputChangeHandler(handler) {
-    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#watched`)
+      .addEventListener(`change`, handler);
   }
 
   setFavoriteInputChangeHandler(handler) {
-    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
-  }
-
-  _setActiveUserScore(score) {
-    const input = this.getElement().querySelector(`#rating-${score}`);
-
-    if (input) {
-      input.checked = true;
-    }
+    this.getElement().querySelector(`#favorite`)
+      .addEventListener(`change`, handler);
   }
 
   setUserRatingInputChangeHandler(handler) {
+    const userRatingScoreElement = this.getElement()
+      .querySelector(`.film-details__user-rating-score`);
+
+    if (!userRatingScoreElement) {
+      return;
+    }
+
     this.getElement().querySelector(`.film-details__user-rating-score`)
       .addEventListener(`change`, (evt) => {
         if (evt.target.tagName !== `INPUT`) {
@@ -225,10 +227,17 @@ export default class FilmDetails extends AbstractSmartComponent {
         }
 
         const score = evt.target.value;
-
-        this._setActiveUserScore(score);
-
         handler(score);
       });
+  }
+
+  setUndoButtonClickHandler(handler) {
+    const undoButtonElement = this.getElement().querySelector(`.film-details__watched-reset`);
+
+    if (!undoButtonElement) {
+      return;
+    }
+
+    undoButtonElement.addEventListener(`click`, handler);
   }
 }

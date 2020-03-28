@@ -109,6 +109,8 @@ export default class PageController {
           this._updateFilms(this._moviesModel.films.slice(0, this._showingFilmsCount));
 
           this._renderExtraFilms();
+
+          movieController._commentsController.loadComments(film.id);
         }
       });
   }

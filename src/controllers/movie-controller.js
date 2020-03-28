@@ -28,6 +28,7 @@ export default class MovieController {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._shake = this._shake.bind(this);
     this._onCommentsCountChange = this._onCommentsCountChange.bind(this);
+    this._resetUserRating = this._resetUserRating.bind(this);
   }
 
   render(film) {
@@ -78,7 +79,17 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setUserRatingInputChangeHandler((score) => {
-      console.log(score);
+      const updatedFilm = MovieModel.clone(film);
+      updatedFilm.personalRating = Number(score);
+
+      this._onDataChange(this, film, updatedFilm);
+    });
+
+    this._filmDetailsComponent.setUndoButtonClickHandler(() => {
+      const updatedFilm = MovieModel.clone(film);
+      this._resetUserRating(updatedFilm);
+
+      this._onDataChange(this, film, updatedFilm);
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
@@ -148,6 +159,7 @@ export default class MovieController {
   _addToHistory(film) {
     const updatedFilm = MovieModel.clone(film);
     updatedFilm.isWatched = !updatedFilm.isWatched;
+    this._resetUserRating(updatedFilm);
 
     this._onDataChange(this, film, updatedFilm);
   }
@@ -157,6 +169,16 @@ export default class MovieController {
     updatedFilm.isFavorite = !updatedFilm.isFavorite;
 
     this._onDataChange(this, film, updatedFilm);
+  }
+
+  _resetUserRating(film) {
+    const checkedInput = this._filmDetailsComponent.getElement()
+      .querySelector(`input.film-details__user-rating-input[checked]`);
+
+    if (checkedInput) {
+      checkedInput.checked = false;
+      film.personalRating = 0;
+    }
   }
 
   _openFilmDetails(film) {
