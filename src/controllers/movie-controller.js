@@ -28,7 +28,6 @@ export default class MovieController {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._shake = this._shake.bind(this);
     this._onCommentsCountChange = this._onCommentsCountChange.bind(this);
-    this._resetUserRating = this._resetUserRating.bind(this);
   }
 
   render(film) {
@@ -38,7 +37,8 @@ export default class MovieController {
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    this._commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
+    this._commentsContainer = this._filmDetailsComponent.getElement()
+      .querySelector(`.film-details__comments-wrap`);
 
     this._commentsController = new CommentsController(this._commentsContainer, film);
 
@@ -82,12 +82,15 @@ export default class MovieController {
       const updatedFilm = MovieModel.clone(film);
       updatedFilm.personalRating = Number(score);
 
+      this._blockUserRating(true);
+
       this._onDataChange(this, film, updatedFilm);
     });
 
     this._filmDetailsComponent.setUndoButtonClickHandler(() => {
       const updatedFilm = MovieModel.clone(film);
-      this._resetUserRating(updatedFilm);
+
+      this._filmDetailsComponent.resetUserRating(updatedFilm);
 
       this._onDataChange(this, film, updatedFilm);
     });
@@ -137,8 +140,40 @@ export default class MovieController {
     }
   }
 
+  _blockUserRating(toBlock) {
+    const userRatingElement = this._filmDetailsComponent.getElement()
+      .querySelector(`.film-details__user-rating-wrap`);
+
+    if (!userRatingElement) {
+      return;
+    }
+
+    const inputs = userRatingElement.querySelectorAll(`input, button`);
+
+    inputs.forEach((input) => {
+      if (toBlock) {
+        input.disabled = true;
+      } else {
+        input.disabled = false;
+      }
+    });
+  }
+
+  _resetUserRating(film) {
+    const checkedInput = this._filmDetailsComponent.getElement()
+      .querySelector(`input.film-details__user-rating-input[checked]`);
+
+    if (!checkedInput) {
+      return;
+    }
+
+    checkedInput.checked = false;
+    film.personalRating = 0;
+  }
+
   _shake() {
-    this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._filmDetailsComponent.getElement()
+      .style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
     setTimeout(() => {
       this._filmDetailsComponent.getElement().style.animation = ``;
@@ -171,20 +206,11 @@ export default class MovieController {
     this._onDataChange(this, film, updatedFilm);
   }
 
-  _resetUserRating(film) {
-    const checkedInput = this._filmDetailsComponent.getElement()
-      .querySelector(`input.film-details__user-rating-input[checked]`);
-
-    if (checkedInput) {
-      checkedInput.checked = false;
-      film.personalRating = 0;
-    }
-  }
-
   _openFilmDetails(film) {
     this._onViewChange();
 
-    this._filmDetailsComponent.getElement().style = `animation: bounceInRight 0.3s;`;
+    this._filmDetailsComponent.getElement()
+      .style = `animation: bounceInRight 0.3s;`;
 
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
 

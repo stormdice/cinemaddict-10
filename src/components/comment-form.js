@@ -43,7 +43,6 @@ export default class CommentForm extends AbstractSmartComponent {
     return createNewCommentMarkup();
   }
 
-  // TODO Сделать по нормальному
   getAddCommentFormData() {
     const form = this.getElement().closest(`.film-details__inner`);
     return new FormData(form);
