@@ -112,6 +112,10 @@ export default class PageController {
 
           movieController._commentsController.loadComments(film.id);
         }
+      })
+      .catch(() => {
+        movieController._blockUserRating(false);
+        movieController._shake();
       });
   }
 
