@@ -1,9 +1,12 @@
-import AbstractComponent from './abstract-component';
+import AbstractSmartComponent from './abstract-smart-component';
 import {commentFormatDate} from '../utils/common';
 
-const createCommentTemplate = (comment) => {
+const DEFAULT_DELETE_BUTTON_TEXT = `Delete`;
+
+const createCommentTemplate = (comment, isPressed, modifiedDeleteButtonText) => {
   const {id, author, text, date, emotion} = comment;
   const commentDate = commentFormatDate(date);
+  const deleteButtonText = isPressed ? modifiedDeleteButtonText : DEFAULT_DELETE_BUTTON_TEXT;
 
   return (
     `<li class="film-details__comment">
@@ -15,16 +18,19 @@ const createCommentTemplate = (comment) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
-          <button type="button" class="film-details__comment-delete" data-id="${id}">Delete</button>
+          <button type="button" class="film-details__comment-delete" data-id="${id}">${deleteButtonText}</button>
         </p>
       </div>
     </li>`
   );
 };
 
-const createCommentsMarkup = (comments) => {
+const createCommentsMarkup = (comments, options = {}) => {
+  const {modifiedDeleteButtonText, selectedId} = options;
   const commentsList = comments.map((comment) => {
-    return createCommentTemplate(comment);
+    const isPressed = selectedId === comment.id ? true : false;
+
+    return createCommentTemplate(comment, isPressed, modifiedDeleteButtonText);
   })
   .join(`\n`);
 
@@ -36,16 +42,23 @@ const createCommentsMarkup = (comments) => {
   );
 };
 
-export default class Comments extends AbstractComponent {
+export default class Comments extends AbstractSmartComponent {
   constructor(comments) {
     super();
 
     this._comments = comments;
+    this._modifiedDeleteButtonText = DEFAULT_DELETE_BUTTON_TEXT;
+    this._selectedId = null;
   }
 
   getTemplate() {
-    return createCommentsMarkup(this._comments);
+    return createCommentsMarkup(this._comments, {
+      modifiedDeleteButtonText: this._modifiedDeleteButtonText,
+      selectedId: this._selectedId
+    });
   }
+
+  recoveryListeners() {}
 
   setCommentsDeleteClickHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
@@ -56,7 +69,16 @@ export default class Comments extends AbstractComponent {
       }
 
       const commentId = evt.target.dataset.id;
+
       handler(commentId);
     });
   }
+
+  setDeleteButtonText(commentId, text) {
+    this._modifiedDeleteButtonText = text;
+    this._selectedId = commentId;
+    this.rerender();
+  }
 }
+
+export {DEFAULT_DELETE_BUTTON_TEXT};

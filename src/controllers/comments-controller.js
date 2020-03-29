@@ -1,5 +1,5 @@
 import API from '../api';
-import CommentsComponent from '../components/comments';
+import CommentsComponent, {DEFAULT_DELETE_BUTTON_TEXT} from '../components/comments';
 import CommentFormComponent from '../components/comment-form';
 import CommentModel from '../models/comment';
 import {render, replace, RenderPosition} from '../utils/render';
@@ -45,7 +45,10 @@ export default class CommentController {
     this._comments = comments;
     this._commentsComponent = new CommentsComponent(this._comments);
 
-    this._commentsComponent.setCommentsDeleteClickHandler(this._setCommentDelete);
+    this._commentsComponent.setCommentsDeleteClickHandler((commentId) => {
+      this._setCommentDelete(commentId);
+      this._commentsComponent.setDeleteButtonText(commentId, `Deleting...`);
+    });
 
     if (oldComponent) {
       replace(this._commentsComponent, oldComponent);
@@ -116,6 +119,9 @@ export default class CommentController {
       })
       .then(() => {
         this.loadComments(this._film.id);
+      })
+      .catch(() => {
+        this._commentsComponent.setDeleteButtonText(commentId, DEFAULT_DELETE_BUTTON_TEXT);
       });
   }
 
