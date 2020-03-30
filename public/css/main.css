@@ -314,6 +314,14 @@ button {
   flex-wrap: wrap;
 }
 
+.films__loading-text {
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
 .films-list {
   flex-basis: 100%;
   flex-shrink: 0;

@@ -12,6 +12,7 @@ const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
+const filmsSectionLoadingMarkup = `<p class="films__loading-text">Loading...</p>`;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
@@ -24,6 +25,8 @@ const menuController = new MenuController(siteMainElement, moviesModel);
 menuController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
+filmsSectionComponent.getElement().innerHTML = filmsSectionLoadingMarkup;
+
 const statisticsController = new StatisticsController(siteMainElement, moviesModel);
 
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
@@ -44,6 +47,7 @@ menuController.setScreenChange((filterName) => {
 
 api.getMovies()
   .then((movies) => {
+    filmsSectionComponent.getElement().innerHTML = ``;
     moviesModel.films = movies;
     profileController.render();
     menuController.render();
