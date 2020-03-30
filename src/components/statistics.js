@@ -3,6 +3,7 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 import {getUserRank} from './profile';
+import {SECONDS_IN_A_MINUTE} from '../utils/common';
 
 const FilterType = {
   ALL_TIME: `all-time`,
@@ -138,8 +139,8 @@ const createStatisticsTemplate = (watchedFilms) => {
   const totalDurationCount = checkTotalDurationCount(watchedFilms);
 
   const DURATION = {
-    HOURS: Math.trunc(totalDurationCount / 60),
-    MINUTES: totalDurationCount % 60,
+    HOURS: Math.trunc(totalDurationCount / SECONDS_IN_A_MINUTE),
+    MINUTES: totalDurationCount % SECONDS_IN_A_MINUTE,
   };
 
   const favoriteGenre = getFavoriteGenre(getFilmsGenres(watchedFilms));

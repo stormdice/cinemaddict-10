@@ -5,7 +5,7 @@ import CommentsController from './comments-controller';
 import {RenderPosition, render, replace} from '../utils/render';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
-
+const FILM_DETAIL_OPEN_ANIMATION = `animation: bounceInRight 0.3s;`;
 const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
@@ -82,7 +82,7 @@ export default class MovieController {
       const updatedFilm = MovieModel.clone(film);
       updatedFilm.personalRating = Number(score);
 
-      this._blockUserRating(true);
+      this.blockUserRating(true);
 
       this._onDataChange(this, film, updatedFilm);
     });
@@ -140,7 +140,7 @@ export default class MovieController {
     }
   }
 
-  _blockUserRating(toBlock) {
+  blockUserRating(toBlock) {
     const userRatingElement = this._filmDetailsComponent.getElement()
       .querySelector(`.film-details__user-rating-wrap`);
 
@@ -151,11 +151,7 @@ export default class MovieController {
     const inputs = userRatingElement.querySelectorAll(`input, button`);
 
     inputs.forEach((input) => {
-      if (toBlock) {
-        input.disabled = true;
-      } else {
-        input.disabled = false;
-      }
+      input.disabled = toBlock ? true : false;
     });
   }
 
@@ -210,7 +206,7 @@ export default class MovieController {
     this._onViewChange();
 
     this._filmDetailsComponent.getElement()
-      .style = `animation: bounceInRight 0.3s;`;
+      .style = FILM_DETAIL_OPEN_ANIMATION;
 
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
 

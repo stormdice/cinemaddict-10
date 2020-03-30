@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+const SECONDS_IN_A_MINUTE = 60;
+
 const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(max * Math.random());
 };
@@ -23,8 +25,8 @@ const filmDetailsFormatReleaseDate = (date) => {
 };
 
 const formatRuntime = (runtime) => {
-  const hours = Math.trunc(runtime / 60);
-  const minutes = runtime % 60;
+  const hours = Math.trunc(runtime / SECONDS_IN_A_MINUTE);
+  const minutes = runtime % SECONDS_IN_A_MINUTE;
 
   return `${hours}h ${minutes}m`;
 };
@@ -42,6 +44,7 @@ const getFilterTitle = (title) => {
 };
 
 export {
+  SECONDS_IN_A_MINUTE,
   getRandomIntegerNumber,
   getRandomArrayItem,
   getRandomDate,

@@ -114,7 +114,7 @@ export default class PageController {
         }
       })
       .catch(() => {
-        movieController._blockUserRating(false);
+        movieController.blockUserRating(false);
         movieController._shake();
       });
   }

@@ -33,13 +33,12 @@ const createMenuTemplate = (menuItem) => {
   );
 };
 
-export default class Filter extends AbstractComponent {
+export default class Menu extends AbstractComponent {
   constructor(filters) {
     super();
 
     this._filters = filters;
     this._currentFilterType = FilterType.ALL;
-    this._linkElements = this.getElement().querySelectorAll(`.main-navigation__item`);
   }
 
   getTemplate() {
@@ -74,9 +73,8 @@ export default class Filter extends AbstractComponent {
   }
 
   _setActiveClass(evt) {
-    this._linkElements.forEach((link) => {
-      link.classList.remove(`main-navigation__item--active`);
-    });
+    this.getElement().querySelector(`.main-navigation__item--active`)
+      .classList.remove(`main-navigation__item--active`);
 
     if (evt.target.tagName === `A`) {
       evt.target.classList.add(`main-navigation__item--active`);
