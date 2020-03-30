@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component';
-import {formatRuntime ,filmCardFormatReleaseDate} from '../utils/common';
+import {formatRuntime, filmCardFormatReleaseDate} from '../utils/common';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 

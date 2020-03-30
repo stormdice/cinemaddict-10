@@ -46,8 +46,9 @@ export default class CommentController {
     this._commentsComponent = new CommentsComponent(this._comments);
 
     this._commentsComponent.setCommentsDeleteClickHandler((commentId) => {
-      this._setCommentDelete(commentId);
       this._commentsComponent.setDeleteButtonText(commentId, `Deleting...`);
+      this._blockDeleteButton(commentId, true);
+      this._setCommentDelete(commentId);
     });
 
     if (oldComponent) {
@@ -82,11 +83,12 @@ export default class CommentController {
       this._api.createComment(this._film.id, newComment)
         .then(() => {
           this._commentFormComponent.resetForm();
-          this._commentFormComponent.blockInput(false);
 
           if (this._updateFilmCardHandler !== null) {
             this._updateFilmCardHandler(this._film);
           }
+
+          this._commentFormComponent.blockInput(false);
         })
         .catch(() => {
           if (this._shake !== null) {
@@ -107,6 +109,20 @@ export default class CommentController {
     this.render(this._comments);
   }
 
+  _blockDeleteButton(commentId, toBLock) {
+    const button = this._commentsComponent.getElement().querySelector(`button[data-id="${commentId}"]`);
+
+    if (!button) {
+      return;
+    }
+
+    if (toBLock) {
+      button.disabled = true;
+    } else {
+      button.disabled = false;
+    }
+  }
+
   _setCommentDelete(commentId) {
     this._api.deleteComment(commentId)
       .then(() => {
@@ -122,6 +138,7 @@ export default class CommentController {
       })
       .catch(() => {
         this._commentsComponent.setDeleteButtonText(commentId, DEFAULT_DELETE_BUTTON_TEXT);
+        this._blockDeleteButton(commentId, false);
       });
   }
 

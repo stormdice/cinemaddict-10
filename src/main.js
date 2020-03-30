@@ -7,7 +7,7 @@ import StatisticsController from './controllers/statistics-controller';
 import MoviesModel from './models/movies';
 import {RenderPosition, render} from './utils/render';
 
-const AUTHORIZATION = `Basic stormdice`;
+const AUTHORIZATION = `Basic stormdicedsafgkljh`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
