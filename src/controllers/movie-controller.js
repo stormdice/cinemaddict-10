@@ -90,7 +90,7 @@ export default class MovieController {
     this._filmDetailsComponent.setUndoButtonClickHandler(() => {
       const updatedFilm = MovieModel.clone(film);
 
-      this._filmDetailsComponent.resetUserRating(updatedFilm);
+      this._resetUserRating(updatedFilm);
 
       this._onDataChange(this, film, updatedFilm);
     });
