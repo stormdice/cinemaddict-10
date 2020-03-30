@@ -15,10 +15,10 @@ export default class ProfileController {
 
   render() {
     const container = this._container;
-    const watchedMovies = this._moviesModel.watchedFilms.length;
+    const watchedMoviesCount = this._moviesModel.watchedFilms.length;
     const oldComponent = this._profileComponent;
 
-    this._profileComponent = new ProfileComponent(watchedMovies);
+    this._profileComponent = new ProfileComponent(watchedMoviesCount);
 
     if (oldComponent) {
       replace(this._profileComponent, oldComponent);

@@ -39,6 +39,11 @@ const checkTotalDurationCount = (films) => {
 
 const getFavoriteGenre = (filmGenres) => {
   const sortedGenres = Object.entries(filmGenres).sort((a, b) => b[1] - a[1]);
+
+  if (sortedGenres.length === 0) {
+    return `–`;
+  }
+
   const favoriteGenre = sortedGenres[0][0];
 
   if (sortedGenres.length >= 1) {

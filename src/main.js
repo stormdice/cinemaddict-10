@@ -3,7 +3,7 @@ import ProfileController from './controllers/profile-controller';
 import MenuController from './controllers/menu-controller';
 import PageController from './controllers/page-controller';
 import FilmsSectionComponent from './components/film-section';
-import StatisticsComponent from './components/statistics';
+import StatisticsController from './controllers/statistics-controller';
 import MoviesModel from './models/movies';
 import {RenderPosition, render} from './utils/render';
 
@@ -24,7 +24,8 @@ const menuController = new MenuController(siteMainElement, moviesModel);
 menuController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
-let statisticsComponent = null;
+const statisticsController = new StatisticsController(siteMainElement, moviesModel);
+
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsSectionComponent, moviesModel);
@@ -32,23 +33,12 @@ const pageController = new PageController(filmsSectionComponent, moviesModel);
 menuController.setScreenChange((filterName) => {
   if (filterName === `stats`) {
     pageController.hide();
-
-    if (statisticsComponent === null) {
-      statisticsComponent = new StatisticsComponent(moviesModel.watchedFilms);
-      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-    } else {
-      statisticsComponent.show();
-    }
-
+    statisticsController.render();
+    statisticsController._statisticsComponent.show();
   } else {
     pageController.show();
     menuController.onFilterChange(filterName);
-
-    if (statisticsComponent === null) {
-      return;
-    } else {
-      statisticsComponent.hide();
-    }
+    statisticsController._statisticsComponent.hide();
   }
 });
 
