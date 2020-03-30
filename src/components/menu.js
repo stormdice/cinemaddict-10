@@ -1,6 +1,13 @@
 import AbstractComponent from './abstract-component';
 import {FilterType} from '../const';
-import {getFilterTitle} from '../utils/common';
+
+const getFilterTitle = (title) => {
+  if (title === `all`) {
+    return `All movies`;
+  }
+
+  return title[0].toUpperCase().concat(title.slice(1));
+};
 
 const createFilterMarkup = (filter) => {
   const {name, count, active} = filter;

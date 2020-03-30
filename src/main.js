@@ -36,12 +36,17 @@ const pageController = new PageController(filmsSectionComponent, moviesModel);
 menuController.setScreenChange((filterName) => {
   if (filterName === `stats`) {
     pageController.hide();
-    statisticsController.render();
-    statisticsController._statisticsComponent.show();
+
+    if (statisticsController._statisticsComponent === null) {
+      statisticsController.render();
+    } else {
+      statisticsController.show();
+    }
+
   } else {
     pageController.show();
     menuController.onFilterChange(filterName);
-    statisticsController._statisticsComponent.hide();
+    statisticsController.hide();
   }
 });
 

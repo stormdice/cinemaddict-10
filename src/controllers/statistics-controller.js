@@ -27,6 +27,14 @@ export default class StatisticsController {
     }
   }
 
+  show() {
+    this._statisticsComponent.show();
+  }
+
+  hide() {
+    this._statisticsComponent.hide();
+  }
+
   _onDataChange() {
     this.render();
   }

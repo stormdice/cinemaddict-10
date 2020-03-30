@@ -166,7 +166,7 @@ export default class MovieController {
     checkedInput.checked = false;
     film.personalRating = 0;
   }
-
+  // TODO разобраться с этим методом приватный или нет
   _shake() {
     this._filmDetailsComponent.getElement()
       .style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
