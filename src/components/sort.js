@@ -1,5 +1,5 @@
-import AbstractComponent from './abstract-component.js';
-import {SortType} from '../const.js';
+import AbstractComponent from './abstract-component';
+import {SortType} from '../const';
 
 const createSortTemplate = () => {
   return (
@@ -36,9 +36,9 @@ export default class Sort extends AbstractComponent {
         return;
       }
 
-      this.getElement().querySelectorAll(`a`).forEach((link) => {
-        link.classList.remove(`sort__button--active`);
-      });
+      this.getElement().querySelector(`.sort__button--active`)
+        .classList.remove(`sort__button--active`);
+
       evt.target.classList.add(`sort__button--active`);
 
       this._currentSortType = sortType;

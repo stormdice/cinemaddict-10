@@ -1,8 +1,7 @@
-import AbstractSmartComponent from './abstract-smart-component.js';
-import CommentComponent from './comment.js';
-import {formatRuntime, filmDetailsFormatReleaseDate} from '../utils/common.js';
-import {EMOTIONS} from '../const.js';
-import he from 'he';
+import AbstractSmartComponent from './abstract-smart-component';
+import {formatRuntime, filmDetailsFormatReleaseDate} from '../utils/common';
+
+const RATING_SCORE = 9;
 
 const createGenreMarkup = (genres) => {
   return Array.from(genres)
@@ -14,8 +13,37 @@ const createGenreMarkup = (genres) => {
     .join(`\n`);
 };
 
-const createUserRatingMarkup = (film) => {
-  const {title, poster} = film;
+const createScoreTemplate = (count, isChecked = false) => {
+  return (
+    `<input
+      type="radio"
+      name="score"
+      class="film-details__user-rating-input  visually-hidden"
+      value="${count}"
+      id="rating-${count}"
+      ${isChecked ? `checked` : ``}
+    >
+    <label class="film-details__user-rating-label" for="rating-${count}">${count}</label>`
+  );
+};
+
+const createRatingInputs = (rating) => {
+  let score = 0;
+
+  return new Array(RATING_SCORE)
+    .fill(``)
+    .map(() => {
+      score++;
+
+      const checked = score === rating ? true : false;
+
+      return createScoreTemplate(score, checked);
+    })
+    .join(`\n`);
+};
+
+const createUserRatingMarkup = (title, poster, personalRating) => {
+  const scoreTemplate = createRatingInputs(personalRating);
 
   return (
     `<div class="form-details__middle-container">
@@ -34,77 +62,12 @@ const createUserRatingMarkup = (film) => {
 
             <p class="film-details__user-rating-feelings">How you feel it?</p>
 
-            <div class="film-details__user-rating-score">
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
-              <label class="film-details__user-rating-label" for="rating-1">1</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
-              <label class="film-details__user-rating-label" for="rating-2">2</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
-              <label class="film-details__user-rating-label" for="rating-3">3</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
-              <label class="film-details__user-rating-label" for="rating-4">4</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5">
-              <label class="film-details__user-rating-label" for="rating-5">5</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
-              <label class="film-details__user-rating-label" for="rating-6">6</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
-              <label class="film-details__user-rating-label" for="rating-7">7</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
-              <label class="film-details__user-rating-label" for="rating-8">8</label>
-
-              <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" checked="">
-              <label class="film-details__user-rating-label" for="rating-9">9</label>
-
-            </div>
+            <div class="film-details__user-rating-score">${scoreTemplate}</div>
           </section>
         </div>
       </section>
     </div>`
   );
-};
-
-const createEmotionsMarkup = (emotions) => {
-  return emotions
-    .map((emotion) => {
-      return (
-        `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
-        <label class="film-details__emoji-label" for="emoji-${emotion}">
-          <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
-        </label>`
-      );
-    })
-    .join(`\n`);
-};
-
-const createNewCommentMarkup = () => {
-  const emotions = createEmotionsMarkup(EMOTIONS);
-
-  return (
-    `<div class="film-details__new-comment">
-      <span class="film-details__comment-error-message">Please fill in the comment and choose an emotion.</span>
-      <div for="add-emoji" class="film-details__add-emoji-label"></div>
-
-      <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-      </label>
-
-      <div class="film-details__emoji-list">${emotions}</div>
-    </div>`
-  );
-};
-
-const createCommentsMarkup = (comments) => {
-  return comments.map((comment) => {
-    return new CommentComponent(comment).getTemplate();
-  })
-  .join(`\n`);
 };
 
 const createFilmDetailsTemplate = (film) => {
@@ -116,20 +79,23 @@ const createFilmDetailsTemplate = (film) => {
     country,
     genres,
     totalRating,
+    director,
+    writers,
+    actors,
     releaseDate,
     runtime,
     description,
+    personalRating,
     isWatchlist,
     isWatched,
     isFavorite,
-    comments
   } = film;
 
   const release = filmDetailsFormatReleaseDate(releaseDate);
   const filmRuntime = formatRuntime(runtime);
   const filmGenre = createGenreMarkup(genres);
-  const commentsList = createCommentsMarkup(comments);
-  const createNewComment = createNewCommentMarkup();
+  const filmWriters = writers.join(`, `);
+  const filmActors = actors.join(`, `);
 
   return (
     `<section class="film-details">
@@ -154,21 +120,22 @@ const createFilmDetailsTemplate = (film) => {
 
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${totalRating}</p>
+                  ${(isWatched && personalRating !== 0) ? `<p class="film-details__user-rating">Your rate ${personalRating}</p>` : ``}
                 </div>
               </div>
 
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">Anthony Mann</td>
+                  <td class="film-details__cell">${director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                  <td class="film-details__cell">${filmWriters}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                  <td class="film-details__cell">${filmActors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
@@ -204,29 +171,14 @@ const createFilmDetailsTemplate = (film) => {
           </section>
         </div>
 
-        ${isWatched ? createUserRatingMarkup(film) : ``}
+        ${isWatched ? createUserRatingMarkup(title, poster, personalRating) : ``}
 
         <div class="form-details__bottom-container">
-          <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-            <ul class="film-details__comments-list">${commentsList}</ul>
-
-            ${createNewComment}
-          </section>
+          <section class="film-details__comments-wrap"></section>
         </div>
       </form>
     </section>`
   );
-};
-
-const parseFormData = (formData) => {
-  return {
-    id: String(Math.random()),
-    author: `You`,
-    text: he.encode(formData.get(`comment`)),
-    date: new Date(),
-    emotion: formData.get(`comment-emoji`),
-  };
 };
 
 export default class FilmDetails extends AbstractSmartComponent {
@@ -234,87 +186,58 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
 
     this._film = film;
-
-    this._subscribeOnEvents();
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
-  recoveryListeners() {
-    this.setCloseButtonClickHandler(this._closeButtonClickHandler);
-    this.setCommentsDeleteClickHandler(this._commentsDeleteClickHandler);
-    this.setCommentSubmitHandler(this._commentSubmitHandler);
-    this._subscribeOnEvents();
-  }
-
-  getAddCommentFormData() {
-    const form = this.getElement().querySelector(`.film-details__inner`);
-    const formData = new FormData(form);
-
-    return parseFormData(formData);
-  }
-
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
-
-    this._closeButtonClickHandler = handler;
   }
 
   setWatchlistInputChangeHandler(handler) {
-    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#watchlist`)
+      .addEventListener(`change`, handler);
   }
 
   setWatchedInputChangeHandler(handler) {
-    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#watched`)
+      .addEventListener(`change`, handler);
   }
 
   setFavoriteInputChangeHandler(handler) {
-    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#favorite`)
+      .addEventListener(`change`, handler);
   }
 
-  setCommentsDeleteClickHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__comment-delete`)
-      .forEach((deleteButton) => {
-        deleteButton.addEventListener(`click`, (evt) => {
-          evt.preventDefault();
-          const commentId = evt.target.closest(`li`).id;
-          handler(commentId);
-        });
-      });
+  setUserRatingInputChangeHandler(handler) {
+    const userRatingScoreElement = this.getElement()
+      .querySelector(`.film-details__user-rating-score`);
 
-    this._commentsDeleteClickHandler = handler;
-  }
+    if (!userRatingScoreElement) {
+      return;
+    }
 
-  setCommentSubmitHandler(handler) {
-    this.getElement().querySelector(`.film-details__comment-input`)
-      .addEventListener(`keydown`, (evt) => {
-        const ctrlOrCommandKey = evt.ctrlKey || evt.metaKey;
-        const enterKey = evt.key === `Enter`;
-
-        if (ctrlOrCommandKey && enterKey) {
-          handler();
-        }
-      });
-
-    this._commentSubmitHandler = handler;
-  }
-
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`.film-details__emoji-list`)
-      .addEventListener(`click`, function (evt) {
+    this.getElement().querySelector(`.film-details__user-rating-score`)
+      .addEventListener(`change`, (evt) => {
         if (evt.target.tagName !== `INPUT`) {
           return;
         }
 
-        const emotionContainer = element.querySelector(`.film-details__add-emoji-label`);
-        const selectedEmotion = evt.target.value;
-
-        emotionContainer.innerHTML = `<img src="./images/emoji/${selectedEmotion}.png" width="55" height="55" alt="emoji">`;
+        const score = evt.target.value;
+        handler(score);
       });
+  }
+
+  setUndoButtonClickHandler(handler) {
+    const undoButtonElement = this.getElement().querySelector(`.film-details__watched-reset`);
+
+    if (!undoButtonElement) {
+      return;
+    }
+
+    undoButtonElement.addEventListener(`click`, handler);
   }
 }

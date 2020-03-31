@@ -1,5 +1,7 @@
-import {getFilmsByFilter} from '../utils/filter.js';
-import {FilterType} from '../const.js';
+import {getFilmsByFilter} from '../utils/filter';
+import {FilterType} from '../const';
+
+const MAX_EXTRA_FILM_COUNT = 2;
 
 export default class Movies {
   constructor() {
@@ -25,15 +27,17 @@ export default class Movies {
 
   get topRatedFilms() {
     return this._films
+      .slice()
       .sort((a, b) => b.totalRating - a.totalRating)
-      .slice(0, 2)
+      .slice(0, MAX_EXTRA_FILM_COUNT)
       .filter((film) => film.totalRating);
   }
 
   get mostCommentedFilms() {
     return this._films
+      .slice()
       .sort((a, b) => b.comments.length - a.comments.length)
-      .slice(0, 2)
+      .slice(0, MAX_EXTRA_FILM_COUNT)
       .filter((film) => film.comments.length);
   }
 

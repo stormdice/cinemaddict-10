@@ -1,8 +1,9 @@
-import AbstractSmartComponent from "./abstract-smart-component.js";
+import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
-import {getUserRank} from './profile.js';
+import {getUserRank} from './profile';
+import {SECONDS_IN_A_MINUTE} from '../utils/common';
 
 const FilterType = {
   ALL_TIME: `all-time`,
@@ -39,9 +40,19 @@ const checkTotalDurationCount = (films) => {
 
 const getFavoriteGenre = (filmGenres) => {
   const sortedGenres = Object.entries(filmGenres).sort((a, b) => b[1] - a[1]);
+
+  if (sortedGenres.length === 0) {
+    return `–`;
+  }
+
+  const favoriteGenre = sortedGenres[0][0];
+
+  if (sortedGenres.length >= 1) {
+    return favoriteGenre;
+  }
+
   const filmsCountFirstFavoriteGenre = sortedGenres[0][1];
   const filmsCountSecondFavoriteGenre = sortedGenres[1][1];
-  const favoriteGenre = sortedGenres[0][0];
 
   if (filmsCountFirstFavoriteGenre === filmsCountSecondFavoriteGenre) {
     return `–`;
@@ -128,8 +139,8 @@ const createStatisticsTemplate = (watchedFilms) => {
   const totalDurationCount = checkTotalDurationCount(watchedFilms);
 
   const DURATION = {
-    HOURS: Math.trunc(totalDurationCount / 60),
-    MINUTES: totalDurationCount % 60,
+    HOURS: Math.trunc(totalDurationCount / SECONDS_IN_A_MINUTE),
+    MINUTES: totalDurationCount % SECONDS_IN_A_MINUTE,
   };
 
   const favoriteGenre = getFavoriteGenre(getFilmsGenres(watchedFilms));

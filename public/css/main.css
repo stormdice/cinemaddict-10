@@ -16,6 +16,30 @@
   --font-size-bigger: 20px;
 }
 
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+.shake {
+  animation: shake 0.6s;
+}
 
 html {
   background: #121213 url('../images/background.png') no-repeat 60% 0;
@@ -288,6 +312,14 @@ button {
 .films {
   display: flex;
   flex-wrap: wrap;
+}
+
+.films__loading-text {
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: bold;
 }
 
 .films-list {
@@ -757,6 +789,9 @@ button {
 .film-details__new-comment.invalid .film-details__comment-error-message {
   display: block;
 }
+.film-details__new-comment.invalid .film-details__comment-input {
+  border-color: var(--text-color-poor);
+}
 .film-details__add-emoji-label {
   width: 79px;
   height: 68px;
@@ -851,8 +886,11 @@ button {
   text-decoration: underline;
   border: none;
 }
-.film-details__comment-delete:hover {
+.film-details__comment-delete:not(:disabled):hover {
   opacity: 0.7;
+}
+.film-details__comment-delete:disabled {
+  color: #979797;
 }
 .film-details__comment-input {
   width: 100%;
@@ -882,6 +920,7 @@ button {
   background-color: #ffffff;
   border: 1px solid var(--text-color-poor);
   border-radius: 5px;
+  user-select: none;
 }
 .film-details__comment-input::placeholder {
   color: #212126;
@@ -997,17 +1036,23 @@ button {
   font-size: 30px;
   font-weight: bold;
   cursor: pointer;
+  user-select: none;
 }
 
 .film-details__user-rating-label:not(:last-child) {
   margin-right: 12px;
 }
 
-.film-details__user-rating-label:hover {
+.film-details__user-rating-input:not(:disabled):hover + .film-details__user-rating-label {
   opacity: 0.7;
 }
 .film-details__user-rating-input:checked + .film-details__user-rating-label {
   background-color: #ffe800;
+}
+
+.film-details__user-rating-input:disabled + .film-details__user-rating-label {
+  background-color: rgba(216, 216, 216, 0.3);
+  cursor: auto;
 }
 
 .statistic {

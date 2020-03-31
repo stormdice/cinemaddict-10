@@ -1,6 +1,13 @@
-import AbstractComponent from './abstract-component.js';
-import {FilterType} from '../const.js';
-import {getFilterTitle} from '../utils/common.js';
+import AbstractComponent from './abstract-component';
+import {FilterType} from '../const';
+
+const getFilterTitle = (title) => {
+  if (title === `all`) {
+    return `All movies`;
+  }
+
+  return title[0].toUpperCase().concat(title.slice(1));
+};
 
 const createFilterMarkup = (filter) => {
   const {name, count, active} = filter;
@@ -33,13 +40,12 @@ const createMenuTemplate = (menuItem) => {
   );
 };
 
-export default class Filter extends AbstractComponent {
+export default class Menu extends AbstractComponent {
   constructor(filters) {
     super();
 
     this._filters = filters;
     this._currentFilterType = FilterType.ALL;
-    this._linkElements = this.getElement().querySelectorAll(`.main-navigation__item`);
   }
 
   getTemplate() {
@@ -74,9 +80,8 @@ export default class Filter extends AbstractComponent {
   }
 
   _setActiveClass(evt) {
-    this._linkElements.forEach((link) => {
-      link.classList.remove(`main-navigation__item--active`);
-    });
+    this.getElement().querySelector(`.main-navigation__item--active`)
+      .classList.remove(`main-navigation__item--active`);
 
     if (evt.target.tagName === `A`) {
       evt.target.classList.add(`main-navigation__item--active`);

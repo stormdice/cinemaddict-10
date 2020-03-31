@@ -1,9 +1,9 @@
-import MenuComponent from '../components/menu.js';
-import {FilterType} from '../const.js';
-import {render, replace, RenderPosition} from '../utils/render.js';
-import {getFilmsByFilter} from '../utils/filter.js';
+import MenuComponent from '../components/menu';
+import {FilterType} from '../const';
+import {render, replace, RenderPosition} from '../utils/render';
+import {getFilmsByFilter} from '../utils/filter';
 
-export default class FilterController {
+export default class MenuController {
   constructor(container, moviesModel) {
     this._container = container;
     this._moviesModel = moviesModel;

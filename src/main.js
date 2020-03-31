@@ -1,55 +1,62 @@
-import ProfileComponent from './components/profile.js';
-import FooterComponent from './components/footer.js';
-import FilterController from './controllers/filter-controller.js';
-import PageController from './controllers/page-controller.js';
-import FilmsSectionComponent from './components/film-section.js';
-import StatisticsComponent from './components/statistics.js';
-import MoviesModel from './models/movies.js';
-import {generateFilms} from './mock/film.js';
-import {RenderPosition, render} from './utils/render.js';
+import API from './api';
+import ProfileController from './controllers/profile-controller';
+import MenuController from './controllers/menu-controller';
+import PageController from './controllers/page-controller';
+import FilmsSectionComponent from './components/film-section';
+import StatisticsController from './controllers/statistics-controller';
+import MoviesModel from './models/movies';
+import {RenderPosition, render} from './utils/render';
 
-const FILMS_COUNT = 40;
-const films = generateFilms(FILMS_COUNT);
+const AUTHORIZATION = `Basic stormdicedsafgkljh`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
+
+const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
-moviesModel.films = films;
+const filmsSectionLoadingMarkup = `<p class="films__loading-text">Loading...</p>`;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
+const footerFilmsCount = document.querySelector(`.footer__statistics p`);
 
-render(siteHeaderElement, new ProfileComponent(moviesModel.watchedFilms.length), RenderPosition.BEFOREEND);
+const profileController = new ProfileController(siteHeaderElement, moviesModel);
+profileController.render();
 
-const filterController = new FilterController(siteMainElement, moviesModel);
-filterController.render();
+const menuController = new MenuController(siteMainElement, moviesModel);
+menuController.render();
 
 const filmsSectionComponent = new FilmsSectionComponent();
-let statisticsComponent = null;
+filmsSectionComponent.getElement().innerHTML = filmsSectionLoadingMarkup;
+
+const statisticsController = new StatisticsController(siteMainElement, moviesModel);
+
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsSectionComponent, moviesModel);
-pageController.render();
 
-const footerComponent = new FooterComponent(moviesModel.allFilms.length);
-render(siteMainElement, footerComponent, RenderPosition.BEFOREEND);
-
-filterController.setScreenChange((filterName) => {
+menuController.setScreenChange((filterName) => {
   if (filterName === `stats`) {
     pageController.hide();
 
-    if (statisticsComponent === null) {
-      statisticsComponent = new StatisticsComponent(moviesModel.watchedFilms);
-      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+    if (statisticsController._statisticsComponent === null) {
+      statisticsController.render();
     } else {
-      statisticsComponent.show();
+      statisticsController.show();
     }
 
   } else {
     pageController.show();
-    filterController.onFilterChange(filterName);
-
-    if (statisticsComponent === null) {
-      return;
-    } else {
-      statisticsComponent.hide();
-    }
+    menuController.onFilterChange(filterName);
+    statisticsController.hide();
   }
 });
+
+api.getMovies()
+  .then((movies) => {
+    filmsSectionComponent.getElement().innerHTML = ``;
+    moviesModel.films = movies;
+    profileController.render();
+    menuController.render();
+    pageController.render();
+
+    footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
+  });
