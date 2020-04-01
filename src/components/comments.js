@@ -58,7 +58,9 @@ export default class Comments extends AbstractSmartComponent {
     });
   }
 
-  recoveryListeners() {}
+  recoveryListeners() {
+    this.setCommentsDeleteClickHandler(this._setCommentsDelete);
+  }
 
   setCommentsDeleteClickHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
@@ -72,6 +74,8 @@ export default class Comments extends AbstractSmartComponent {
 
       handler(commentId);
     });
+
+    this._setCommentsDelete = handler;
   }
 
   setDeleteButtonText(commentId, text) {

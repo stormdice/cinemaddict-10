@@ -30,7 +30,7 @@ export default class CommentController {
     this._setCommentDelete = this._setCommentDelete.bind(this);
   }
 
-  set shake(handler) {
+  shake(handler) {
     this._shake = handler;
   }
 
@@ -134,7 +134,10 @@ export default class CommentController {
       })
       .catch(() => {
         this._commentsComponent.setDeleteButtonText(commentId, DEFAULT_DELETE_BUTTON_TEXT);
-        this._blockDeleteButton(commentId, false);
+        if (this._shake !== null) {
+          this._shake();
+          this._blockDeleteButton(commentId, false);
+        }
       });
   }
 

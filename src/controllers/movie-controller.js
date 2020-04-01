@@ -26,7 +26,7 @@ export default class MovieController {
     this._commentsController = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
-    this._shake = this._shake.bind(this);
+    this.shake = this.shake.bind(this);
     this._onCommentsCountChange = this._onCommentsCountChange.bind(this);
   }
 
@@ -42,7 +42,7 @@ export default class MovieController {
 
     this._commentsController = new CommentsController(this._commentsContainer, film);
 
-    this._commentsController.shake = this._shake;
+    this._commentsController.shake(this.shake);
     this._commentsController.onCommentsCountChangeHandler(this._onCommentsCountChange);
 
     this._filmComponent.setOpenDetailsClickHandler((evt) => {
@@ -166,8 +166,8 @@ export default class MovieController {
     checkedInput.checked = false;
     film.personalRating = 0;
   }
-  // TODO разобраться с этим методом приватный или нет
-  _shake() {
+
+  shake() {
     this._filmDetailsComponent.getElement()
       .style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
