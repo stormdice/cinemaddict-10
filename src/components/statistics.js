@@ -1,17 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from 'moment';
 import {getUserRank} from './profile';
 import {SECONDS_IN_A_MINUTE} from '../utils/common';
-
-const FilterType = {
-  ALL_TIME: `all-time`,
-  TODAY: `today`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`
-};
 
 const getFilmsGenres = (films) => {
   return films
@@ -191,54 +182,32 @@ const createStatisticsTemplate = ({films}) => {
   );
 };
 
-const getTodayWatchedFilms = (films) => {
-  return films
-    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`day`), moment().endOf(`day`)));
-};
-
-const getWeekWatchedFilms = (films) => {
-  return films
-    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`isoWeek`), moment().endOf(`isoWeek`)));
-};
-
-const getMonthWatchedFilms = (films) => {
-  return films
-    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`month`), moment().endOf(`month`)));
-};
-
-const getYearWatchedFilms = (films) => {
-  return films
-    .filter((film) => moment(film.watchingDate).isBetween(moment().startOf(`year`), moment().endOf(`year`)));
-};
-
 export default class Statistics extends AbstractSmartComponent {
-  constructor({films}) {
+  constructor(moviesModel) {
     super();
 
-    this._films = films;
-    this._currentFilterType = FilterType.ALL_TIME;
-
+    this._moviesModel = moviesModel;
     this._genresChart = null;
-    this._onFilterChange = this._onFilterChange.bind(this);
-    this._setFilterChangeHandler(this._onFilterChange);
+
+    this._setStatisticsPeriodChange = this._setStatisticsPeriodChange.bind(this);
   }
 
   getTemplate() {
-    return createStatisticsTemplate({films: this._films.watchedFilms});
+    return createStatisticsTemplate({films: this._moviesModel.watchedFilms});
   }
 
   show() {
     super.show();
 
-    this.rerender(this._films);
+    this.rerender(this._moviesModel);
   }
 
   recoveryListeners() {
-    this._setFilterChangeHandler(this._onFilterChange);
+    this._setStatisticsPeriodChangeHandler(this._setStatisticsPeriodChange);
   }
 
   rerender(films) {
-    this._films = films;
+    this._moviesModel = films;
 
     super.rerender();
     this._renderCharts();
@@ -249,8 +218,7 @@ export default class Statistics extends AbstractSmartComponent {
     const ctx = element.querySelector(`.statistic__chart`);
 
     this._resetChart();
-
-    this._genresChart = renderChart(ctx, this._films.watchedFilms);
+    this._genresChart = renderChart(ctx, this._moviesModel.statisticsFilms);
   }
 
   _resetChart() {
@@ -260,7 +228,7 @@ export default class Statistics extends AbstractSmartComponent {
     }
   }
 
-  _setFilterChangeHandler(handler) {
+  _setStatisticsPeriodChangeHandler(handler) {
     this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, (evt) => {
       if (evt.target.tagName !== `INPUT`) {
         return;
@@ -274,23 +242,9 @@ export default class Statistics extends AbstractSmartComponent {
     });
   }
 
-  _onFilterChange(filter) {
-    switch (filter) {
-      case FilterType.ALL_TIME:
-        this._renderCharts(this._films);
-        break;
-      case FilterType.TODAY:
-        this._renderCharts(getTodayWatchedFilms(this._films));
-        break;
-      case FilterType.WEEK:
-        this._renderCharts(getWeekWatchedFilms(this._films));
-        break;
-      case FilterType.MONTH:
-        this._renderCharts(getMonthWatchedFilms(this._films));
-        break;
-      case FilterType.YEAR:
-        this._renderCharts(getYearWatchedFilms(this._films));
-        break;
-    }
+  _setStatisticsPeriodChange(filter) {
+    this._moviesModel.statisticsFilms = filter;
+
+    this._renderCharts();
   }
 }

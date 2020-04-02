@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import API from './api';
 import ProfileController from './controllers/profile-controller';
 import MenuController from './controllers/menu-controller';
@@ -7,7 +8,7 @@ import StatisticsComponent from './components/statistics';
 import MoviesModel from './models/movies';
 import {RenderPosition, render} from './utils/render';
 
-const AUTHORIZATION = `Basic stormdicedsafgkljh`;
+const AUTHORIZATION = `Basic stormdice${nanoid()}`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
@@ -21,7 +22,7 @@ const footerFilmsCount = document.querySelector(`.footer__statistics p`);
 const profileController = new ProfileController(siteHeaderElement, moviesModel);
 const menuController = new MenuController(siteMainElement, moviesModel);
 const filmsSectionComponent = new FilmsSectionComponent();
-const statisticsComponent = new StatisticsComponent({films: moviesModel});
+const statisticsComponent = new StatisticsComponent(moviesModel);
 
 menuController.render();
 profileController.render();

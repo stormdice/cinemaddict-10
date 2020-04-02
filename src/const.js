@@ -27,4 +27,12 @@ const FilterType = {
   FAVORITES: `favorites`,
 };
 
-export {userRanks, EMOTIONS, SortType, FilterType};
+const StatisticsType = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
+export {userRanks, EMOTIONS, SortType, FilterType, StatisticsType};

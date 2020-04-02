@@ -1,5 +1,7 @@
 import {getFilmsByFilter} from '../utils/filter';
+import {getFilmsByStatistics} from '../utils/statistics';
 import {FilterType} from '../const';
+import {StatisticsType} from '../const';
 
 const MAX_EXTRA_FILM_COUNT = 2;
 
@@ -7,6 +9,7 @@ export default class Movies {
   constructor() {
     this._films = [];
     this._activeFilterType = FilterType.ALL;
+    this._statisticsType = StatisticsType.ALL;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
@@ -23,6 +26,10 @@ export default class Movies {
   get watchedFilms() {
     return this._films
       .filter((film) => film.isWatched);
+  }
+
+  get statisticsFilms() {
+    return getFilmsByStatistics(this.watchedFilms, this._statisticsType);
   }
 
   get topRatedFilms() {
@@ -49,6 +56,10 @@ export default class Movies {
   set filter(filterType) {
     this._activeFilterType = filterType;
     this._callHandlers(this._filterChangeHandlers);
+  }
+
+  set statisticsFilms(statisticsType) {
+    this._statisticsType = statisticsType;
   }
 
   updateFilm(id, film) {
