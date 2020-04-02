@@ -43,6 +43,7 @@ export default class Movies {
 
   set films(films) {
     this._films = Array.from(films);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   set filter(filterType) {

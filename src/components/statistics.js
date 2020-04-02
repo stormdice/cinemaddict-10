@@ -133,17 +133,17 @@ const createUserRankTemplate = (count) => {
   );
 };
 
-const createStatisticsTemplate = (watchedFilms) => {
-  const watchedFilmsCount = watchedFilms.length;
+const createStatisticsTemplate = ({films}) => {
+  const watchedFilmsCount = films.length;
 
-  const totalDurationCount = checkTotalDurationCount(watchedFilms);
+  const totalDurationCount = checkTotalDurationCount(films);
 
   const DURATION = {
     HOURS: Math.trunc(totalDurationCount / SECONDS_IN_A_MINUTE),
     MINUTES: totalDurationCount % SECONDS_IN_A_MINUTE,
   };
 
-  const favoriteGenre = getFavoriteGenre(getFilmsGenres(watchedFilms));
+  const favoriteGenre = getFavoriteGenre(getFilmsGenres(films));
 
   return (
     `<section class="statistic">
@@ -212,26 +212,19 @@ const getYearWatchedFilms = (films) => {
 };
 
 export default class Statistics extends AbstractSmartComponent {
-  constructor(films) {
+  constructor({films}) {
     super();
 
     this._films = films;
     this._currentFilterType = FilterType.ALL_TIME;
 
     this._genresChart = null;
-    this._todayWatchedFilms = getTodayWatchedFilms(this._films);
-    this._weekWatchedFIlms = getWeekWatchedFilms(this._films);
-    this._monthWatchedFIlms = getMonthWatchedFilms(this._films);
-    this._yearWatchedFIlms = getYearWatchedFilms(this._films);
-
     this._onFilterChange = this._onFilterChange.bind(this);
-
-    this._onFilterChange(this._currentFilterType);
     this._setFilterChangeHandler(this._onFilterChange);
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films);
+    return createStatisticsTemplate({films: this._films.watchedFilms});
   }
 
   show() {
@@ -248,17 +241,16 @@ export default class Statistics extends AbstractSmartComponent {
     this._films = films;
 
     super.rerender();
-
-    this._renderCharts(this._films);
+    this._renderCharts();
   }
 
-  _renderCharts(films) {
+  _renderCharts() {
     const element = this.getElement();
     const ctx = element.querySelector(`.statistic__chart`);
 
     this._resetChart();
 
-    this._genresChart = renderChart(ctx, films);
+    this._genresChart = renderChart(ctx, this._films.watchedFilms);
   }
 
   _resetChart() {
@@ -288,16 +280,16 @@ export default class Statistics extends AbstractSmartComponent {
         this._renderCharts(this._films);
         break;
       case FilterType.TODAY:
-        this._renderCharts(this._todayWatchedFilms);
+        this._renderCharts(getTodayWatchedFilms(this._films));
         break;
       case FilterType.WEEK:
-        this._renderCharts(this._weekWatchedFIlms);
+        this._renderCharts(getWeekWatchedFilms(this._films));
         break;
       case FilterType.MONTH:
-        this._renderCharts(this._monthWatchedFIlms);
+        this._renderCharts(getMonthWatchedFilms(this._films));
         break;
       case FilterType.YEAR:
-        this._renderCharts(this._yearWatchedFIlms);
+        this._renderCharts(getYearWatchedFilms(this._films));
         break;
     }
   }
