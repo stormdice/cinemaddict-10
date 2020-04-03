@@ -40,7 +40,24 @@ self.addEventListener(`install`, (evt) => {
 });
 
 self.addEventListener(`activate`, (evt) => {
-  console.log(`sw activated`);
+  evt.waitUntil(
+      caches.keys()
+        .then(
+            (keys) => Promise.all(
+                keys.map(
+                    (key) => {
+                      if (key.indexOf(CACHE_PREFIX) === 0 && key !== CACHE_NAME) {
+                        return caches.delete(key);
+                      }
+
+                      return null;
+                    }
+                ).filter(
+                    (key) => key !== null
+                )
+            )
+        )
+  );
 });
 
 const fetchHandler = (evt) => {
@@ -49,19 +66,20 @@ const fetchHandler = (evt) => {
   evt.respondWith(
       caches.match(request)
         .then((cacheResponse) => {
-          // Если в кэше нашёлся ответ на запрос (request),
-          // возвращаем его (cacheResponse) вместо запроса к серверу
-
           if (cacheResponse) {
             return cacheResponse;
           }
 
-          // Если в кэше не нашёлся ответ,
-          // повторно вызываем fetch
-          // с тем же запросом (request),
-          // и возвращаем его
           return fetch(request).then(
               (response) => {
+                if (!response || response.status !== 200 || response.type !== `basic`) {
+                  return response;
+                }
+
+                const clonedResponse = response.clone();
+
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, clonedResponse));
+
                 return response;
               }
           );
