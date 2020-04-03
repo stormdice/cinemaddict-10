@@ -1,5 +1,7 @@
 import {nanoid} from 'nanoid';
 import Api from './api/index';
+import Store from './api/store';
+import Provider from './api/provider';
 import ProfileController from './controllers/profile-controller';
 import MenuController from './controllers/menu-controller';
 import PageController from './controllers/page-controller';
@@ -8,6 +10,9 @@ import StatisticsComponent from './components/statistics';
 import MoviesModel from './models/movies';
 import {RenderPosition, render} from './utils/render';
 
+const STORE_PREFIX = `cinemaaddict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic stormdice${nanoid()}`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
@@ -21,6 +26,8 @@ window.addEventListener(`load`, () => {
 });
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const moviesModel = new MoviesModel();
 
 const filmsSectionLoadingMarkup = `<p class="films__loading-text">Loading...</p>`;
