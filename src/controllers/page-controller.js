@@ -1,4 +1,4 @@
-import API from '../api';
+import Api from '../api/index';
 import MovieController from './movie-controller';
 import SortComponent from '../components/sort';
 import FilmsListComponent from '../components/film-list';
@@ -24,7 +24,7 @@ export default class PageController {
     this._container = container;
     this._moviesModel = moviesModel;
 
-    this._api = new API();
+    this._api = new Api();
     this._showedFilmControllers = [];
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     this._sortComponent = new SortComponent();

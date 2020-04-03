@@ -1,5 +1,5 @@
 import {nanoid} from 'nanoid';
-import API from './api';
+import Api from './api/index';
 import ProfileController from './controllers/profile-controller';
 import MenuController from './controllers/menu-controller';
 import PageController from './controllers/page-controller';
@@ -20,7 +20,7 @@ window.addEventListener(`load`, () => {
     });
 });
 
-const api = new API(END_POINT, AUTHORIZATION);
+const api = new Api(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
 
 const filmsSectionLoadingMarkup = `<p class="films__loading-text">Loading...</p>`;

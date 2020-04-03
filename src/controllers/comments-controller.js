@@ -1,4 +1,4 @@
-import API from '../api';
+import Api from '../api/index';
 import CommentsComponent, {DEFAULT_DELETE_BUTTON_TEXT} from '../components/comments';
 import CommentFormComponent from '../components/comment-form';
 import CommentModel from '../models/comment';
@@ -18,7 +18,7 @@ export default class CommentController {
     this._container = container;
     this._film = film;
 
-    this._api = new API();
+    this._api = new Api();
     this._shake = null;
     this._updateFilmCardHandler = null;
     this._commentsComponent = null;

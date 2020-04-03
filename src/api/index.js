@@ -1,5 +1,5 @@
-import Movie from './models/movie';
-import Comment from './models/comment';
+import Movie from '../models/movie';
+import Comment from '../models/comment';
 
 const SUCCESS_STATUS = {
   MIN: 200,
@@ -21,16 +21,16 @@ const checkStatus = (response) => {
   }
 };
 
-export default class API {
+export default class Api {
   constructor(endPoint, authorization) {
-    if (API.instance instanceof API) {
-      return API.instance;
+    if (Api.instance instanceof Api) {
+      return Api.instance;
     }
 
     this._endpoint = endPoint;
     this._authorization = authorization;
 
-    API.instance = this;
+    Api.instance = this;
   }
 
   getMovies() {
