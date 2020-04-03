@@ -23,14 +23,8 @@ const checkStatus = (response) => {
 
 export default class Api {
   constructor(endPoint, authorization) {
-    if (Api.instance instanceof Api) {
-      return Api.instance;
-    }
-
     this._endpoint = endPoint;
     this._authorization = authorization;
-
-    Api.instance = this;
   }
 
   getMovies() {

@@ -47,7 +47,7 @@ render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 statisticsComponent.hide();
 
-const pageController = new PageController(filmsSectionComponent, moviesModel);
+const pageController = new PageController(filmsSectionComponent, moviesModel, apiWithProvider);
 
 menuController.setScreenChange((filterName) => {
   if (filterName === `stats`) {
@@ -60,7 +60,7 @@ menuController.setScreenChange((filterName) => {
   }
 });
 
-api.getMovies()
+apiWithProvider.getMovies()
   .then((movies) => {
     filmsSectionComponent.getElement().innerHTML = ``;
     moviesModel.films = movies;

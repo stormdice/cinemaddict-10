@@ -12,11 +12,12 @@ const Mode = {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onCommentsDataChange, onViewChange) {
+  constructor(container, onDataChange, onCommentsDataChange, onViewChange, api) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onCommentsDataChange = onCommentsDataChange;
     this._onViewChange = onViewChange;
+    this._api = api;
 
     this._mode = Mode.DEFAULT;
 
@@ -40,7 +41,7 @@ export default class MovieController {
     this._commentsContainer = this._filmDetailsComponent.getElement()
       .querySelector(`.film-details__comments-wrap`);
 
-    this._commentsController = new CommentsController(this._commentsContainer, film);
+    this._commentsController = new CommentsController(this._commentsContainer, film, this._api);
 
     this._commentsController.shake(this.shake);
     this._commentsController.onCommentsCountChangeHandler(this._onCommentsCountChange);

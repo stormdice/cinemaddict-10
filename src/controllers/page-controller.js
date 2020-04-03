@@ -1,4 +1,3 @@
-import Api from '../api/index';
 import MovieController from './movie-controller';
 import SortComponent from '../components/sort';
 import FilmsListComponent from '../components/film-list';
@@ -10,9 +9,9 @@ import {RenderPosition, render, remove} from '../utils/render';
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
-const renderFilms = (filmListElement, films, onDataChange, onCommentsDataChange, onViewChange) => {
+const renderFilms = (filmListElement, films, onDataChange, onCommentsDataChange, onViewChange, api) => {
   return films.map((film) => {
-    const movieController = new MovieController(filmListElement, onDataChange, onCommentsDataChange, onViewChange);
+    const movieController = new MovieController(filmListElement, onDataChange, onCommentsDataChange, onViewChange, api);
     movieController.render(film);
 
     return movieController;
@@ -20,11 +19,11 @@ const renderFilms = (filmListElement, films, onDataChange, onCommentsDataChange,
 };
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api) {
     this._container = container;
     this._moviesModel = moviesModel;
+    this._api = api;
 
-    this._api = new Api();
     this._showedFilmControllers = [];
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     this._sortComponent = new SortComponent();
@@ -78,7 +77,7 @@ export default class PageController {
   _renderFilms(films) {
     const filmListElement = this._filmListComponent.getElement();
 
-    const newFilms = renderFilms(filmListElement, films, this._onDataChange, this._onCommentsDataChange, this._onViewChange);
+    const newFilms = renderFilms(filmListElement, films, this._onDataChange, this._onCommentsDataChange, this._onViewChange, this._api);
 
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     this._showingFilmsCount = this._showedFilmControllers.length;
