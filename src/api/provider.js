@@ -23,4 +23,8 @@ export default class Provider {
   deleteComment(id) {
     return this._api.deleteComment(id);
   }
+
+  _isOnLine() {
+    return window.navigator.onLine;
+  }
 }
