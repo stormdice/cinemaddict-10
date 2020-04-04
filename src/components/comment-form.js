@@ -83,9 +83,4 @@ export default class CommentForm extends AbstractSmartComponent {
       input.disabled = toBlock ? true : false;
     });
   }
-
-  resetForm() {
-    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    this.getElement().querySelector(`.film-details__comment-input`).value = ``;
-  }
 }

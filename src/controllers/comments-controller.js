@@ -81,7 +81,7 @@ export default class CommentController {
 
       this._api.createComment(this._film.id, newComment)
         .then(() => {
-          this._commentFormComponent.resetForm();
+          this.resetForm();
 
           if (this._updateFilmCardHandler !== null) {
             this._updateFilmCardHandler(this._film);
@@ -102,6 +102,18 @@ export default class CommentController {
     } else {
       render(container, this._commentFormComponent, RenderPosition.BEFOREEND);
     }
+  }
+
+  loadComments(movieId) {
+    this._api.getComments(movieId)
+      .then((comments) => {
+        this.render(comments);
+      });
+  }
+
+  resetForm() {
+    this._commentFormComponent.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    this._commentFormComponent.getElement().querySelector(`.film-details__comment-input`).value = ``;
   }
 
   _onDataChange() {
@@ -137,13 +149,6 @@ export default class CommentController {
           this._shake();
           this._blockDeleteButton(commentId, false);
         }
-      });
-  }
-
-  loadComments(movieId) {
-    this._api.getComments(movieId)
-      .then((comments) => {
-        this.render(comments);
       });
   }
 
