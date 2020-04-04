@@ -1,5 +1,7 @@
 const EMOTIONS = [`smile`, `sleeping`, `puke`, `angry`];
 
+const DEBOUNCE_TIMEOUT = 150;
+
 const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
@@ -35,4 +37,4 @@ const StatisticsType = {
   YEAR: `year`
 };
 
-export {userRanks, EMOTIONS, SortType, FilterType, StatisticsType};
+export {EMOTIONS, DEBOUNCE_TIMEOUT, SortType, userRanks, FilterType, StatisticsType};

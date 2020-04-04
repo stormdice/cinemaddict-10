@@ -1,3 +1,5 @@
+import debounce from 'lodash/debounce';
+import {DEBOUNCE_TIMEOUT} from '../const';
 import AbstractSmartComponent from './abstract-smart-component';
 import {formatRuntime, filmDetailsFormatReleaseDate} from '../utils/common';
 
@@ -199,17 +201,17 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   setWatchlistInputChangeHandler(handler) {
     this.getElement().querySelector(`#watchlist`)
-      .addEventListener(`change`, handler);
+      .addEventListener(`change`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   setWatchedInputChangeHandler(handler) {
     this.getElement().querySelector(`#watched`)
-      .addEventListener(`change`, handler);
+      .addEventListener(`change`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   setFavoriteInputChangeHandler(handler) {
     this.getElement().querySelector(`#favorite`)
-      .addEventListener(`change`, handler);
+      .addEventListener(`change`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   setUserRatingInputChangeHandler(handler) {

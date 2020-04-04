@@ -1,9 +1,9 @@
 import debounce from 'lodash/debounce';
+import {DEBOUNCE_TIMEOUT} from '../const';
 import AbstractComponent from './abstract-component';
 import {formatRuntime, filmCardFormatReleaseDate} from '../utils/common';
 
 const MAX_DESCRIPTION_LENGTH = 140;
-const DEBOUNCE_TIMEOUT = 400;
 
 const checkDescriptionLength = (description) => {
   const length = description.length;
