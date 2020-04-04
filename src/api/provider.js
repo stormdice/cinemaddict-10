@@ -4,6 +4,7 @@ export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
+    this._isSynchronized = true;
   }
 
   getMovies() {
@@ -19,6 +20,8 @@ export default class Provider {
 
     const storeMovies = Object.values(this._store.getAll());
 
+    this._isSynchronized = false;
+
     return Promise.resolve(Movie.parseMovies(storeMovies));
   }
 
@@ -33,6 +36,8 @@ export default class Provider {
     }
 
     const fakeUpdatedMovie = Movie.parseMovie(Object.assign({}, movie.toRAW(), {id}));
+
+    this._isSynchronized = false;
 
     this._store.setItem(id, Object.assign({}, fakeUpdatedMovie.toRAW(), {offline: true}));
 
