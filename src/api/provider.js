@@ -1,5 +1,9 @@
 import Movie from '../models/movie';
 
+const getSyncedMovies = (items) => items
+  .filter(({success}) => success)
+  .map(({payload}) => payload.movie);
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
@@ -58,6 +62,28 @@ export default class Provider {
 
   getSynchronize() {
     return this._isSynchronized;
+  }
+
+  sync() {
+    const storeMovies = Object.values(this._store.getAll());
+
+    return this._api.sync(storeMovies)
+      .then((response) => {
+        storeMovies.filter((movie) => movie.offline)
+          .forEach((movie) => {
+            this._store.removeItem(movie.id);
+          });
+
+        const updatedMovies = getSyncedMovies(response.updated);
+
+        [...updatedMovies].forEach((movie) => {
+          this._store.setItem(movie.id, movie);
+        });
+
+        this._isSynchronized = true;
+
+        return Promise.resolve();
+      });
   }
 
   _isOnLine() {
