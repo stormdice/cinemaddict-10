@@ -6,7 +6,7 @@ export default class Store {
 
   getAll() {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey))
+      return JSON.parse(this._storage.getItem(this._storeKey));
     } catch (err) {
       return {};
     }

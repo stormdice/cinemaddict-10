@@ -8,18 +8,35 @@ export default class Provider {
 
   getMovies() {
     if (this._isOnLine()) {
-      return this._api.getMovies();
+      return this._api.getMovies().then(
+          (movies) => {
+            movies.forEach((movie) => this._store.setItem(movie.id, movie.toRAW()));
+
+            return movies;
+          }
+      );
     }
 
-    return Promise.resolve(Movie.parseMovies([]));
+    const storeMovies = Object.values(this._store.getAll());
+
+    return Promise.resolve(Movie.parseMovies(storeMovies));
   }
 
   updateMovie(id, movie) {
     if (this._isOnLine()) {
-      return this._api.updateMovie(id, movie);
+      return this._api.updateMovie(id, movie).then(
+          (newMovie) => {
+            this._store.setItem(newMovie.id, newMovie.toRAW());
+            return newMovie;
+          }
+      );
     }
 
-    return Promise.resolve(movie);
+    const fakeUpdatedMovie = Movie.parseMovie(Object.assign({}, movie.toRAW(), {id}));
+
+    this._store.setItem(id, Object.assign({}, fakeUpdatedMovie.toRAW(), {offline: true}));
+
+    return Promise.resolve(fakeUpdatedMovie);
   }
 
   getComments(movieId) {
