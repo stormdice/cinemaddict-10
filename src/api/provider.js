@@ -65,25 +65,29 @@ export default class Provider {
   }
 
   sync() {
-    const storeMovies = Object.values(this._store.getAll());
+    if (this._isOnLine()) {
+      const storeMovies = Object.values(this._store.getAll());
 
-    return this._api.sync(storeMovies)
-      .then((response) => {
-        storeMovies.filter((movie) => movie.offline)
-          .forEach((movie) => {
-            this._store.removeItem(movie.id);
+      return this._api.sync(storeMovies)
+        .then((response) => {
+          storeMovies.filter((movie) => movie.offline)
+            .forEach((movie) => {
+              this._store.removeItem(movie.id);
+            });
+
+          const updatedMovies = getSyncedMovies(response.updated);
+
+          [...updatedMovies].forEach((movie) => {
+            this._store.setItem(movie.id, movie);
           });
 
-        const updatedMovies = getSyncedMovies(response.updated);
+          this._isSynchronized = true;
 
-        [...updatedMovies].forEach((movie) => {
-          this._store.setItem(movie.id, movie);
+          return Promise.resolve();
         });
+    }
 
-        this._isSynchronized = true;
-
-        return Promise.resolve();
-      });
+    return Promise.reject(new Error(`Sync movies failed`));
   }
 
   _isOnLine() {
