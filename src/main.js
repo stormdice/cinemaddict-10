@@ -1,4 +1,3 @@
-import {nanoid} from 'nanoid';
 import Api from './api/index';
 import Store from './api/store';
 import Provider from './api/provider';
@@ -13,7 +12,7 @@ import {RenderPosition, render} from './utils/render';
 const STORE_PREFIX = `cinemaaddict-localstorage`;
 const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
-const AUTHORIZATION = `Basic stormdice${nanoid()}`;
+const AUTHORIZATION = `Basic stormdiceABC`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 window.addEventListener(`load`, () => {
