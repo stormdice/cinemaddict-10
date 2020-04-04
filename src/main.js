@@ -16,12 +16,7 @@ const AUTHORIZATION = `Basic stormdiceABC`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      document.title += ` [SW]`;
-    }).catch(() => {
-      document.title += ` [no SW]`;
-    });
+  navigator.serviceWorker.register(`/sw.js`);
 });
 
 const api = new Api(END_POINT, AUTHORIZATION);
@@ -67,3 +62,11 @@ apiWithProvider.getMovies()
 
     footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
   });
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
