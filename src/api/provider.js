@@ -56,6 +56,10 @@ export default class Provider {
     return this._api.deleteComment(id);
   }
 
+  getSynchronize() {
+    return this._isSynchronized;
+  }
+
   _isOnLine() {
     return window.navigator.onLine;
   }
