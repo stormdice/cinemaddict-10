@@ -76,11 +76,11 @@ export default class CommentForm extends AbstractSmartComponent {
       });
   }
 
-  blockInput(toBlock) {
+  blockInput(shouldBlock) {
     const inputs = this.getElement().querySelectorAll(`input, textarea`);
 
     inputs.forEach((input) => {
-      input.disabled = toBlock ? true : false;
+      input.disabled = shouldBlock ? true : false;
     });
   }
 }

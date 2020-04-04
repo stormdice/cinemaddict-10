@@ -17,7 +17,7 @@ const createFilterMarkup = (filter) => {
       return ``;
     }
 
-    return count > 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``;
+    return `<span class="main-navigation__item-count">${count}</span>`;
   };
 
   const title = getFilterTitle(name);

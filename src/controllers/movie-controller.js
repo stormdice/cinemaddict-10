@@ -112,7 +112,7 @@ export default class MovieController {
     }
   }
 
-  blockUserRating(toBlock) {
+  blockUserRating(shouldBlock) {
     const userRatingElement = this._filmDetailsComponent.getElement()
       .querySelector(`.film-details__user-rating-wrap`);
 
@@ -123,7 +123,7 @@ export default class MovieController {
     const inputs = userRatingElement.querySelectorAll(`input, button`);
 
     inputs.forEach((input) => {
-      input.disabled = toBlock ? true : false;
+      input.disabled = shouldBlock ? true : false;
     });
   }
 

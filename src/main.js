@@ -15,16 +15,15 @@ const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic stormdiceABC`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`);
-});
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`);
+// });
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 const moviesModel = new MoviesModel();
 
-const filmsSectionLoadingMarkup = `<p class="films__loading-text">Loading...</p>`;
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const footerFilmsCount = document.querySelector(`.footer__statistics p`);
@@ -36,7 +35,6 @@ const statisticsComponent = new StatisticsComponent(moviesModel);
 
 menuController.render();
 profileController.render();
-filmsSectionComponent.getElement().innerHTML = filmsSectionLoadingMarkup;
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 statisticsComponent.hide();
@@ -56,8 +54,8 @@ menuController.setScreenChange((filterName) => {
 
 apiWithProvider.getMovies()
   .then((movies) => {
-    filmsSectionComponent.getElement().innerHTML = ``;
-    moviesModel.films = movies;
+    // moviesModel.films = movies;
+    moviesModel.films = [];
     pageController.render();
 
     footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
@@ -67,10 +65,10 @@ window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
 });
 
-window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
-});
-
 if (!apiWithProvider.getSynchronize()) {
   apiWithProvider.sync();
 }
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
