@@ -6,6 +6,7 @@ import {RenderPosition, render, replace} from '../utils/render';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 const FILM_DETAIL_OPEN_ANIMATION = `animation: bounceInRight 0.3s;`;
+
 const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
