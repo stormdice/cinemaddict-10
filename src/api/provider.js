@@ -1,3 +1,5 @@
+import Movie from '../models/movie';
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
@@ -5,11 +7,19 @@ export default class Provider {
   }
 
   getMovies() {
-    return this._api.getMovies();
+    if (this._isOnLine()) {
+      return this._api.getMovies();
+    }
+
+    return Promise.resolve(Movie.parseMovies([]));
   }
 
   updateMovie(id, movie) {
-    return this._api.updateMovie(id, movie);
+    if (this._isOnLine()) {
+      return this._api.updateMovie(id, movie);
+    }
+
+    return Promise.resolve(movie);
   }
 
   getComments(movieId) {

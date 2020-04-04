@@ -4,11 +4,22 @@ export default class Store {
     this._storeKey = key;
   }
 
-  getAll() {}
+  getAll() {
+    try {
+      return JSON.parse(this._storage.getItem(this._storeKey))
+    } catch (err) {
+      return {};
+    }
+  }
 
-  dropAll() {}
+  setItem(key, value) {
+    const store = this.getAll();
 
-  setItem(key, value) {}
-
-  removeItem(key) {}
+    this._storage.setItem(
+        this._storeKey,
+        JSON.stringify(
+            Object.assign({}, store, {[key]: value})
+        )
+    );
+  }
 }
