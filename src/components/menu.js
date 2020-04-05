@@ -45,7 +45,7 @@ export default class Menu extends AbstractComponent {
     super();
 
     this._filters = filters;
-    this._currentFilterType = FilterType.ALL;
+    this._currentFilterType = null;
   }
 
   getTemplate() {

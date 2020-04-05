@@ -13,12 +13,12 @@ import {RenderPosition, render} from './utils/render';
 const STORE_PREFIX = `cinemaaddict-localstorage`;
 const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
-const AUTHORIZATION = `Basic stormdiceABC`;
+const AUTHORIZATION = `Basic sadasdlkjdlfkjasdlkkljhslgkjalksdjfl;ksdjf`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`/sw.js`);
-// });
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
