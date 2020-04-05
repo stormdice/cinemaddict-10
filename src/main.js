@@ -5,6 +5,7 @@ import ProfileController from './controllers/profile-controller';
 import MenuController from './controllers/menu-controller';
 import PageController from './controllers/page-controller';
 import FilmsSectionComponent from './components/film-section';
+import FilmsListLoadingComponent from './components/films-loading';
 import StatisticsComponent from './components/statistics';
 import MoviesModel from './models/movies';
 import {RenderPosition, render} from './utils/render';
@@ -32,10 +33,12 @@ const profileController = new ProfileController(siteHeaderElement, moviesModel);
 const menuController = new MenuController(siteMainElement, moviesModel);
 const filmsSectionComponent = new FilmsSectionComponent();
 const statisticsComponent = new StatisticsComponent(moviesModel);
+const filmsListLoadingComponent = new FilmsListLoadingComponent(`Loading...`);
 
 menuController.render();
 profileController.render();
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
+render(filmsSectionComponent.getElement(), filmsListLoadingComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 statisticsComponent.hide();
 
@@ -54,8 +57,10 @@ menuController.setScreenChange((filterName) => {
 
 apiWithProvider.getMovies()
   .then((movies) => {
-    // moviesModel.films = movies;
-    moviesModel.films = [];
+    filmsListLoadingComponent.getElement().remove();
+    filmsListLoadingComponent.removeElement();
+
+    moviesModel.films = movies;
     pageController.render();
 
     footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
