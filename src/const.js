@@ -1,5 +1,7 @@
 const EMOTIONS = [`smile`, `sleeping`, `puke`, `angry`];
 
+const DEBOUNCE_TIMEOUT = 150;
+
 const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
@@ -27,4 +29,12 @@ const FilterType = {
   FAVORITES: `favorites`,
 };
 
-export {userRanks, EMOTIONS, SortType, FilterType};
+const StatisticsType = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
+export {EMOTIONS, DEBOUNCE_TIMEOUT, SortType, userRanks, FilterType, StatisticsType};

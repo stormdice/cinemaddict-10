@@ -1,4 +1,3 @@
-import API from '../api';
 import CommentsComponent, {DEFAULT_DELETE_BUTTON_TEXT} from '../components/comments';
 import CommentFormComponent from '../components/comment-form';
 import CommentModel from '../models/comment';
@@ -14,11 +13,11 @@ const parseFormData = (formData) => {
 };
 
 export default class CommentController {
-  constructor(container, film) {
+  constructor(container, film, api) {
     this._container = container;
     this._film = film;
+    this._api = api;
 
-    this._api = new API();
     this._shake = null;
     this._updateFilmCardHandler = null;
     this._commentsComponent = null;
@@ -30,7 +29,7 @@ export default class CommentController {
     this._setCommentDelete = this._setCommentDelete.bind(this);
   }
 
-  set shake(handler) {
+  shake(handler) {
     this._shake = handler;
   }
 
@@ -82,7 +81,7 @@ export default class CommentController {
 
       this._api.createComment(this._film.id, newComment)
         .then(() => {
-          this._commentFormComponent.resetForm();
+          this.resetForm();
 
           if (this._updateFilmCardHandler !== null) {
             this._updateFilmCardHandler(this._film);
@@ -103,6 +102,18 @@ export default class CommentController {
     } else {
       render(container, this._commentFormComponent, RenderPosition.BEFOREEND);
     }
+  }
+
+  loadComments(movieId) {
+    this._api.getComments(movieId)
+      .then((comments) => {
+        this.render(comments);
+      });
+  }
+
+  resetForm() {
+    this._commentFormComponent.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    this._commentFormComponent.getElement().querySelector(`.film-details__comment-input`).value = ``;
   }
 
   _onDataChange() {
@@ -134,14 +145,10 @@ export default class CommentController {
       })
       .catch(() => {
         this._commentsComponent.setDeleteButtonText(commentId, DEFAULT_DELETE_BUTTON_TEXT);
-        this._blockDeleteButton(commentId, false);
-      });
-  }
-
-  loadComments(movieId) {
-    this._api.getComments(movieId)
-      .then((comments) => {
-        this.render(comments);
+        if (this._shake !== null) {
+          this._shake();
+          this._blockDeleteButton(commentId, false);
+        }
       });
   }
 

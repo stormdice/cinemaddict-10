@@ -76,16 +76,11 @@ export default class CommentForm extends AbstractSmartComponent {
       });
   }
 
-  blockInput(toBlock) {
+  blockInput(shouldBlock) {
     const inputs = this.getElement().querySelectorAll(`input, textarea`);
 
     inputs.forEach((input) => {
-      input.disabled = toBlock ? true : false;
+      input.disabled = shouldBlock ? true : false;
     });
-  }
-
-  resetForm() {
-    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    this.getElement().querySelector(`.film-details__comment-input`).value = ``;
   }
 }

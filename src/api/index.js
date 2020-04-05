@@ -1,5 +1,5 @@
-import Movie from './models/movie';
-import Comment from './models/comment';
+import Movie from '../models/movie';
+import Comment from '../models/comment';
 
 const SUCCESS_STATUS = {
   MIN: 200,
@@ -21,16 +21,10 @@ const checkStatus = (response) => {
   }
 };
 
-export default class API {
+export default class Api {
   constructor(endPoint, authorization) {
-    if (API.instance instanceof API) {
-      return API.instance;
-    }
-
     this._endpoint = endPoint;
     this._authorization = authorization;
-
-    API.instance = this;
   }
 
   getMovies() {
@@ -39,11 +33,11 @@ export default class API {
       .then(Movie.parseMovies);
   }
 
-  updateMovie(id, data) {
+  updateMovie(id, movie) {
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
+      body: JSON.stringify(movie.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
     .then((response) => response.json())
@@ -72,6 +66,16 @@ export default class API {
       url: `comments/${id}`,
       method: Method.DELETE
     });
+  }
+
+  sync(movies) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(movies),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+    .then((response) => response.json);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

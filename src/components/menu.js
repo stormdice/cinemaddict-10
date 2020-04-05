@@ -17,7 +17,7 @@ const createFilterMarkup = (filter) => {
       return ``;
     }
 
-    return count > 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``;
+    return `<span class="main-navigation__item-count">${count}</span>`;
   };
 
   const title = getFilterTitle(name);
@@ -45,7 +45,7 @@ export default class Menu extends AbstractComponent {
     super();
 
     this._filters = filters;
-    this._currentFilterType = FilterType.ALL;
+    this._currentFilterType = null;
   }
 
   getTemplate() {
