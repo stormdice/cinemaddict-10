@@ -1,14 +1,14 @@
-import Api from './api/index';
-import Store from './api/store';
-import Provider from './api/provider';
-import ProfileController from './controllers/profile-controller';
-import MenuController from './controllers/menu-controller';
-import PageController from './controllers/page-controller';
-import FilmsSectionComponent from './components/film-section';
-import FilmsListLoadingComponent from './components/films-loading';
-import StatisticsComponent from './components/statistics';
-import MoviesModel from './models/movies';
-import {RenderPosition, render} from './utils/render';
+import Api from "./api/index";
+import Store from "./api/store";
+import Provider from "./api/provider";
+import ProfileController from "./controllers/profile-controller";
+import MenuController from "./controllers/menu-controller";
+import PageController from "./controllers/page-controller";
+import FilmsSectionComponent from "./components/film-section";
+import FilmsListLoadingComponent from "./components/films-loading";
+import StatisticsComponent from "./components/statistics";
+import MoviesModel from "./models/movies";
+import {RenderPosition, render} from "./utils/render";
 
 const STORE_PREFIX = `cinemaaddict-localstorage`;
 const STORE_VER = `v1`;
@@ -38,11 +38,19 @@ const filmsListLoadingComponent = new FilmsListLoadingComponent(`Loading...`);
 menuController.render();
 profileController.render();
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
-render(filmsSectionComponent.getElement(), filmsListLoadingComponent, RenderPosition.BEFOREEND);
+render(
+    filmsSectionComponent.getElement(),
+    filmsListLoadingComponent,
+    RenderPosition.BEFOREEND
+);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 statisticsComponent.hide();
 
-const pageController = new PageController(filmsSectionComponent, moviesModel, apiWithProvider);
+const pageController = new PageController(
+    filmsSectionComponent,
+    moviesModel,
+    apiWithProvider
+);
 
 menuController.setScreenChange((filterName) => {
   if (filterName === `stats`) {
@@ -55,16 +63,15 @@ menuController.setScreenChange((filterName) => {
   }
 });
 
-apiWithProvider.getMovies()
-  .then((movies) => {
-    filmsListLoadingComponent.getElement().remove();
-    filmsListLoadingComponent.removeElement();
+apiWithProvider.getMovies().then((movies) => {
+  filmsListLoadingComponent.getElement().remove();
+  filmsListLoadingComponent.removeElement();
 
-    moviesModel.films = movies;
-    pageController.render();
+  moviesModel.films = movies;
+  pageController.render();
 
-    footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
-  });
+  footerFilmsCount.textContent = `${moviesModel.films.length} movies inside`;
+});
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);

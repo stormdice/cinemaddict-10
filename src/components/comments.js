@@ -78,6 +78,10 @@ export default class Comments extends AbstractSmartComponent {
     this._setCommentsDelete = handler;
   }
 
+  getDeleteButton(commentId) {
+    return this.getElement().querySelector(`button[data-id="${commentId}"]`);
+  }
+
   setDeleteButtonText(commentId, text) {
     this._modifiedDeleteButtonText = text;
     this._selectedId = commentId;

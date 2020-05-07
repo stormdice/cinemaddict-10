@@ -5,7 +5,6 @@ import CommentsController from './comments-controller';
 import {RenderPosition, render, replace} from '../utils/render';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
-const FILM_DETAIL_OPEN_ANIMATION = `animation: bounceInRight 0.3s;`;
 
 const Mode = {
   DEFAULT: `default`,
@@ -39,8 +38,7 @@ export default class MovieController {
     this._filmComponent = new FilmComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    this._commentsContainer = this._filmDetailsComponent.getElement()
-      .querySelector(`.film-details__comments-wrap`);
+    this._commentsContainer = this._filmDetailsComponent.getCommentsContainer();
 
     this._commentsController = new CommentsController(this._commentsContainer, film, this._api);
 
@@ -86,7 +84,7 @@ export default class MovieController {
       replace(this._filmComponent, oldFilmComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
     } else {
-      render(this._container.querySelector(`.films-list__container`), this._filmComponent, RenderPosition.BEFOREEND);
+      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
     }
 
     this._commentsController.renderCommentsForm();
@@ -102,7 +100,7 @@ export default class MovieController {
     if (oldFilmComponent) {
       replace(this._filmComponent, oldFilmComponent);
     } else {
-      render(this._container.querySelector(`.films-list__container`), this._filmComponent, RenderPosition.BEFOREEND);
+      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
     }
   }
 
@@ -113,14 +111,13 @@ export default class MovieController {
   }
 
   blockUserRating(shouldBlock) {
-    const userRatingElement = this._filmDetailsComponent.getElement()
-      .querySelector(`.film-details__user-rating-wrap`);
+    const userRatingElement = this._filmDetailsComponent.getUserRatingContainer();
 
     if (!userRatingElement) {
       return;
     }
 
-    const inputs = userRatingElement.querySelectorAll(`input, button`);
+    const inputs = this._filmDetailsComponent.getUserRatingInteractiveElements();
 
     inputs.forEach((input) => {
       input.disabled = shouldBlock ? true : false;
@@ -156,8 +153,7 @@ export default class MovieController {
   }
 
   _resetUserRating(film) {
-    const checkedInput = this._filmDetailsComponent.getElement()
-      .querySelector(`input.film-details__user-rating-input[checked]`);
+    const checkedInput = this._filmDetailsComponent.getCheckedUserRatingInput();
 
     if (!checkedInput) {
       return;
@@ -196,8 +192,9 @@ export default class MovieController {
   _openFilmDetails(film) {
     this._onViewChange();
 
-    this._filmDetailsComponent.getElement()
-      .style = FILM_DETAIL_OPEN_ANIMATION;
+    if (document.querySelector(`.film-details`)) {
+      document.querySelector(`.film-details`).remove();
+    }
 
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
 

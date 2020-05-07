@@ -7,15 +7,15 @@ import {SECONDS_IN_A_MINUTE} from '../utils/common';
 const getFilmsGenres = (films) => {
   return films
     .map((film) => film.genres)
-    .reduce((acc, genre) => [...acc, ...genre], [])
-    .reduce((obj, genre) => {
-      if (!obj[genre]) {
-        obj[genre] = 1;
+    .reduce((genres, genre) => [...genres, ...genre], [])
+    .reduce((totalGenres, genre) => {
+      if (!totalGenres[genre]) {
+        totalGenres[genre] = 1;
       } else {
-        obj[genre]++;
+        totalGenres[genre]++;
       }
 
-      return obj;
+      return totalGenres;
     }, {});
 };
 
@@ -26,7 +26,7 @@ const checkTotalDurationCount = (films) => {
 
   return films
     .map((film) => film.runtime)
-    .reduce((acc, runtime) => acc + runtime);
+    .reduce((totalResult, runtime) => totalResult + runtime);
 };
 
 const getFavoriteGenre = (filmGenres) => {

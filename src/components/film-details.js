@@ -194,6 +194,22 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
+  getCommentsContainer() {
+    return this.getElement().querySelector(`.film-details__comments-wrap`);
+  }
+
+  getUserRatingContainer() {
+    return this.getElement().querySelector(`.film-details__user-rating-wrap`);
+  }
+
+  getUserRatingInteractiveElements() {
+    return this.getUserRatingContainer().querySelectorAll(`input, button`);
+  }
+
+  getCheckedUserRatingInput() {
+    return this.getElement().querySelector(`input.film-details__user-rating-input[checked]`);
+  }
+
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);

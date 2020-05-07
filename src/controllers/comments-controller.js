@@ -112,8 +112,7 @@ export default class CommentController {
   }
 
   resetForm() {
-    this._commentFormComponent.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    this._commentFormComponent.getElement().querySelector(`.film-details__comment-input`).value = ``;
+    this._commentFormComponent.resetForm();
   }
 
   _onDataChange() {
@@ -121,7 +120,7 @@ export default class CommentController {
   }
 
   _blockDeleteButton(commentId, toBLock) {
-    const button = this._commentsComponent.getElement().querySelector(`button[data-id="${commentId}"]`);
+    const button = this._commentsComponent.getDeleteButton(commentId);
 
     if (!button) {
       return;
@@ -133,7 +132,7 @@ export default class CommentController {
   _setCommentDelete(commentId) {
     this._api.deleteComment(commentId)
       .then(() => {
-        this._comments = this._comments.filter((it) => it.id !== commentId);
+        this._comments = this._comments.filter((comment) => comment.id !== commentId);
         this._onDataChange();
 
         if (this._updateFilmCardHandler !== null) {

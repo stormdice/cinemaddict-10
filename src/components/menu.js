@@ -29,8 +29,8 @@ const createFilterMarkup = (filter) => {
   );
 };
 
-const createMenuTemplate = (menuItem) => {
-  const filterMarkup = menuItem.map((filter) => createFilterMarkup(filter)).join(`\n`);
+const createMenuTemplate = (filters) => {
+  const filterMarkup = filters.map((filter) => createFilterMarkup(filter)).join(`\n`);
 
   return (
     `<nav class="main-navigation">

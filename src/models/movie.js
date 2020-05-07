@@ -57,8 +57,8 @@ export default class Movie {
     return new Movie(movie);
   }
 
-  static parseMovies(movie) {
-    return movie.map(Movie.parseMovie);
+  static parseMovies(movies) {
+    return movies.map(Movie.parseMovie);
   }
 
   static clone(movie) {

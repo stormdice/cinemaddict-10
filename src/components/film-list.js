@@ -6,7 +6,6 @@ const createFilmsListTemplate = (title = false) => {
   return (
     `<section class="${title ? `films-list--extra` : `films-list`}">
       ${listTitle}
-      <div class="films-list__container"></div>
     </section>`
   );
 };
