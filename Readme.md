@@ -1,15 +1,8 @@
-# Личный проект «Киноман» [![Build status][travis-image]][travis-url]
+# Личный проект «Киноман»
 
-* Студент: [Евгений Горчаков](https://htmlacademy.ru/profile/id774781).
-* Наставник: [Артём Рудов](https://htmlacademy.ru/profile/artrudov).
+Это одностраничное приложение с использованием синтаксиса ES6+, паттерна Model-View-Presenter, REST API, Service Worker.
 
----
-
-_Не удаляйте и не изменяйте папки и файлы:_
-_`.editorconfig`, `.gitattributes`, `.gitignore`, `.travis.yml`, `package.json`._
-
----
-
+Ссылка на билд: 
 https://stormdice.github.io/cinemaddict-10/
 
 ---
